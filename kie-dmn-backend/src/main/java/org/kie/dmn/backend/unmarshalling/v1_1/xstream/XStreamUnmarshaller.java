@@ -17,6 +17,8 @@
 package org.kie.dmn.backend.unmarshalling.v1_1.xstream;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
 import org.kie.dmn.feel.model.v1_1.*;
 import org.kie.dmn.unmarshalling.v1_1.Unmarshaller;
 
@@ -43,6 +45,15 @@ public class XStreamUnmarshaller
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public void marshal(Object o) {
+        try {
+            XStream xStream = newXStream();
+            xStream.toXML(o, System.out);
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
     }
 
     private XStream newXStream() {

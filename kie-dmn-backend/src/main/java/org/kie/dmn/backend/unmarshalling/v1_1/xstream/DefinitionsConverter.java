@@ -17,7 +17,10 @@
 package org.kie.dmn.backend.unmarshalling.v1_1.xstream;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
 import org.kie.dmn.feel.model.v1_1.*;
 
 public class DefinitionsConverter
@@ -69,5 +72,31 @@ public class DefinitionsConverter
     protected Object createModelObject() {
         return new Definitions();
     }
+
+    @Override
+    protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
+        super.writeChildren(writer, context, parent);
+        Definitions def = (Definitions) parent;
+        
+        for ( DRGElement e : def.getDrgElement() ) {
+//            writer.startNode(e.getClass().getName());
+            context.convertAnother(e);
+//            writer.endNode();
+        }
+    }
+
+    @Override
+    protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
+        super.writeAttributes(writer, parent);
+        Definitions def = (Definitions) parent;
+        
+        writer.addAttribute( EXPRESSION_LANGUAGE , def.getExpressionLanguage() );
+        writer.addAttribute( TYPE_LANGUAGE, def.getTypeLanguage() );
+        writer.addAttribute( NAMESPACE, def.getNamespace());
+        if (def.getExporter() != null) writer.addAttribute( EXPORTER, def.getExporter() );
+        if (def.getExporterVersion() != null) writer.addAttribute( EXPORTER_VERSION, def.getExporterVersion());
+    }
+    
+    
 
 }

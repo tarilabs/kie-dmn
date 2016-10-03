@@ -34,6 +34,18 @@ public abstract class DMNBaseConverter
             Object object,
             HierarchicalStreamWriter writer,
             MarshallingContext context) {
+        writeAttributes(writer, object);
+        writeChildren(writer, context, object);
+    }
+
+    protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
+        // TODO Auto-generated method stub
+        
     }
 
     public Object unmarshal(

@@ -17,7 +17,10 @@
 package org.kie.dmn.backend.unmarshalling.v1_1.xstream;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
 import org.kie.dmn.feel.model.v1_1.DMNElement;
 
 public abstract class DMNElementConverter
@@ -46,5 +49,19 @@ public abstract class DMNElementConverter
 
         dmne.setId( id );
         dmne.setLabel( label );
+    }
+    
+    protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
+        super.writeAttributes(writer, parent);
+        
+        DMNElement e = (DMNElement) parent;
+        
+        if (e.getId() != null) writer.addAttribute( ID , e.getId() );
+        if (e.getLabel() != null) writer.addAttribute( LABEL , e.getLabel() );
     }
 }
