@@ -79,9 +79,9 @@ public class DefinitionsConverter
         Definitions def = (Definitions) parent;
         
         for ( DRGElement e : def.getDrgElement() ) {
-//            writer.startNode(e.getClass().getName());
+            writer.startNode(e.getClass().getName());
             context.convertAnother(e);
-//            writer.endNode();
+            writer.endNode();
         }
     }
 
