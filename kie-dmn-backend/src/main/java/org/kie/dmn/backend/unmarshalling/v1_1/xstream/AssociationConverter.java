@@ -46,7 +46,7 @@ public class AssociationConverter extends ArtifactConverter {
         
         String associationDirectionValue = reader.getAttribute(ASSOCIATION_DIRECTION);
         
-        a.setAssociationDirection(AssociationDirection.fromValue(associationDirectionValue));
+        if (associationDirectionValue != null) a.setAssociationDirection(AssociationDirection.fromValue(associationDirectionValue));
     }
 
     @Override
