@@ -40,7 +40,9 @@ public class InformationRequirementConverter
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
+        super.assignChildElement(parent, nodeName, child);
         InformationRequirement ir = (InformationRequirement) parent;
+        
         if ( REQUIRED_INPUT.equals( nodeName ) ) {
             ir.setRequiredInput( (DMNElementReference) child );
         } else if ( REQUIRED_DECISION.equals( nodeName ) ) {
@@ -62,14 +64,25 @@ public class InformationRequirementConverter
 
     @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
+        super.writeChildren(writer, context, parent);
+        InformationRequirement ir = (InformationRequirement) parent;
         
+        if ( ir.getRequiredDecision() != null ) {
+            writeChildrenNode(writer, context, ir.getRequiredDecision());
+        }
+        // TODO or if else ?
+        if ( ir.getRequiredInput() != null ) {
+            writeChildrenNode(writer, context, ir.getRequiredInput());
+        }
     }
 
     @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
-        // TODO Auto-generated method stub
+        super.writeAttributes(writer, parent);
         
+        // no attributes.
     }
+
+    
 
 }

@@ -53,11 +53,15 @@ public abstract class DMNElementConverter
     
     @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
-        
+        // there is no call to super as super is an abstract method.
+        DMNElement e = (DMNElement) parent;
+
+        if (e.getDescription() !=null) writeChildrenNodeAsValue(writer, context, e.getDescription(), DESCRIPTION);
+        // TODO what about DMNElement.ExtensionElements extensionElements;
     }
     @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
+        // there is no call to super as super is an abstract method.
         DMNElement e = (DMNElement) parent;
         
         if (e.getId() != null) writer.addAttribute( ID , e.getId() );

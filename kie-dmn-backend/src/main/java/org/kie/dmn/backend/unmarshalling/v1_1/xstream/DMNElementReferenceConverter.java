@@ -58,13 +58,16 @@ public class DMNElementReferenceConverter
 
     @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
+        super.writeChildren(writer, context, parent);
         
+        // no children nodes.
     }
     @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
-        // TODO Auto-generated method stub
+        super.writeAttributes(writer, parent);
+        DMNElementReference er = (DMNElementReference) parent;
         
+        if ( er.getHref() != null ) writer.addAttribute(HREF, er.getHref()); 
     }
 
 }

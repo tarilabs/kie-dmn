@@ -43,8 +43,9 @@ public abstract class NamedElementConverter
     
     @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
+        super.writeChildren(writer, context, parent);
         
+        // no children.
     }
     @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {

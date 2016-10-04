@@ -38,11 +38,11 @@ public abstract class DRGElementConverter
         super.assignAttributes( reader, parent );
     }
     
+    @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
-        
+        super.writeChildren(writer, context, parent);
     }
-
+    @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
         super.writeAttributes(writer, parent);
     }

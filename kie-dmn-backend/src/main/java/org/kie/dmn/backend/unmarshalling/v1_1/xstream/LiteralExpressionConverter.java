@@ -17,7 +17,10 @@
 package org.kie.dmn.backend.unmarshalling.v1_1.xstream;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
 import org.kie.dmn.feel.model.v1_1.ImportedValues;
 import org.kie.dmn.feel.model.v1_1.LiteralExpression;
 
@@ -36,10 +39,13 @@ public class LiteralExpressionConverter
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
+        super.assignChildElement(parent, nodeName, child);
+        LiteralExpression le = (LiteralExpression)parent;
+        
         if( "text".equals( nodeName ) ) {
-            ((LiteralExpression)parent).setText( (String) child );
+            le.setText( (String) child );
         } else if( "importedValues".equals( nodeName ) ) {
-            ((LiteralExpression)parent).setImportedValues( (ImportedValues) child );
+            le.setImportedValues( (ImportedValues) child );
         } else {
             super.assignChildElement( parent, nodeName, child );
         }
@@ -48,8 +54,11 @@ public class LiteralExpressionConverter
     @Override
     protected void assignAttributes(HierarchicalStreamReader reader, Object parent) {
         super.assignAttributes( reader, parent );
+        LiteralExpression le = (LiteralExpression) parent;
+        
         String exprLanguage = reader.getAttribute( EXPR_LANGUAGE );
-        ((LiteralExpression) parent).setExpressionLanguage( exprLanguage );
+
+        le.setExpressionLanguage( exprLanguage );
     }
 
     @Override
@@ -57,4 +66,23 @@ public class LiteralExpressionConverter
         return new LiteralExpression();
     }
 
+    @Override
+    protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
+        super.writeChildren(writer, context, parent);
+        LiteralExpression le = (LiteralExpression) parent;
+        
+        if ( le.getText() != null ) writeChildrenNodeAsValue(writer, context, le.getText(), "text");
+        // TODO Or if-else ?
+        if ( le.getImportedValues() != null ) writeChildrenNode(writer, context, le.getImportedValues());
+    }
+
+    @Override
+    protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
+        super.writeAttributes(writer, parent);
+        LiteralExpression le = (LiteralExpression) parent;
+        
+        if ( le.getExpressionLanguage() != null ) writer.addAttribute(EXPR_LANGUAGE, le.getExpressionLanguage());
+    }
+
+    
 }
