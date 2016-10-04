@@ -24,9 +24,24 @@ import org.kie.dmn.unmarshalling.v1_1.Unmarshaller;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class XStreamUnmarshaller
         implements Unmarshaller {
+    
+    public static final Map<Class, String> ALIASES = new HashMap<>();
+    static {
+        ALIASES.put( Definitions.class, "definitions" );                        
+        ALIASES.put( InputData.class, "inputData" );                            
+        ALIASES.put( Decision.class, "decision" );                              
+        ALIASES.put( InformationItem.class, "variable" );                       
+        ALIASES.put( InformationRequirement.class, "informationRequirement" );  
+        ALIASES.put( DMNElementReference.class, "requiredInput" );              
+        ALIASES.put( LiteralExpression.class, "literalExpression" );            
+        ALIASES.put( String.class, "text" );                                    
+    }
 
     @Override
     public Definitions unmarshal(String xml) {
@@ -58,14 +73,9 @@ public class XStreamUnmarshaller
 
     private XStream newXStream() {
         XStream xStream = new XStream();
-        xStream.alias( "definitions", Definitions.class );
-        xStream.alias( "inputData", InputData.class );
-        xStream.alias( "decision", Decision.class );
-        xStream.alias( "variable", InformationItem.class );
-        xStream.alias( "informationRequirement", InformationRequirement.class );
-        xStream.alias( "requiredInput", DMNElementReference.class );
-        xStream.alias( "literalExpression", LiteralExpression.class );
-        xStream.alias( "text", String.class );
+        for ( Entry<Class, String> alias : ALIASES.entrySet() ) {
+            xStream.alias(alias.getValue(), alias.getKey());
+        }
 
         xStream.registerConverter( new DefinitionsConverter( xStream ) );
         xStream.registerConverter( new DecisionConverter( xStream ) );

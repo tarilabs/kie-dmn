@@ -41,11 +41,12 @@ public abstract class NamedElementConverter
         ((NamedElement) parent).setName( name );
     }
     
+    @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
         // TODO Auto-generated method stub
         
     }
-
+    @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
         super.writeAttributes(writer, parent);
         NamedElement ne = (NamedElement) parent;

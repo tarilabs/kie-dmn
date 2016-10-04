@@ -56,7 +56,7 @@ public class DefinitionsConverter
         Definitions def = (Definitions) parent;
 
         String exprLang = reader.getAttribute( EXPRESSION_LANGUAGE );
-        String typeLang = reader.getAttribute( TYPE_LANGUAGE );
+        String typeLang = reader.getAttribute( TYPE_LANGUAGE ); 
         String namespace = reader.getAttribute( NAMESPACE );
         String exporter = reader.getAttribute( EXPORTER );
         String exporterVersion = reader.getAttribute( EXPORTER_VERSION );
@@ -78,10 +78,23 @@ public class DefinitionsConverter
         super.writeChildren(writer, context, parent);
         Definitions def = (Definitions) parent;
         
+        for ( Import i : def.getImport() ) {
+            writeChildrenNode(writer, context, i);
+        }
+        for ( ItemDefinition id : def.getItemDefinition() ) {
+            writeChildrenNode(writer, context, id);
+        }
         for ( DRGElement e : def.getDrgElement() ) {
-            writer.startNode(e.getClass().getName());
-            context.convertAnother(e);
-            writer.endNode();
+            writeChildrenNode(writer, context, e);
+        }
+        for ( Artifact a : def.getArtifact() ) {
+            writeChildrenNode(writer, context, a);
+        }
+        for ( ElementCollection ec : def.getElementCollection() ) {
+            writeChildrenNode(writer, context, ec);
+        }
+        for ( BusinessContextElement bce : def.getBusinessContextElement() ) {
+            writeChildrenNode(writer, context, bce);
         }
     }
 
@@ -90,13 +103,10 @@ public class DefinitionsConverter
         super.writeAttributes(writer, parent);
         Definitions def = (Definitions) parent;
         
-        writer.addAttribute( EXPRESSION_LANGUAGE , def.getExpressionLanguage() );
-        writer.addAttribute( TYPE_LANGUAGE, def.getTypeLanguage() );
-        writer.addAttribute( NAMESPACE, def.getNamespace());
+        if (def.getExpressionLanguage() != null) writer.addAttribute( EXPRESSION_LANGUAGE , def.getExpressionLanguage() );
+        if (def.getTypeLanguage() != null) writer.addAttribute( TYPE_LANGUAGE, def.getTypeLanguage() );
+        if (def.getNamespace() != null) writer.addAttribute( NAMESPACE, def.getNamespace());
         if (def.getExporter() != null) writer.addAttribute( EXPORTER, def.getExporter() );
         if (def.getExporterVersion() != null) writer.addAttribute( EXPORTER_VERSION, def.getExporterVersion());
     }
-    
-    
-
 }

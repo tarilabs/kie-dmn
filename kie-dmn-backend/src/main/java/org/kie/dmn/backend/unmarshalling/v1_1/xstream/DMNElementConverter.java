@@ -51,14 +51,13 @@ public abstract class DMNElementConverter
         dmne.setLabel( label );
     }
     
+    @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
         // TODO Auto-generated method stub
         
     }
-
+    @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
-        super.writeAttributes(writer, parent);
-        
         DMNElement e = (DMNElement) parent;
         
         if (e.getId() != null) writer.addAttribute( ID , e.getId() );

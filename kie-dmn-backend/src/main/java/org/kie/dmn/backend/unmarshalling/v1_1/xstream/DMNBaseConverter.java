@@ -37,16 +37,22 @@ public abstract class DMNBaseConverter
         writeAttributes(writer, object);
         writeChildren(writer, context, object);
     }
-
-    protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
-        
+    
+    protected void writeChildrenNode(HierarchicalStreamWriter writer, MarshallingContext context, Object node) {
+        writer.startNode(XStreamUnmarshaller.ALIASES.get(node.getClass()));
+        context.convertAnother(node);
+        writer.endNode();
+    }
+    
+    protected void writeChildrenNodeAsValue(HierarchicalStreamWriter writer, MarshallingContext context, String nodeValue, String nodeAlias) {
+        writer.startNode(nodeAlias);
+        writer.setValue(nodeValue);
+        writer.endNode();
     }
 
-    protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
-        // TODO Auto-generated method stub
-        
-    }
+    protected abstract void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent);
+
+    protected abstract void writeAttributes(HierarchicalStreamWriter writer, Object parent);
 
     public Object unmarshal(
             HierarchicalStreamReader reader,

@@ -21,10 +21,13 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import org.kie.dmn.feel.model.v1_1.AuthorityRequirement;
+import org.kie.dmn.feel.model.v1_1.DMNElementReference;
 import org.kie.dmn.feel.model.v1_1.Decision;
 import org.kie.dmn.feel.model.v1_1.Expression;
 import org.kie.dmn.feel.model.v1_1.InformationItem;
 import org.kie.dmn.feel.model.v1_1.InformationRequirement;
+import org.kie.dmn.feel.model.v1_1.KnowledgeRequirement;
 
 public class DecisionConverter
         extends DRGElementConverter {
@@ -70,12 +73,47 @@ public class DecisionConverter
         return new Decision();
     }
     
+    @Override
     protected void writeChildren(HierarchicalStreamWriter writer, MarshallingContext context, Object parent) {
-        // TODO Auto-generated method stub
+        super.writeChildren(writer, context, parent);
+        Decision dec = (Decision) parent;
         
+        if (dec.getQuestion() != null) writeChildrenNodeAsValue(writer, context, dec.getQuestion(), QUESTION);
+        if (dec.getAllowedAnswers() != null) writeChildrenNodeAsValue(writer, context, dec.getAllowedAnswers(), ALLOWED_ANSWERS);
+        if (dec.getVariable() != null) writeChildrenNode(writer, context, dec.getVariable());
+        for ( InformationRequirement ir : dec.getInformationRequirement() ) {
+            writeChildrenNode(writer, context, ir);
+        }
+        for ( KnowledgeRequirement kr : dec.getKnowledgeRequirement() ) {
+            writeChildrenNode(writer, context, kr);
+        }
+        for ( AuthorityRequirement ar : dec.getAuthorityRequirement() ) {
+            writeChildrenNode(writer, context, ar);
+        }
+        for ( DMNElementReference so : dec.getSupportedObjective() ) {
+            writeChildrenNode(writer, context, so);
+        }
+        for ( DMNElementReference ipi : dec.getImpactedPerformanceIndicator() ) {
+            writeChildrenNode(writer, context, ipi);
+        }
+        for ( DMNElementReference dm : dec.getDecisionMaker() ) {
+            writeChildrenNode(writer, context, dm);
+        }
+        for ( DMNElementReference downer : dec.getDecisionOwner() ) {
+            writeChildrenNode(writer, context, downer);
+        }
+        for ( DMNElementReference up : dec.getUsingProcess() ) {
+            writeChildrenNode(writer, context, up);
+        }
+        for ( DMNElementReference ut : dec.getUsingTask() ) {
+            writeChildrenNode(writer, context, ut);
+        }
+        if (dec.getExpression() != null) writeChildrenNode(writer, context, dec.getExpression());
     }
-
+    @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {
         super.writeAttributes(writer, parent);
+        
+        // no attributes 
     }
 }
