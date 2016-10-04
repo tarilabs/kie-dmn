@@ -13,7 +13,6 @@ public class BindingConverter extends DMNModelInstrumentedBaseConverter {
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         Binding b = (Binding) parent;
         
         if ("parameter".equals(nodeName)) {

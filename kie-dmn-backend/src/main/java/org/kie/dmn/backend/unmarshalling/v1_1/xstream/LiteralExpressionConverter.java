@@ -39,7 +39,6 @@ public class LiteralExpressionConverter
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         LiteralExpression le = (LiteralExpression)parent;
         
         if( "text".equals( nodeName ) ) {

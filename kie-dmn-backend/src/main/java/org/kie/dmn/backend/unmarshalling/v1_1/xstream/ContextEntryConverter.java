@@ -12,7 +12,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class ContextEntryConverter extends DMNModelInstrumentedBaseConverter {
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         ContextEntry ce = (ContextEntry) parent;
         
         if ("variable".equals(nodeName)) {

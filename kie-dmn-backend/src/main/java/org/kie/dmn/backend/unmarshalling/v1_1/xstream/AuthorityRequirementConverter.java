@@ -12,7 +12,6 @@ public class AuthorityRequirementConverter extends DMNModelInstrumentedBaseConve
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         AuthorityRequirement ar = (AuthorityRequirement) parent;
         
         if ("requiredDecision".equals(nodeName)) {

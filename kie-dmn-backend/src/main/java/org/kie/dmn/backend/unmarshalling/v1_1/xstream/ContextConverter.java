@@ -11,7 +11,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class ContextConverter extends ExpressionConverter {
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         Context c = (Context) parent;
         
         if ("contextEntry".equals(nodeName)) {

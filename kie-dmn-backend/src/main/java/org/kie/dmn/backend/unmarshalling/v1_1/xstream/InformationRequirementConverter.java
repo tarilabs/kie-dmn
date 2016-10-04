@@ -40,7 +40,6 @@ public class InformationRequirementConverter
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         InformationRequirement ir = (InformationRequirement) parent;
         
         if ( REQUIRED_INPUT.equals( nodeName ) ) {

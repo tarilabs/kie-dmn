@@ -28,7 +28,6 @@ public class AssociationConverter extends ArtifactConverter {
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
-        super.assignChildElement(parent, nodeName, child);
         Association a = (Association) parent;
         
         if( "sourceRef".equals( nodeName ) ) {
