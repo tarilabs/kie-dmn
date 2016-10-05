@@ -38,8 +38,15 @@ public abstract class DMNBaseConverter
         writeChildren(writer, context, object);
     }
     
+    @Deprecated
     protected void writeChildrenNode(HierarchicalStreamWriter writer, MarshallingContext context, Object node) {
         writer.startNode(XStreamUnmarshaller.ALIASES.get(node.getClass()));
+        context.convertAnother(node);
+        writer.endNode();
+    }
+    
+    protected void writeChildrenNode(HierarchicalStreamWriter writer, MarshallingContext context, Object node, String nodeAlias) {
+        writer.startNode(nodeAlias);
         context.convertAnother(node);
         writer.endNode();
     }

@@ -10,6 +10,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class AssociationConverter extends ArtifactConverter {
+    public static final String TARGET_REF = "targetRef";
+    public static final String SOURCE_REF = "sourceRef";
     public static final String ASSOCIATION_DIRECTION = "associationDirection";
 
     public AssociationConverter(XStream xstream) {
@@ -30,9 +32,9 @@ public class AssociationConverter extends ArtifactConverter {
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         Association a = (Association) parent;
         
-        if( "sourceRef".equals( nodeName ) ) {
+        if( SOURCE_REF.equals( nodeName ) ) {
             a.setSourceRef( (DMNElementReference) child );
-        } else if( "targetRef".equals( nodeName ) ) {
+        } else if( TARGET_REF.equals( nodeName ) ) {
             a.setTargetRef( (DMNElementReference) child );
         } else {
             super.assignChildElement( parent, nodeName, child );
@@ -54,8 +56,8 @@ public class AssociationConverter extends ArtifactConverter {
         super.writeChildren(writer, context, parent);
         Association a = (Association) parent;
         
-        writeChildrenNode(writer, context, a.getSourceRef());
-        writeChildrenNode(writer, context, a.getTargetRef());
+        writeChildrenNode(writer, context, a.getSourceRef(), SOURCE_REF);
+        writeChildrenNode(writer, context, a.getTargetRef(), TARGET_REF);
     }
 
     @Override
