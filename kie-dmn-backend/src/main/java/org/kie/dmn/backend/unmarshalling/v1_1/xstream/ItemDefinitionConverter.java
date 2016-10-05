@@ -10,6 +10,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ItemDefinitionConverter extends NamedElementConverter {
+    public static final String ITEM_COMPONENT = "itemComponent";
+    public static final String ALLOWED_VALUES = "allowedValues";
+    public static final String TYPE_REF = "typeRef";
     public static final String TYPE_LANGUAGE = "typeLanguage";
     public static final String IS_COLLECTION = "isCollection";
     
@@ -17,11 +20,11 @@ public class ItemDefinitionConverter extends NamedElementConverter {
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         ItemDefinition id = (ItemDefinition) parent;
         
-        if ("typeRef".equals(nodeName)) {
+        if (TYPE_REF.equals(nodeName)) {
             id.setTypeRef((QName) child);
-        } else if ("allowedValues".equals(nodeName)) {
+        } else if (ALLOWED_VALUES.equals(nodeName)) {
             id.setAllowedValues((UnaryTests) child);
-        } else if ("itemComponent".equals(nodeName)) {
+        } else if (ITEM_COMPONENT.equals(nodeName)) {
             id.getItemComponent().add((ItemDefinition) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -45,10 +48,10 @@ public class ItemDefinitionConverter extends NamedElementConverter {
         super.writeChildren(writer, context, parent);
         ItemDefinition id = (ItemDefinition) parent;
         
-        if (id.getTypeRef() != null) writeChildrenNode(writer, context, id.getTypeRef());
-        if (id.getAllowedValues() != null) writeChildrenNode(writer, context, id.getAllowedValues());
+        if (id.getTypeRef() != null) writeChildrenNode(writer, context, id.getTypeRef(), TYPE_REF);
+        if (id.getAllowedValues() != null) writeChildrenNode(writer, context, id.getAllowedValues(), ALLOWED_VALUES);
         for ( ItemDefinition ic : id.getItemComponent() ) {
-            writeChildrenNode(writer, context, ic);
+            writeChildrenNode(writer, context, ic, ITEM_COMPONENT);
         }
     }
 

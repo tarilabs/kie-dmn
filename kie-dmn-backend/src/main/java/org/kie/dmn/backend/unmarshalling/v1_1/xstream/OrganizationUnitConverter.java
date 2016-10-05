@@ -9,13 +9,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class OrganizationUnitConverter extends BusinessContextElementConverter {
+    public static final String DECISION_OWNED = "decisionOwned";
+    public static final String DECISION_MADE = "decisionMade";
+
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         OrganizationUnit ou = (OrganizationUnit) parent;
         
-        if ("decisionMade".equals(nodeName)) {
+        if (DECISION_MADE.equals(nodeName)) {
             ou.getDecisionMade().add((DMNElementReference) child);
-        } else if ("decisionOwned".equals(nodeName)) {
+        } else if (DECISION_OWNED.equals(nodeName)) {
             ou.getDecisionOwned().add((DMNElementReference) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -35,10 +38,10 @@ public class OrganizationUnitConverter extends BusinessContextElementConverter {
         OrganizationUnit ou = (OrganizationUnit) parent;
         
         for (DMNElementReference dm : ou.getDecisionMade()) {
-            writeChildrenNode(writer, context, dm);
+            writeChildrenNode(writer, context, dm, DECISION_MADE);
         }
         for (DMNElementReference downed : ou.getDecisionOwned()) {
-            writeChildrenNode(writer, context, downed);
+            writeChildrenNode(writer, context, downed, DECISION_OWNED);
         }
     }
 

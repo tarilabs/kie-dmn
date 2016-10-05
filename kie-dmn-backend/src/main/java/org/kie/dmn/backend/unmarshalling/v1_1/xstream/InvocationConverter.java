@@ -11,14 +11,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class InvocationConverter extends ExpressionConverter {
+    public static final String BINDING = "binding";
+    public static final String EXPRESSION = "expression";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         Invocation i = (Invocation) parent;
         
-        if ("expression".equals(nodeName)) {
+        if (EXPRESSION.equals(nodeName)) {
             i.setExpression((Expression) child);
-        } else if ("binding".equals(nodeName)) {
+        } else if (BINDING.equals(nodeName)) {
             i.getBinding().add((Binding) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -35,9 +37,9 @@ public class InvocationConverter extends ExpressionConverter {
         super.writeChildren(writer, context, parent);
         Invocation i = (Invocation) parent;
         
-        if (i.getExpression() != null) writeChildrenNode(writer, context, i.getExpression());
+        if (i.getExpression() != null) writeChildrenNode(writer, context, i.getExpression(), EXPRESSION);
         for (Binding b : i.getBinding()) {
-            writeChildrenNode(writer, context, b);
+            writeChildrenNode(writer, context, b, BINDING);
         }
     }
 

@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ImportedValuesConverter extends ImportConverter {
+    public static final String IMPORTED_ELEMENT = "importedElement";
     public static final String EXPRESSION_LANGUAGE = "expressionLanguage";
 
     public ImportedValuesConverter(XStream xstream) {
@@ -18,7 +19,7 @@ public class ImportedValuesConverter extends ImportConverter {
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         ImportedValues iv = (ImportedValues) parent;
         
-        if ("importedElement".equals(nodeName)) {
+        if (IMPORTED_ELEMENT.equals(nodeName)) {
             iv.setImportedElement((String) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -40,7 +41,7 @@ public class ImportedValuesConverter extends ImportConverter {
         super.writeChildren(writer, context, parent);
         ImportedValues iv = (ImportedValues) parent;
         
-        writeChildrenNode(writer, context, iv.getImportedElement());
+        writeChildrenNode(writer, context, iv.getImportedElement(), IMPORTED_ELEMENT);
     }
 
     @Override

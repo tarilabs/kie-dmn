@@ -10,14 +10,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class InputClauseConverter extends DMNElementConverter {
+    public static final String INPUT_VALUES = "inputValues";
+    public static final String INPUT_EXPRESSION = "inputExpression";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         InputClause ic = (InputClause) parent;
         
-        if ("inputExpression".equals(nodeName)) {
+        if (INPUT_EXPRESSION.equals(nodeName)) {
             ic.setInputExpression((LiteralExpression) child);
-        } else if ("inputValues".equals(nodeName)) {
+        } else if (INPUT_VALUES.equals(nodeName)) {
             ic.setInputValues((UnaryTests) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -34,8 +36,8 @@ public class InputClauseConverter extends DMNElementConverter {
         super.writeChildren(writer, context, parent);
         InputClause ic = (InputClause) parent;
         
-        writeChildrenNode(writer, context, ic.getInputExpression());
-        if (ic.getInputValues() != null) writeChildrenNode(writer, context, ic.getInputValues()); 
+        writeChildrenNode(writer, context, ic.getInputExpression(), INPUT_EXPRESSION);
+        if (ic.getInputValues() != null) writeChildrenNode(writer, context, ic.getInputValues(), INPUT_VALUES); 
     }
 
     @Override

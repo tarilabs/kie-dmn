@@ -10,17 +10,20 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class KnowledgeSourceConverter extends DRGElementConverter {
+    public static final String OWNER = "owner";
+    public static final String TYPE = "type";
+    public static final String AUTHORITY_REQUIREMENT = "authorityRequirement";
     public static final String LOCATION_URI = "locationURI";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         KnowledgeSource ks = (KnowledgeSource) parent;
         
-        if ("authorityRequirement".equals(nodeName)) {
+        if (AUTHORITY_REQUIREMENT.equals(nodeName)) {
             ks.getAuthorityRequirement().add((AuthorityRequirement) child);
-        } else if ("type".equals(nodeName)) {
+        } else if (TYPE.equals(nodeName)) {
             ks.setType((String) child);
-        } else if ("owner".equals(nodeName)) {
+        } else if (OWNER.equals(nodeName)) {
             ks.setOwner((DMNElementReference) child);
         } else { 
             super.assignChildElement(parent, nodeName, child);
@@ -43,10 +46,10 @@ public class KnowledgeSourceConverter extends DRGElementConverter {
         KnowledgeSource ks = (KnowledgeSource) parent;
         
         for ( AuthorityRequirement ar : ks.getAuthorityRequirement() ) {
-            writeChildrenNode(writer, context, ar);
+            writeChildrenNode(writer, context, ar, AUTHORITY_REQUIREMENT);
         }
-        if (ks.getType() != null) writeChildrenNode(writer, context, ks.getType());
-        if (ks.getOwner() != null) writeChildrenNode(writer, context, ks.getOwner());
+        if (ks.getType() != null) writeChildrenNode(writer, context, ks.getType(), TYPE);
+        if (ks.getOwner() != null) writeChildrenNode(writer, context, ks.getOwner(), OWNER);
     }
 
     @Override

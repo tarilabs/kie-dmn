@@ -8,13 +8,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class UnaryTestsConverter extends DMNElementConverter {
+    public static final String TEXT = "text";
     public static final String EXPRESSION_LANGUAGE = "expressionLanguage";
     
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         UnaryTests ut = (UnaryTests) parent;
         
-        if ("text".equals(nodeName)) {
+        if (TEXT.equals(nodeName)) {
             ut.setText((String) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -36,7 +37,7 @@ public class UnaryTestsConverter extends DMNElementConverter {
         super.writeChildren(writer, context, parent);
         UnaryTests ut = (UnaryTests) parent;
 
-        writeChildrenNode(writer, context, ut.getText());
+        writeChildrenNode(writer, context, ut.getText(), TEXT);
     }
 
     @Override

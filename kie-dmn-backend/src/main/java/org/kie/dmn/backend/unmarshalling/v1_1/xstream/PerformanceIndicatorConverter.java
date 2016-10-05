@@ -9,12 +9,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class PerformanceIndicatorConverter extends BusinessContextElementConverter {
+    public static final String IMPACTING_DECISION = "impactingDecision";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         PerformanceIndicator pi = (PerformanceIndicator) parent;
         
-        if ("impactingDecision".equals(nodeName)) {
+        if (IMPACTING_DECISION.equals(nodeName)) {
             pi.getImpactingDecision().add((DMNElementReference) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -34,7 +35,7 @@ public class PerformanceIndicatorConverter extends BusinessContextElementConvert
         PerformanceIndicator pi = (PerformanceIndicator) parent;
         
         for ( DMNElementReference id : pi.getImpactingDecision() ) {
-            writeChildrenNode(writer, context, id);
+            writeChildrenNode(writer, context, id, IMPACTING_DECISION);
         }
     }
 

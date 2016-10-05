@@ -10,6 +10,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class OutputClauseConverter extends DMNElementConverter {
+    public static final String DEFAULT_OUTPUT_ENTRY = "defaultOutputEntry";
+    public static final String OUTPUT_VALUES = "outputValues";
     public static final String NAME = "name";
     public static final String TYPE_REF ="typeRef";
     
@@ -17,9 +19,9 @@ public class OutputClauseConverter extends DMNElementConverter {
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         OutputClause oc = (OutputClause) parent;
         
-        if ("outputValues".equals(nodeName)) {
+        if (OUTPUT_VALUES.equals(nodeName)) {
             oc.setOutputValues((UnaryTests) child);
-        } else if ("defaultOutputEntry".equals(nodeName)) {
+        } else if (DEFAULT_OUTPUT_ENTRY.equals(nodeName)) {
             oc.setDefaultOutputEntry((LiteralExpression) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -43,8 +45,8 @@ public class OutputClauseConverter extends DMNElementConverter {
         super.writeChildren(writer, context, parent);
         OutputClause oc = (OutputClause) parent;
         
-        if (oc.getOutputValues() != null) writeChildrenNode(writer, context, oc.getOutputValues());
-        if (oc.getDefaultOutputEntry() != null) writeChildrenNode(writer, context, oc.getDefaultOutputEntry());
+        if (oc.getOutputValues() != null) writeChildrenNode(writer, context, oc.getOutputValues(), OUTPUT_VALUES);
+        if (oc.getDefaultOutputEntry() != null) writeChildrenNode(writer, context, oc.getDefaultOutputEntry(), DEFAULT_OUTPUT_ENTRY);
     }
 
     @Override

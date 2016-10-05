@@ -21,6 +21,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import java.util.List;
+
 import org.kie.dmn.feel.model.v1_1.AuthorityRequirement;
 import org.kie.dmn.feel.model.v1_1.DMNElementReference;
 import org.kie.dmn.feel.model.v1_1.Decision;
@@ -29,10 +31,20 @@ import org.kie.dmn.feel.model.v1_1.InformationItem;
 import org.kie.dmn.feel.model.v1_1.InformationRequirement;
 import org.kie.dmn.feel.model.v1_1.KnowledgeRequirement;
 
-public class DecisionConverter
-        extends DRGElementConverter {
-    public static final String QUESTION        = "question";
+public class DecisionConverter extends DRGElementConverter {
+    public static final String QUESTION = "question";
     public static final String ALLOWED_ANSWERS = "allowedAnswers";
+    public static final String VARIABLE = "variable";
+    public static final String INFORMATION_REQUIREMENT = "informationRequirement";
+    public static final String KNOWLEDGE_REQUIREMENT = "knowledgeRequirement";
+    public static final String AUTHORITY_REQUIREMENT = "authorityRequirement";
+    public static final String SUPPORTED_OBJECTIVE = "supportedObjective";
+    public static final String IMPACTED_PERFORMANCE_INDICATOR = "impactedPerformanceIndicator";
+    public static final String DECISION_MAKER = "decisionMaker";
+    public static final String DECISION_OWNER = "decisionOwner";
+    public static final String USING_PROCESS = "usingProcess";
+    public static final String USING_TASK = "usingTask";
+    public static final String EXPRESSION = "expression";
 
     public DecisionConverter(XStream xstream) {
         super( xstream );
@@ -45,11 +57,32 @@ public class DecisionConverter
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         Decision dec = (Decision) parent;
-        if ( child instanceof InformationRequirement ) {
-            dec.getInformationRequirement().add( (InformationRequirement) child );
-        } else if ( child instanceof InformationItem ) {
+        
+        if (QUESTION.equals(nodeName)) {
+            dec.setQuestion((String) child);
+        } else if (ALLOWED_ANSWERS.equals(nodeName)) {
+            dec.setAllowedAnswers((String) child);
+        } else if (VARIABLE.equals(nodeName) ) {
             dec.setVariable( (InformationItem) child );
-        } else if ( child instanceof Expression ) {
+        } else if (INFORMATION_REQUIREMENT.equals(nodeName) ) {
+            dec.getInformationRequirement().add( (InformationRequirement) child );
+        } else if (KNOWLEDGE_REQUIREMENT.equals(nodeName) ) {
+            dec.getKnowledgeRequirement().add((KnowledgeRequirement) child);
+        } else if (AUTHORITY_REQUIREMENT.equals(nodeName) ) {
+            dec.getAuthorityRequirement().add((AuthorityRequirement) child);
+        } else if (SUPPORTED_OBJECTIVE.equals(nodeName) ) {
+            dec.getSupportedObjective().add((DMNElementReference) child);
+        } else if (IMPACTED_PERFORMANCE_INDICATOR.equals(nodeName) ) {
+            dec.getImpactedPerformanceIndicator().add((DMNElementReference) child);
+        } else if (DECISION_MAKER.equals(nodeName) ) {
+            dec.getDecisionMaker().add((DMNElementReference) child);
+        } else if (DECISION_OWNER.equals(nodeName) ) {
+            dec.getDecisionOwner().add((DMNElementReference) child);
+        } else if (USING_PROCESS.equals(nodeName) ) {
+            dec.getUsingProcess().add((DMNElementReference) child);
+        } else if (USING_TASK.equals(nodeName) ) {
+            dec.getUsingTask().add((DMNElementReference) child);
+        } else if (EXPRESSION.equals(nodeName) ) {
             dec.setExpression( (Expression) child );
         } else {
             super.assignChildElement( dec, nodeName, child );
@@ -59,13 +92,8 @@ public class DecisionConverter
     @Override
     protected void assignAttributes(HierarchicalStreamReader reader, Object parent) {
         super.assignAttributes( reader, parent );
-        Decision dec = (Decision) parent;
-
-        String question = reader.getAttribute( QUESTION );
-        String allowedAnswers = reader.getAttribute( ALLOWED_ANSWERS );
-
-        dec.setQuestion( question );
-        dec.setAllowedAnswers( allowedAnswers );
+        
+        // no attributes.
     }
 
     @Override
@@ -80,35 +108,35 @@ public class DecisionConverter
         
         if (dec.getQuestion() != null) writeChildrenNodeAsValue(writer, context, dec.getQuestion(), QUESTION);
         if (dec.getAllowedAnswers() != null) writeChildrenNodeAsValue(writer, context, dec.getAllowedAnswers(), ALLOWED_ANSWERS);
-        if (dec.getVariable() != null) writeChildrenNode(writer, context, dec.getVariable());
+        if (dec.getVariable() != null) writeChildrenNode(writer, context, dec.getVariable(), VARIABLE);
         for ( InformationRequirement ir : dec.getInformationRequirement() ) {
-            writeChildrenNode(writer, context, ir);
+            writeChildrenNode(writer, context, ir, INFORMATION_REQUIREMENT);
         }
         for ( KnowledgeRequirement kr : dec.getKnowledgeRequirement() ) {
-            writeChildrenNode(writer, context, kr);
+            writeChildrenNode(writer, context, kr, KNOWLEDGE_REQUIREMENT);
         }
         for ( AuthorityRequirement ar : dec.getAuthorityRequirement() ) {
-            writeChildrenNode(writer, context, ar);
+            writeChildrenNode(writer, context, ar, AUTHORITY_REQUIREMENT);
         }
         for ( DMNElementReference so : dec.getSupportedObjective() ) {
-            writeChildrenNode(writer, context, so);
+            writeChildrenNode(writer, context, so, SUPPORTED_OBJECTIVE);
         }
         for ( DMNElementReference ipi : dec.getImpactedPerformanceIndicator() ) {
-            writeChildrenNode(writer, context, ipi);
+            writeChildrenNode(writer, context, ipi, IMPACTED_PERFORMANCE_INDICATOR);
         }
         for ( DMNElementReference dm : dec.getDecisionMaker() ) {
-            writeChildrenNode(writer, context, dm);
+            writeChildrenNode(writer, context, dm, DECISION_MAKER);
         }
         for ( DMNElementReference downer : dec.getDecisionOwner() ) {
-            writeChildrenNode(writer, context, downer);
+            writeChildrenNode(writer, context, downer, DECISION_OWNER);
         }
         for ( DMNElementReference up : dec.getUsingProcess() ) {
-            writeChildrenNode(writer, context, up);
+            writeChildrenNode(writer, context, up, USING_PROCESS);
         }
         for ( DMNElementReference ut : dec.getUsingTask() ) {
-            writeChildrenNode(writer, context, ut);
+            writeChildrenNode(writer, context, ut, USING_TASK);
         }
-        if (dec.getExpression() != null) writeChildrenNode(writer, context, dec.getExpression());
+        if (dec.getExpression() != null) writeChildrenNode(writer, context, dec.getExpression(), EXPRESSION);
     }
     @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {

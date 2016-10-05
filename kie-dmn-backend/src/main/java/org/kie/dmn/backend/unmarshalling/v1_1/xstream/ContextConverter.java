@@ -9,11 +9,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ContextConverter extends ExpressionConverter {
+    public static final String CONTEXT_ENTRY = "contextEntry";
+
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         Context c = (Context) parent;
         
-        if ("contextEntry".equals(nodeName)) {
+        if (CONTEXT_ENTRY.equals(nodeName)) {
             c.getContextEntry().add((ContextEntry) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -33,7 +35,7 @@ public class ContextConverter extends ExpressionConverter {
         Context c = (Context) parent;
         
         for (ContextEntry ce : c.getContextEntry()) {
-            writeChildrenNode(writer, context, ce);
+            writeChildrenNode(writer, context, ce, CONTEXT_ENTRY);
         }
     }
 

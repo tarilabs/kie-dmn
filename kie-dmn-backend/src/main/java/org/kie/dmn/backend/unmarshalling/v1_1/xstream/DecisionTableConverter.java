@@ -14,6 +14,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class DecisionTableConverter extends ExpressionConverter {
+    public static final String RULE = "rule";
+    public static final String OUTPUT = "output";
+    public static final String INPUT = "input";
     public static final String HIT_POLICY = "hitPolicy";
     public static final String AGGREGATION = "aggregation";
     public static final String PREFERRED_ORIENTATION = "preferredOrientation";
@@ -23,11 +26,11 @@ public class DecisionTableConverter extends ExpressionConverter {
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         DecisionTable dt = (DecisionTable) parent;
         
-        if ("input".equals(nodeName)) {
+        if (INPUT.equals(nodeName)) {
             dt.getInput().add((InputClause) child);
-        } else if ("output".equals(nodeName)) {
+        } else if (OUTPUT.equals(nodeName)) {
             dt.getOutput().add((OutputClause) child);
-        } else if ("rule".equals(nodeName)) {
+        } else if (RULE.equals(nodeName)) {
             dt.getRule().add((DecisionRule) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -56,13 +59,13 @@ public class DecisionTableConverter extends ExpressionConverter {
         DecisionTable dt = (DecisionTable) parent;
         
         for (InputClause i : dt.getInput()) {
-            writeChildrenNode(writer, context, i);
+            writeChildrenNode(writer, context, i, INPUT);
         }
         for (OutputClause o : dt.getOutput()) {
-            writeChildrenNode(writer, context, o);
+            writeChildrenNode(writer, context, o, OUTPUT);
         }
         for (DecisionRule r : dt.getRule()) {
-            writeChildrenNode(writer, context, r);
+            writeChildrenNode(writer, context, r, RULE);
         }
     }
 

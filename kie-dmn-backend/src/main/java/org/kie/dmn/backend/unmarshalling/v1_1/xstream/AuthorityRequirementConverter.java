@@ -9,16 +9,19 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class AuthorityRequirementConverter extends DMNModelInstrumentedBaseConverter {
+    public static final String REQUIRED_AUTHORITY = "requiredAuthority";
+    public static final String REQUIRED_INPUT = "requiredInput";
+    public static final String REQUIRED_DECISION = "requiredDecision";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         AuthorityRequirement ar = (AuthorityRequirement) parent;
         
-        if ("requiredDecision".equals(nodeName)) {
+        if (REQUIRED_DECISION.equals(nodeName)) {
             ar.setRequiredDecision( (DMNElementReference) child );
-        } else if ("requiredInput".equals(nodeName)) {
+        } else if (REQUIRED_INPUT.equals(nodeName)) {
             ar.setRequiredInput( (DMNElementReference) child );
-        } else if ("requiredAuthority".equals(nodeName)) {
+        } else if (REQUIRED_AUTHORITY.equals(nodeName)) {
             ar.setRequiredAuthority( (DMNElementReference) child );
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -37,10 +40,10 @@ public class AuthorityRequirementConverter extends DMNModelInstrumentedBaseConve
         super.writeChildren(writer, context, parent);
         AuthorityRequirement ar = (AuthorityRequirement) parent;
         
-        if (ar.getRequiredDecision() != null) writeChildrenNode(writer, context, ar.getRequiredDecision()); 
+        if (ar.getRequiredDecision() != null) writeChildrenNode(writer, context, ar.getRequiredDecision(), REQUIRED_DECISION); 
         // TODO or if else?
-        if (ar.getRequiredInput() != null) writeChildrenNode(writer, context, ar.getRequiredInput());
-        if (ar.getRequiredAuthority() != null) writeChildrenNode(writer, context, ar.getRequiredAuthority());
+        if (ar.getRequiredInput() != null) writeChildrenNode(writer, context, ar.getRequiredInput(), REQUIRED_INPUT);
+        if (ar.getRequiredAuthority() != null) writeChildrenNode(writer, context, ar.getRequiredAuthority(), REQUIRED_AUTHORITY);
     }
 
     @Override

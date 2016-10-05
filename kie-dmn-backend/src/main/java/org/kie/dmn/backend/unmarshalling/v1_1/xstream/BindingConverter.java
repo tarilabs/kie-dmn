@@ -10,14 +10,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class BindingConverter extends DMNModelInstrumentedBaseConverter {
+    public static final String EXPRESSION = "expression";
+    public static final String PARAMETER = "parameter";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         Binding b = (Binding) parent;
         
-        if ("parameter".equals(nodeName)) {
+        if (PARAMETER.equals(nodeName)) {
             b.setParameter((InformationItem) child);
-        } else if ("expression".equals(nodeName)) {
+        } else if (EXPRESSION.equals(nodeName)) {
             b.setExpression((Expression) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -36,8 +38,8 @@ public class BindingConverter extends DMNModelInstrumentedBaseConverter {
         super.writeChildren(writer, context, parent);
         Binding b = (Binding) parent;
         
-        writeChildrenNode(writer, context, b.getParameter());
-        if (b.getExpression() != null) writeChildrenNode(writer, context, b.getExpression());
+        writeChildrenNode(writer, context, b.getParameter(), PARAMETER);
+        if (b.getExpression() != null) writeChildrenNode(writer, context, b.getExpression(), EXPRESSION);
     }
 
     @Override

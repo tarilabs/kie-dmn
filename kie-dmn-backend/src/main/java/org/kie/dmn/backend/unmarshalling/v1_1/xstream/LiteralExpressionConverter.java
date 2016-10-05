@@ -27,6 +27,8 @@ import org.kie.dmn.feel.model.v1_1.LiteralExpression;
 public class LiteralExpressionConverter
         extends ExpressionConverter {
 
+    public static final String IMPORTED_VALUES = "importedValues";
+    public static final String TEXT = "text";
     public static final String EXPR_LANGUAGE = "expressionLanguage";
 
     public LiteralExpressionConverter(XStream xstream) {
@@ -41,9 +43,9 @@ public class LiteralExpressionConverter
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         LiteralExpression le = (LiteralExpression)parent;
         
-        if( "text".equals( nodeName ) ) {
+        if( TEXT.equals( nodeName ) ) {
             le.setText( (String) child );
-        } else if( "importedValues".equals( nodeName ) ) {
+        } else if( IMPORTED_VALUES.equals( nodeName ) ) {
             le.setImportedValues( (ImportedValues) child );
         } else {
             super.assignChildElement( parent, nodeName, child );
@@ -70,9 +72,9 @@ public class LiteralExpressionConverter
         super.writeChildren(writer, context, parent);
         LiteralExpression le = (LiteralExpression) parent;
         
-        if ( le.getText() != null ) writeChildrenNodeAsValue(writer, context, le.getText(), "text");
+        if ( le.getText() != null ) writeChildrenNodeAsValue(writer, context, le.getText(), TEXT);
         // TODO Or if-else ?
-        if ( le.getImportedValues() != null ) writeChildrenNode(writer, context, le.getImportedValues());
+        if ( le.getImportedValues() != null ) writeChildrenNode(writer, context, le.getImportedValues(), IMPORTED_VALUES);
     }
 
     @Override

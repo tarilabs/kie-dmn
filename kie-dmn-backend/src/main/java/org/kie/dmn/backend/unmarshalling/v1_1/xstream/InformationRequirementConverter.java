@@ -67,11 +67,11 @@ public class InformationRequirementConverter
         InformationRequirement ir = (InformationRequirement) parent;
         
         if ( ir.getRequiredDecision() != null ) {
-            writeChildrenNode(writer, context, ir.getRequiredDecision());
+            writeChildrenNode(writer, context, ir.getRequiredDecision(), REQUIRED_DECISION);
         }
         // TODO or if else ?
         if ( ir.getRequiredInput() != null ) {
-            writeChildrenNode(writer, context, ir.getRequiredInput());
+            writeChildrenNode(writer, context, ir.getRequiredInput(), REQUIRED_INPUT);
         }
     }
 

@@ -21,6 +21,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import java.util.List;
+
 import org.kie.dmn.feel.model.v1_1.*;
 
 public class DefinitionsConverter
@@ -30,6 +32,13 @@ public class DefinitionsConverter
     private static final String NAMESPACE           = "namespace";
     private static final String EXPORTER            = "exporter";
     private static final String EXPORTER_VERSION    = "exporterVersion";
+    
+    public static final String IMPORT = "import";
+    public static final String ITEM_DEFINITION = "itemDefinition";
+    public static final String DRG_ELEMENT = "drgElement";
+    public static final String ARTIFACT = "artifact";
+    public static final String ELEMENT_COLLECTION = "elementCollection";
+    public static final String BUSINESS_CONTEXT_ELEMENT = "businessContextElement";
 
     public DefinitionsConverter(XStream xstream) {
         super( xstream );
@@ -79,22 +88,22 @@ public class DefinitionsConverter
         Definitions def = (Definitions) parent;
         
         for ( Import i : def.getImport() ) {
-            writeChildrenNode(writer, context, i);
+            writeChildrenNode(writer, context, i, IMPORT);
         }
         for ( ItemDefinition id : def.getItemDefinition() ) {
-            writeChildrenNode(writer, context, id);
+            writeChildrenNode(writer, context, id, ITEM_DEFINITION);
         }
         for ( DRGElement e : def.getDrgElement() ) {
-            writeChildrenNode(writer, context, e);
+            writeChildrenNode(writer, context, e, DRG_ELEMENT);
         }
         for ( Artifact a : def.getArtifact() ) {
-            writeChildrenNode(writer, context, a);
+            writeChildrenNode(writer, context, a, ARTIFACT);
         }
         for ( ElementCollection ec : def.getElementCollection() ) {
-            writeChildrenNode(writer, context, ec);
+            writeChildrenNode(writer, context, ec, ELEMENT_COLLECTION);
         }
         for ( BusinessContextElement bce : def.getBusinessContextElement() ) {
-            writeChildrenNode(writer, context, bce);
+            writeChildrenNode(writer, context, bce, BUSINESS_CONTEXT_ELEMENT);
         }
     }
 

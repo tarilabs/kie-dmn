@@ -8,13 +8,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class TextAnnotationConverter extends ArtifactConverter {
+    public static final String TEXT = "text";
     public static final String TEXT_FORMAT = "textFormat";
     
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         TextAnnotation ta = (TextAnnotation) parent;
         
-        if ("text".equals(nodeName)) {
+        if (TEXT.equals(nodeName)) {
             ta.setText((String) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -36,7 +37,7 @@ public class TextAnnotationConverter extends ArtifactConverter {
         super.writeChildren(writer, context, parent);
         TextAnnotation ta = (TextAnnotation) parent;
         
-        if (ta.getText() != null) writeChildrenNode(writer, context, ta.getText());
+        if (ta.getText() != null) writeChildrenNode(writer, context, ta.getText(), TEXT);
     }
 
     @Override

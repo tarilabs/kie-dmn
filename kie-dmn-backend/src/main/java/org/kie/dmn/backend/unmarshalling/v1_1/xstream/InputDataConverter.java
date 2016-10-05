@@ -65,7 +65,7 @@ public class InputDataConverter
         InputData id = (InputData) parent;
         
         if ( id.getVariable() != null ) {
-            writeChildrenNode(writer, context, id.getVariable());
+            writeChildrenNode(writer, context, id.getVariable(), VARIABLE);
         }
     }
 

@@ -10,14 +10,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class FunctionDefinitionConverter extends ExpressionConverter {
-    
+    public static final String EXPRESSION = "expression";
+    public static final String FORMAL_PARAMETER = "formalParameter";
+
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         FunctionDefinition fd = (FunctionDefinition) parent;
         
-        if ("formalParameter".equals(nodeName)) {
+        if (FORMAL_PARAMETER.equals(nodeName)) {
             fd.getFormalParameter().add((InformationItem) child);
-        } else if ("expression".equals(nodeName)) {
+        } else if (EXPRESSION.equals(nodeName)) {
             fd.setExpression((Expression) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -37,9 +39,9 @@ public class FunctionDefinitionConverter extends ExpressionConverter {
         FunctionDefinition fd = (FunctionDefinition) parent;
         
         for (InformationItem fparam : fd.getFormalParameter()) {
-            writeChildrenNode(writer, context, fparam);
+            writeChildrenNode(writer, context, fparam, FORMAL_PARAMETER);
         }
-        if (fd.getExpression() != null) writeChildrenNode(writer, context, fd.getExpression());
+        if (fd.getExpression() != null) writeChildrenNode(writer, context, fd.getExpression(), EXPRESSION);
     }
 
     @Override

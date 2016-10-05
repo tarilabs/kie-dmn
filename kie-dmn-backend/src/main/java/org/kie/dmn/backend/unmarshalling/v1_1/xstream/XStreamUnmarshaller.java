@@ -77,6 +77,7 @@ public class XStreamUnmarshaller
             xStream.alias(alias.getValue(), alias.getKey());
         }
 
+        xStream.registerConverter( new AssociationConverter( xStream ) );
         xStream.registerConverter( new DefinitionsConverter( xStream ) );
         xStream.registerConverter( new DecisionConverter( xStream ) );
         xStream.registerConverter( new InputDataConverter( xStream ) );

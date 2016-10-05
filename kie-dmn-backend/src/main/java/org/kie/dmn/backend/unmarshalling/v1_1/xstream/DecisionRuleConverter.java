@@ -10,13 +10,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class DecisionRuleConverter extends DMNElementConverter {
+    public static final String OUTPUT_ENTRY = "outputEntry";
+    public static final String INPUT_ENTRY = "inputEntry";
+
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         DecisionRule dr = (DecisionRule) parent;
 
-        if ("inputEntry".equals(nodeName)) {
+        if (INPUT_ENTRY.equals(nodeName)) {
             dr.getInputEntry().add((UnaryTests) child);
-        } else if ("outputEntry".equals(nodeName)) {
+        } else if (OUTPUT_ENTRY.equals(nodeName)) {
             dr.getOutputEntry().add((LiteralExpression) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -36,10 +39,10 @@ public class DecisionRuleConverter extends DMNElementConverter {
         DecisionRule dr = (DecisionRule) parent;
         
         for (UnaryTests ie : dr.getInputEntry()) {
-            writeChildrenNode(writer, context, ie);
+            writeChildrenNode(writer, context, ie, INPUT_ENTRY);
         }
         for (LiteralExpression oe : dr.getOutputEntry()) {
-            writeChildrenNode(writer, context, oe);
+            writeChildrenNode(writer, context, oe, OUTPUT_ENTRY);
         }
     }
 

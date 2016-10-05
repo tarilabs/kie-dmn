@@ -10,13 +10,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ContextEntryConverter extends DMNModelInstrumentedBaseConverter {
+    public static final String EXPRESSION = "expression";
+    public static final String VARIABLE = "variable";
+
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         ContextEntry ce = (ContextEntry) parent;
         
-        if ("variable".equals(nodeName)) {
+        if (VARIABLE.equals(nodeName)) {
             ce.setVariable((InformationItem) child);
-        } else if ("expression".equals(nodeName)) {
+        } else if (EXPRESSION.equals(nodeName)) {
             ce.setExpression((Expression) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -35,8 +38,8 @@ public class ContextEntryConverter extends DMNModelInstrumentedBaseConverter {
         super.writeChildren(writer, context, parent);
         ContextEntry ce = (ContextEntry) parent;
         
-        if (ce.getVariable() != null) writeChildrenNode(writer, context, ce.getVariable());
-        writeChildrenNode(writer, context, ce.getExpression());
+        if (ce.getVariable() != null) writeChildrenNode(writer, context, ce.getVariable(), VARIABLE);
+        writeChildrenNode(writer, context, ce.getExpression(), EXPRESSION);
     }
 
     @Override

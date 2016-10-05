@@ -9,12 +9,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class KnowledgeRequirementConverter extends DMNModelInstrumentedBaseConverter {
+    public static final String REQUIRED_KNOWLEDGE = "requiredKnowledge";
 
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         KnowledgeRequirement kr = (KnowledgeRequirement) parent;
         
-        if ("requiredKnowledge".equals(nodeName)) {
+        if (REQUIRED_KNOWLEDGE.equals(nodeName)) {
             kr.setRequiredKnowledge((DMNElementReference) child);
         } else {
             super.assignChildElement(parent, nodeName, child);
@@ -33,7 +34,7 @@ public class KnowledgeRequirementConverter extends DMNModelInstrumentedBaseConve
         super.writeChildren(writer, context, parent);
         KnowledgeRequirement kr = (KnowledgeRequirement) parent;
         
-        writeChildrenNode(writer, context, kr.getRequiredKnowledge());
+        writeChildrenNode(writer, context, kr.getRequiredKnowledge(), REQUIRED_KNOWLEDGE);
     }
 
     @Override
