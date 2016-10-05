@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 import org.junit.Test;
 import org.kie.dmn.backend.unmarshalling.v1_1.xstream.XStreamUnmarshaller;
+import org.kie.dmn.feel.model.v1_1.Association;
 import org.kie.dmn.feel.model.v1_1.DMNElementReference;
 import org.kie.dmn.feel.model.v1_1.Definitions;
 
@@ -20,5 +21,19 @@ public class MatteoTest {
         final Definitions def = marshaller.unmarshal( isr );
         
         marshaller.marshal(def);
+    }
+    
+    @Test
+    public void ambiguosMarshallingTest() {
+        XStreamUnmarshaller marshaller = new XStreamUnmarshaller();
+
+        Association a = new Association();
+        DMNElementReference sourceRef = new DMNElementReference();
+        sourceRef.setHref("#source");
+        DMNElementReference targetRef = new DMNElementReference();
+        targetRef.setHref("#target");
+        a.setSourceRef(sourceRef);
+        a.setTargetRef(targetRef);
+        marshaller.marshal(a);
     }
 }
