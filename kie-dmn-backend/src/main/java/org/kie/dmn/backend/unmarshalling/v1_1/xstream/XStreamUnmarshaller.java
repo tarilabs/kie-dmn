@@ -30,18 +30,6 @@ import java.util.Map.Entry;
 
 public class XStreamUnmarshaller
         implements Unmarshaller {
-    
-    public static final Map<Class, String> ALIASES = new HashMap<>();
-    static {
-        ALIASES.put( Definitions.class, "definitions" );                        
-        ALIASES.put( InputData.class, "inputData" );                            
-        ALIASES.put( Decision.class, "decision" );                              
-        ALIASES.put( InformationItem.class, "variable" );                       
-        ALIASES.put( InformationRequirement.class, "informationRequirement" );  
-        ALIASES.put( DMNElementReference.class, "requiredInput" );              
-        ALIASES.put( LiteralExpression.class, "literalExpression" );            
-        ALIASES.put( String.class, "text" );                                    
-    }
 
     @Override
     public Definitions unmarshal(String xml) {
@@ -70,21 +58,150 @@ public class XStreamUnmarshaller
             e.printStackTrace();
         }
     }
-
+    
     private XStream newXStream() {
         XStream xStream = new XStream();
-        for ( Entry<Class, String> alias : ALIASES.entrySet() ) {
-            xStream.alias(alias.getValue(), alias.getKey());
-        }
+        xStream.alias( "artifact", Artifact.class );
+        xStream.alias( "definitions", Definitions.class );
+        xStream.alias( "inputData", InputData.class );
+        xStream.alias( "decision", Decision.class );
+        xStream.alias( "variable", InformationItem.class );
+        xStream.alias( "informationRequirement", InformationRequirement.class );
+        xStream.alias( "requiredInput", DMNElementReference.class );
+        xStream.alias( "literalExpression", LiteralExpression.class );
+        
+        // TODO will need to remove dups and find missing element not captured?
+        xStream.alias("DMNElement", DMNElement.class );
+//        xStream.alias("description", xsd:string.class );
+        xStream.alias("namedElement", NamedElement.class );
+        xStream.alias("definitions", Definitions.class );
+        xStream.alias("import", Import.class );
+        xStream.alias("itemDefinition", ItemDefinition.class );
+        xStream.alias("elementCollection", ElementCollection.class );
+        xStream.alias("import", Import.class );
+        xStream.alias("elementCollection", ElementCollection.class );
+        xStream.alias("drgElement", DMNElementReference.class );
+        xStream.alias("drgElement", DRGElement.class );
+        xStream.alias("decision", Decision.class );
+//        xStream.alias("question", xsd:string.class );
+//        xStream.alias("allowedAnswers", xsd:string.class );
+        xStream.alias("variable", InformationItem.class );
+        xStream.alias("informationRequirement", InformationRequirement.class );
+        xStream.alias("knowledgeRequirement", KnowledgeRequirement.class );
+        xStream.alias("authorityRequirement", AuthorityRequirement.class );
+        xStream.alias("supportedObjective", DMNElementReference.class );
+        xStream.alias("impactedPerformanceIndicator", DMNElementReference.class );
+        xStream.alias("decisionMaker", DMNElementReference.class );
+        xStream.alias("decisionOwner", DMNElementReference.class );
+        xStream.alias("usingProcess", DMNElementReference.class );
+        xStream.alias("usingTask", DMNElementReference.class );
+        xStream.alias("businessContextElement", BusinessContextElement.class );
+        xStream.alias("performanceIndicator", PerformanceIndicator.class );
+        xStream.alias("impactingDecision", DMNElementReference.class );
+        xStream.alias("organizationUnit", OrganizationUnit.class );
+        xStream.alias("decisionMade", DMNElementReference.class );
+        xStream.alias("decisionOwned", DMNElementReference.class );
+        xStream.alias("businessKnowledgeModel", BusinessKnowledgeModel.class );
+        xStream.alias("encapsulatedLogic", FunctionDefinition.class );
+        xStream.alias("variable", InformationItem.class );
+        xStream.alias("knowledgeRequirement", KnowledgeRequirement.class );
+        xStream.alias("authorityRequirement", AuthorityRequirement.class );
+        xStream.alias("inputData", InputData.class );
+        xStream.alias("variable", InformationItem.class );
+        xStream.alias("knowledgeSource", KnowledgeSource.class );
+        xStream.alias("authorityRequirement", AuthorityRequirement.class );
+        // TODO where?
+        xStream.alias("type", String.class );
+        xStream.alias("owner", DMNElementReference.class );
+        xStream.alias("requiredDecision", DMNElementReference.class );
+        xStream.alias("requiredInput", DMNElementReference.class );
+        xStream.alias("requiredKnowledge", DMNElementReference.class );
+        xStream.alias("requiredDecision", DMNElementReference.class );
+        xStream.alias("requiredInput", DMNElementReference.class );
+        xStream.alias("requiredAuthority", DMNElementReference.class );
+        xStream.alias("expression", Expression.class );
+        xStream.alias("itemDefinition", ItemDefinition.class );
+        xStream.alias("typeRef", QName.class );
+        xStream.alias("allowedValues", UnaryTests.class );
+        xStream.alias("itemComponent", ItemDefinition.class );
+        xStream.alias("literalExpression", LiteralExpression.class );
+//        xStream.alias("text", xsd:string.class );
+        xStream.alias("importedValues", ImportedValues.class );
+        xStream.alias("invocation", Invocation.class );
+        xStream.alias("binding", Binding.class );
+        xStream.alias("parameter", InformationItem.class );
+        xStream.alias("informationItem", InformationItem.class );
+        xStream.alias("decisionTable", DecisionTable.class );
+        xStream.alias("input", InputClause.class );
+        xStream.alias("output", OutputClause.class );
+        xStream.alias("rule", DecisionRule.class );
+        xStream.alias("inputEntry", UnaryTests.class );
+        xStream.alias("outputEntry", LiteralExpression.class );
+        // TODO where?
+        xStream.alias("importedElement", String.class );
+        xStream.alias("artifact", Artifact.class );
+        xStream.alias("textAnnotation", TextAnnotation.class );
+//        xStream.alias("text", xsd:string.class );
+        xStream.alias("association", Association.class );
+        xStream.alias("sourceRef", DMNElementReference.class );
+        xStream.alias("targetRef", DMNElementReference.class );
+        xStream.alias("outputValues", UnaryTests.class );
+        xStream.alias("defaultOutputEntry", LiteralExpression.class );
+        xStream.alias("inputExpression", LiteralExpression.class );
+        xStream.alias("inputValues", UnaryTests.class );
+        xStream.alias("context", Context.class );
+        xStream.alias("contextEntry", ContextEntry.class );
+        xStream.alias("variable", InformationItem.class );
+        xStream.alias("functionDefinition", FunctionDefinition.class );
+        xStream.alias("formalParameter", InformationItem.class );
+        xStream.alias("relation", Relation.class );
+        xStream.alias("column", InformationItem.class );
+//        xStream.alias("row", List.class );
+//        xStream.alias("list", List.class );
+//        xStream.alias("text", xsd:string.class );
+        xStream.alias("decisionService", DecisionService.class );
+        xStream.alias("outputDecision", DMNElementReference.class );
+        xStream.alias("encapsulatedDecision", DMNElementReference.class );
+        xStream.alias("inputDecision", DMNElementReference.class );
+        xStream.alias("inputData", DMNElementReference.class );
 
-        xStream.registerConverter( new AssociationConverter( xStream ) );
-        xStream.registerConverter( new DefinitionsConverter( xStream ) );
-        xStream.registerConverter( new DecisionConverter( xStream ) );
-        xStream.registerConverter( new InputDataConverter( xStream ) );
-        xStream.registerConverter( new InformationItemConverter( xStream ) );
-        xStream.registerConverter( new InformationRequirementConverter( xStream ) );
-        xStream.registerConverter( new DMNElementReferenceConverter( xStream ) );
-        xStream.registerConverter( new LiteralExpressionConverter( xStream ) );
+
+        // Manually imported TEXT = String
+        xStream.alias( LiteralExpressionConverter.TEXT, String.class );
+        xStream.alias( TextAnnotationConverter.TEXT, String.class );
+        xStream.alias( UnaryTestsConverter.TEXT, String.class );
+        xStream.alias( DecisionConverter.QUESTION, String.class );
+        xStream.alias( DecisionConverter.ALLOWED_ANSWERS, String.class );
+        xStream.alias( DMNElementConverter.DESCRIPTION, String.class );
+
+        xStream.registerConverter(new AssociationConverter( xStream ) );
+        xStream.registerConverter(new AuthorityRequirementConverter( xStream ) );
+        xStream.registerConverter(new BindingConverter( xStream ) );
+        xStream.registerConverter(new ContextConverter( xStream ) );
+        xStream.registerConverter(new ContextEntryConverter( xStream ) );
+        xStream.registerConverter(new DecisionConverter( xStream ) );
+        xStream.registerConverter(new DecisionRuleConverter( xStream ) );
+        xStream.registerConverter(new DecisionTableConverter( xStream ) );
+        xStream.registerConverter(new DefinitionsConverter( xStream ) );
+        xStream.registerConverter(new DMNElementReferenceConverter( xStream ) );
+        xStream.registerConverter(new FunctionDefinitionConverter( xStream ) );
+        xStream.registerConverter(new ImportConverter( xStream ) );
+        xStream.registerConverter(new ImportedValuesConverter( xStream ) );
+        xStream.registerConverter(new InformationItemConverter( xStream ) );
+        xStream.registerConverter(new InformationRequirementConverter( xStream ) );
+        xStream.registerConverter(new InputClauseConverter( xStream ) );
+        xStream.registerConverter(new InputDataConverter( xStream ) );
+        xStream.registerConverter(new InvocationConverter( xStream ) );
+        xStream.registerConverter(new ItemDefinitionConverter( xStream ) );
+        xStream.registerConverter(new KnowledgeRequirementConverter( xStream ) );
+        xStream.registerConverter(new KnowledgeSourceConverter( xStream ) );
+        xStream.registerConverter(new LiteralExpressionConverter( xStream ) );
+        xStream.registerConverter(new OrganizationUnitConverter( xStream ) );
+        xStream.registerConverter(new OutputClauseConverter( xStream ) );
+        xStream.registerConverter(new PerformanceIndicatorConverter( xStream ) );
+        xStream.registerConverter(new RelationConverter( xStream ) );
+        xStream.registerConverter(new TextAnnotationConverter( xStream ) );
+        xStream.registerConverter(new UnaryTestsConverter( xStream ) );
         return xStream;
     }
 

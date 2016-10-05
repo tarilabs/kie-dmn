@@ -59,7 +59,7 @@ public class InvocationConverter extends ExpressionConverter {
 
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals( Converter.class );
+        return clazz.equals( Invocation.class );
     }
 
 }

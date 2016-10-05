@@ -25,9 +25,9 @@ import org.kie.dmn.feel.model.v1_1.DMNElement;
 
 public abstract class DMNElementConverter
         extends DMNBaseConverter {
-    private static final String ID          = "id";
-    private static final String LABEL       = "label";
-    private static final String DESCRIPTION = "description";
+    public static final String ID          = "id";
+    public static final String LABEL       = "label";
+    public static final String DESCRIPTION = "description";
 
     public DMNElementConverter(XStream xstream) {
         super( xstream.getMapper() );

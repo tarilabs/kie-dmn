@@ -36,4 +36,10 @@ public class MatteoTest {
         a.setTargetRef(targetRef);
         marshaller.marshal(a);
     }
+    
+    @Test
+    public void variousTest() {
+        XStreamUnmarshaller marshaller = new XStreamUnmarshaller();
+        marshaller.unmarshal( new InputStreamReader( this.getClass().getResourceAsStream( "/ch11example.xml" ) ) );
+    }
 }
