@@ -110,8 +110,7 @@ public class XStreamUnmarshaller
         xStream.alias("variable", InformationItem.class );
         xStream.alias("knowledgeSource", KnowledgeSource.class );
         xStream.alias("authorityRequirement", AuthorityRequirement.class );
-        // TODO where?
-        xStream.alias("type", String.class );
+        xStream.alias("type", String.class ); // TODO where?
         xStream.alias("owner", DMNElementReference.class );
         xStream.alias("requiredDecision", DMNElementReference.class );
         xStream.alias("requiredInput", DMNElementReference.class );
@@ -137,8 +136,7 @@ public class XStreamUnmarshaller
         xStream.alias("rule", DecisionRule.class );
         xStream.alias("inputEntry", UnaryTests.class );
         xStream.alias("outputEntry", LiteralExpression.class );
-        // TODO where?
-        xStream.alias("importedElement", String.class );
+        xStream.alias("importedElement", String.class ); // TODO where?
         xStream.alias("artifact", Artifact.class );
         xStream.alias("textAnnotation", TextAnnotation.class );
 //        xStream.alias("text", xsd:string.class );
