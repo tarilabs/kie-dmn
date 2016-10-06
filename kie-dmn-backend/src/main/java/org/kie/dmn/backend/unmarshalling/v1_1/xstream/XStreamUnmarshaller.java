@@ -17,19 +17,66 @@
 package org.kie.dmn.backend.unmarshalling.v1_1.xstream;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.xml.Dom4JDriver;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.QNameMap;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.StaxWriter;
+
+import javanet.staxutils.StaxUtilsXMLOutputFactory;
 
 import org.kie.dmn.feel.model.v1_1.*;
 import org.kie.dmn.unmarshalling.v1_1.Unmarshaller;
+import org.xml.sax.InputSource;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+
 public class XStreamUnmarshaller
         implements Unmarshaller {
+
+    private static StaxDriver staxDriver;
+    static {
+        QNameMap qmap = new QNameMap();
+        qmap.setDefaultNamespace("http://www.omg.org/spec/DMN/20151101/dmn.xsd");
+        qmap.registerMapping(new QName("http://www.omg.org/spec/FEEL/20140401", "feel", "feel"), Void.class); // FIXME boh.
+        
+        staxDriver = new StaxDriver() {
+
+            private XMLOutputFactory outputFactory = null;
+
+            public XMLOutputFactory getOutputFactory() {
+                if (outputFactory == null) {
+                    XMLOutputFactory factory = new StaxUtilsXMLOutputFactory(super.getOutputFactory());
+                    factory.setProperty(StaxUtilsXMLOutputFactory.INDENTING, Boolean.TRUE);
+                    outputFactory = factory;
+                }
+                return outputFactory;
+            }
+        };
+        staxDriver.setQnameMap(qmap);
+    }
 
     @Override
     public Definitions unmarshal(String xml) {
@@ -53,14 +100,46 @@ public class XStreamUnmarshaller
     public void marshal(Object o) {
         try {
             XStream xStream = newXStream();
-            xStream.toXML(o, System.out);
+            String xml = xStream.toXML(o);
+            System.out.println(xml);
+            System.out.println(formatXml(xml));
         } catch ( Exception e ) {
             e.printStackTrace();
         }
     }
     
+    public void marshalNew(Object o) {
+        marshal(o, System.out);
+    }
+    
+    public void marshal(Object o, OutputStream out) {
+        try {
+            XStream xStream = newXStream();
+//            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
+//            OutputStreamWriter ows = new OutputStreamWriter(out, "UTF-8");
+            xStream.marshal(o, staxDriver.createWriter(out) );
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String formatXml(String xml){
+        try{
+           Transformer serializer= SAXTransformerFactory.newInstance().newTransformer();
+           serializer.setOutputProperty(OutputKeys.INDENT, "yes");         
+           serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+           Source xmlSource=new SAXSource(new InputSource(new ByteArrayInputStream(xml.getBytes())));
+           StreamResult res =  new StreamResult(new ByteArrayOutputStream());            
+           serializer.transform(xmlSource, res);
+           return new String(((ByteArrayOutputStream)res.getOutputStream()).toByteArray());
+        }catch(Exception e){   
+           return xml;
+        }
+     }
+    
     private XStream newXStream() {
-        XStream xStream = new XStream();
+
+        XStream xStream = new XStream( staxDriver );
         xStream.alias( "artifact", Artifact.class );
         xStream.alias( "definitions", Definitions.class );
         xStream.alias( "inputData", InputData.class );

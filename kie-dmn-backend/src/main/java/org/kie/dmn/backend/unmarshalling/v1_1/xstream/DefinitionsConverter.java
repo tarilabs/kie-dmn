@@ -51,9 +51,18 @@ public class DefinitionsConverter
     @Override
     protected void assignChildElement(Object parent, String nodeName, Object child) {
         Definitions def = (Definitions) parent;
-        if ( child instanceof InputData || child instanceof BusinessKnowledgeModel ||
-             child instanceof Decision || child instanceof KnowledgeSource ) {
+        if ( IMPORT.equals(nodeName) ) {
+            def.getImport().add((Import) child);
+        } else if (ITEM_DEFINITION.equals(nodeName)) {
+            def.getItemDefinition().add((ItemDefinition) child);
+        } else if (child instanceof DRGElement) {
             def.getDrgElement().add( (DRGElement) child );
+        } else if (child instanceof Artifact) {
+            def.getArtifact().add((Artifact) child);
+        } else if (ELEMENT_COLLECTION.equals(nodeName)) {
+            def.getElementCollection().add((ElementCollection) child);
+        } else if (child instanceof BusinessContextElement ) {
+            def.getBusinessContextElement().add((BusinessContextElement) child);
         } else {
             super.assignChildElement( def, nodeName, child );
         }
@@ -94,16 +103,38 @@ public class DefinitionsConverter
             writeChildrenNode(writer, context, id, ITEM_DEFINITION);
         }
         for ( DRGElement e : def.getDrgElement() ) {
-            writeChildrenNode(writer, context, e, DRG_ELEMENT);
+            String nodeName = DRG_ELEMENT;
+            if (e instanceof BusinessKnowledgeModel) {
+                nodeName = "businessKnowledgeModel";
+            } else if (e instanceof Decision) {
+                nodeName = "decision";
+            } else if (e instanceof InputData) {
+                nodeName = "inputData";
+            } else if (e instanceof KnowledgeSource) {
+                nodeName = "knowledgeSource";
+            }
+            writeChildrenNode(writer, context, e, nodeName);
         }
         for ( Artifact a : def.getArtifact() ) {
-            writeChildrenNode(writer, context, a, ARTIFACT);
+            String nodeName = ARTIFACT;
+            if (a instanceof Association) {
+                nodeName = "association";
+            } else if (a instanceof TextAnnotation) {
+                nodeName = "textAnnotation";
+            }
+            writeChildrenNode(writer, context, a, nodeName);
         }
         for ( ElementCollection ec : def.getElementCollection() ) {
             writeChildrenNode(writer, context, ec, ELEMENT_COLLECTION);
         }
         for ( BusinessContextElement bce : def.getBusinessContextElement() ) {
-            writeChildrenNode(writer, context, bce, BUSINESS_CONTEXT_ELEMENT);
+            String nodeName = BUSINESS_CONTEXT_ELEMENT;
+            if (bce instanceof OrganizationUnit) {
+                nodeName = "organizationUnit";
+            } else if (bce instanceof PerformanceIndicator) {
+                nodeName = "performanceIndicator";
+            }
+            writeChildrenNode(writer, context, bce, nodeName);
         }
     }
 
