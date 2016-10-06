@@ -24,12 +24,18 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.List;
 
 import org.kie.dmn.feel.model.v1_1.AuthorityRequirement;
+import org.kie.dmn.feel.model.v1_1.Context;
 import org.kie.dmn.feel.model.v1_1.DMNElementReference;
 import org.kie.dmn.feel.model.v1_1.Decision;
+import org.kie.dmn.feel.model.v1_1.DecisionTable;
 import org.kie.dmn.feel.model.v1_1.Expression;
+import org.kie.dmn.feel.model.v1_1.FunctionDefinition;
 import org.kie.dmn.feel.model.v1_1.InformationItem;
 import org.kie.dmn.feel.model.v1_1.InformationRequirement;
+import org.kie.dmn.feel.model.v1_1.Invocation;
 import org.kie.dmn.feel.model.v1_1.KnowledgeRequirement;
+import org.kie.dmn.feel.model.v1_1.LiteralExpression;
+import org.kie.dmn.feel.model.v1_1.Relation;
 
 public class DecisionConverter extends DRGElementConverter {
     public static final String QUESTION = "question";
@@ -82,7 +88,7 @@ public class DecisionConverter extends DRGElementConverter {
             dec.getUsingProcess().add((DMNElementReference) child);
         } else if (USING_TASK.equals(nodeName) ) {
             dec.getUsingTask().add((DMNElementReference) child);
-        } else if (EXPRESSION.equals(nodeName) ) {
+        } else if ( child instanceof Expression ) {
             dec.setExpression( (Expression) child );
         } else {
             super.assignChildElement( dec, nodeName, child );
@@ -136,7 +142,24 @@ public class DecisionConverter extends DRGElementConverter {
         for ( DMNElementReference ut : dec.getUsingTask() ) {
             writeChildrenNode(writer, context, ut, USING_TASK);
         }
-        if (dec.getExpression() != null) writeChildrenNode(writer, context, dec.getExpression(), EXPRESSION);
+        if (dec.getExpression() != null) {
+            Expression e = dec.getExpression();
+            String nodeName = EXPRESSION;
+            if (e instanceof Context) {
+                nodeName = "context";
+            } else if (e instanceof DecisionTable) {
+                nodeName = "decisionTable";
+            } else if (e instanceof FunctionDefinition) {
+                nodeName = "functionDefinition";
+            } else if (e instanceof Invocation) {
+                nodeName = "invocation";
+            } else if (e instanceof LiteralExpression) {
+                nodeName = "literalExpression";
+            } else if (e instanceof Relation) {
+                nodeName = "relation";
+            }
+            writeChildrenNode(writer, context, dec.getExpression(), nodeName);
+        }
     }
     @Override
     protected void writeAttributes(HierarchicalStreamWriter writer, Object parent) {

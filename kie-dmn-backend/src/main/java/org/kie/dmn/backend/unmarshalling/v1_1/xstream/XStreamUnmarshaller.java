@@ -98,21 +98,31 @@ public class XStreamUnmarshaller
     }
     
     public void marshal(Object o) {
+        marshal(o, System.out);
+    }
+    
+    public void marshal(Object o, OutputStream out) {
         try {
             XStream xStream = newXStream();
             String xml = xStream.toXML(o);
-            System.out.println(xml);
-            System.out.println(formatXml(xml));
+            out.write(xml.getBytes());
         } catch ( Exception e ) {
             e.printStackTrace();
         }
     }
     
-    public void marshalNew(Object o) {
+    /** 
+     * Unnecessary as was a tentative UTF-8 preamble output but still not working.
+     */
+    @Deprecated
+    public void marshalMarshall(Object o) {
         marshal(o, System.out);
     }
-    
-    public void marshal(Object o, OutputStream out) {
+    /** 
+     * Unnecessary as was a tentative UTF-8 preamble output but still not working.
+     */
+    @Deprecated
+    public void marshalMarshall(Object o, OutputStream out) {
         try {
             XStream xStream = newXStream();
 //            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
@@ -123,6 +133,10 @@ public class XStreamUnmarshaller
         }
     }
     
+    /** 
+     * Unnecessary as the stax driver custom anon as static definition is embedding the indentation.
+     */
+    @Deprecated
     public static String formatXml(String xml){
         try{
            Transformer serializer= SAXTransformerFactory.newInstance().newTransformer();
@@ -138,7 +152,6 @@ public class XStreamUnmarshaller
      }
     
     private XStream newXStream() {
-
         XStream xStream = new XStream( staxDriver );
         xStream.alias( "artifact", Artifact.class );
         xStream.alias( "definitions", Definitions.class );
