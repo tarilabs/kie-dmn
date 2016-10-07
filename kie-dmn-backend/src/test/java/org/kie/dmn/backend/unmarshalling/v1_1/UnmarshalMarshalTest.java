@@ -56,10 +56,15 @@ public class UnmarshalMarshalTest {
         testRoundTrip("", "dish-decision.xml");
     }
     
-    @Ignore("Still some converter issues..")
     @Test
     public void testCh11() throws Exception {
         testRoundTrip("", "ch11example.xml");
+    }
+    
+    @Ignore("A problem with the StaxDriver has still to be resolved.")
+    @Test
+    public void testFAILforMissingNamespaces() {
+        fail("PERFORM A MANUAL CHECK: does now the Stax driver do output the namespace for 'feel:' ?? ");
     }
 
     public void testRoundTrip(String subdir, String xmlfile) throws Exception {
@@ -119,7 +124,7 @@ public class UnmarshalMarshalTest {
                 new QName("preferredOrientation")
                 }));
         Set<String> nodeHavingDefaultableAttr = new HashSet<>();
-        nodeHavingDefaultableAttr.addAll(Arrays.asList(new String[]{"definitions", "decisionTable", "itemDefinition"}));
+        nodeHavingDefaultableAttr.addAll(Arrays.asList(new String[]{"definitions", "decisionTable", "itemDefinition", "itemComponent"}));
         Diff checkSimilar = DiffBuilder
                 .compare( control )
                 .withTest( test )
