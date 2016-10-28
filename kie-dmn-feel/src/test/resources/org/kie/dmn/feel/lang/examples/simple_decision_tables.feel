@@ -36,10 +36,22 @@
                                 hit policy: "Unique"
                             ),
    
+   // not sure if Input Expression List is expecting a list of Strings or should be some tokens?                         
+   multipleInOut : decision table (
+                                outputs: ["Out1", "Out2"],
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ <47, >1,      "io1a",  "io2a" ],
+                                    [ >0,  >0,      "io1b",  "io2b" ]
+                                ],
+                                hit policy: "Unique"
+                            ),
+   
    
    result : myDecisionTable( 34 ),
    result2: biggerDecisionTable( 35, "good" ),
    result3: multipleOutputs(2),
+   result4: multipleInOut(In2: 47, In1:2),
    
    basic : 1 = 1        
 }

@@ -19,9 +19,11 @@ package org.kie.dmn.feel.runtime.functions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.runtime.Range;
 import org.kie.dmn.feel.runtime.UnaryTest;
 import org.slf4j.Logger;
@@ -44,7 +46,8 @@ public class DecisionTableFunction
                 .collect(Collectors.toList());
         
         // TODO shoud the name be the information item?
-        return new ConcreteDTFunction("dt", decisionRules);
+        // TODO what if inputExpressionList does not contain only strings?
+        return new ConcreteDTFunction(UUID.randomUUID().toString(), inputExpressionList, decisionRules);
     }
     
     public static DecisionRule toDecisionRule(List<?> rule, int inputSize) {
@@ -88,13 +91,15 @@ public class DecisionTableFunction
     
     public static class ConcreteDTFunction extends BaseFEELFunction {
         private List<DecisionRule> decisionRules;
+        private List<String> inputs;
 
-        public ConcreteDTFunction(String name, List<DecisionRule> decisionRules) {
+        public ConcreteDTFunction(String name, List<String> inputs, List<DecisionRule> decisionRules) {
             super(name);
             this.decisionRules = decisionRules;
+            this.inputs = inputs;
         }
         
-        public Object apply(Object[] params) {            
+        public Object apply(EvaluationContext ctx, Object[] params) {            
             if (decisionRules.isEmpty()) {
                 return null;
             }
@@ -105,7 +110,7 @@ public class DecisionTableFunction
             }
 
             for ( DecisionRule decisionRule : decisionRules ) {
-                Boolean ruleMatches = IntStream.range(0, params.length)
+                Boolean ruleMatches = IntStream.range(0, params.length)                         // TODO could short-circuit by using for/continue
                         .mapToObj(i -> decisionRule.getInputEntry().get(i).apply(params[i]))
                         .reduce((a, b) -> a && b)
                         .orElse(false);
@@ -119,6 +124,15 @@ public class DecisionTableFunction
             }
             
             return null;
+        }
+
+        @Override
+        protected boolean isCustomFunction() {
+            return true;
+        }
+        
+        public List<List<String>> getParameterNames() {
+            return Arrays.asList( inputs );
         }
     }
 }
