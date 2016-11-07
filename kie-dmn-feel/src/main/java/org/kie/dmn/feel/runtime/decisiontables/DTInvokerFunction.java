@@ -33,12 +33,14 @@ public class DTInvokerFunction
 
     private       List<DTDecisionRule> decisionRules;
     private       List<DTInputClause>  inputs;
+    private       List<DTOutputClause> outputs;
     private final HitPolicy            hitPolicy;
 
-    public DTInvokerFunction(String name, List<DTInputClause> inputs, List<DTDecisionRule> decisionRules, HitPolicy hitPolicy) {
+    public DTInvokerFunction(String name, List<DTInputClause> inputs, List<DTDecisionRule> decisionRules, List<DTOutputClause> outputs, HitPolicy hitPolicy) {
         super( name );
         this.decisionRules = decisionRules;
         this.inputs = inputs;
+        this.outputs = outputs;
         this.hitPolicy = hitPolicy;
     }
 
