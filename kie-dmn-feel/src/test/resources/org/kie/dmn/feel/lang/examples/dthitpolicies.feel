@@ -1,0 +1,80 @@
+{
+   DTunique : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "row1" ],
+                                    [ >0,  -, "row2" ]
+                                ],
+                                hit policy: "U"
+                            ),
+   
+   DTunique10 : DTunique(1,0),
+   DTunique11 : DTunique(1,1),
+
+   DTfirst : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "row1" ],
+                                    [ >0,  -, "row2" ],
+                                    [ - ,  -, "row3" ]
+                                ],
+                                hit policy: "F"
+                            ),
+                            
+   DTfirst11 : DTfirst(1,1),    
+   
+   DTany : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "A" ],
+                                    [ >0,  -, "B" ],
+                                    [ - ,  -, "B" ]
+                                ],
+                                hit policy: "A"
+                            ),
+                            
+    DTAny10 : DTany(1,0),
+    DTAny11 : DTany(1,1),
+    
+    DTruleOrder : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "A" ],
+                                    [ >0,  -, "B" ],
+                                    [ - ,  -, "B" ]
+                                ],
+                                hit policy: "R"
+                            ),
+                            
+    DTruleOrder10 : DTruleOrder(1,0),
+    DTruleOrder11 : DTruleOrder(1,1),
+    
+    DTcollect : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "A" ],
+                                    [ >0,  -, "B" ]
+                                ],
+                                hit policy: "C"
+                            ),
+                            
+    DTcollect11 : DTcollect(1,1),
+    
+    DTpriority : decision table (
+                                outputs: "Out",
+                                output values: ["B", "A"],
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "A" ],
+                                    [ >0,  -, "B" ]
+                                ],
+                                hit policy: "P"
+                            ),
+                            
+    DTpriority11 : DTpriority(1,1)
+}
