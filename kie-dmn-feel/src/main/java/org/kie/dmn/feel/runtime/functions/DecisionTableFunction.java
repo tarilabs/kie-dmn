@@ -97,6 +97,8 @@ of the output values.
             outputClauses = parseOutputs.stream().map(out -> new DTOutputClause(out, null)).collect(Collectors.toList());
         }
         
+        // TODO parse default output value.
+        
         
         List<DTDecisionRule> decisionRules = ruleList.stream()
                 .map( o -> DecisionTableFunction.toDecisionRule( o, inputExpressions.size() ) )

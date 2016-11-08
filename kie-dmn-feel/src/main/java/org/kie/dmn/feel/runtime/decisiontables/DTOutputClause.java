@@ -8,6 +8,7 @@ public class DTOutputClause {
     private final String name;
     /**
 [...] output values is a list of values for the one output. Each value is a string.
+TODO ^ this might be conflict in specs if comparing FEEL scope Vs broader DMN scope.
      */
     private final List<String> outputValues;
     

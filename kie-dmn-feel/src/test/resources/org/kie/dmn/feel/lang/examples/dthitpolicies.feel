@@ -76,5 +76,18 @@
                                 hit policy: "P"
                             ),
                             
-    DTpriority11 : DTpriority(1,1)
+    DTpriority11 : DTpriority(1,1),
+    
+    DToutputOrder : decision table (
+                                outputs: "Out",
+                                output values: ["C", "B", "A"],
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "A" ],
+                                    [ >0,  -, "B" ]
+                                ],
+                                hit policy: "O"
+                            ),
+                            
+    DToutputOrder11 : DToutputOrder(1,1)
 }

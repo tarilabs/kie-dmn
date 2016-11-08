@@ -70,5 +70,12 @@ public class SimpleDecisionTablesTest
         assertTrue( ((List)context.get( "DTcollect11" )).contains("A"));
         assertTrue( ((List)context.get( "DTcollect11" )).contains("B"));
         assertTrue( ((List)context.get( "DTcollect11" )).size() == 2 );
+        
+        assertTrue( ((List)context.get( "DTpriority11" )).size() == 1 );
+        assertTrue( ((List)context.get( "DTpriority11" )).get(0).equals("B"));
+                
+        assertTrue( ((List)context.get( "DToutputOrder11" )).size() == 2 );
+        assertTrue( ((List)context.get( "DToutputOrder11" )).get(0).equals("B"));
+        assertTrue( ((List)context.get( "DToutputOrder11" )).get(1).equals("A"));
     }
 }
