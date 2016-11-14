@@ -6,6 +6,7 @@ import org.kie.dmn.feel.FEEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +78,17 @@ public class SimpleDecisionTablesTest
         assertTrue( ((List)context.get( "DToutputOrder11" )).size() == 2 );
         assertTrue( ((List)context.get( "DToutputOrder11" )).get(0).equals("B"));
         assertTrue( ((List)context.get( "DToutputOrder11" )).get(1).equals("A"));
+        
+        assertThat( context.get( "DTcount10" ), is( new BigDecimal(1) ) );
+        assertThat( context.get( "DTcount11" ), is( new BigDecimal(2) ) );
+        
+        assertThat( context.get( "DTsum10" ), is( new BigDecimal(5) ) );
+        assertThat( context.get( "DTsum11" ), is( new BigDecimal(6) ) );
+        
+        assertThat( context.get( "DTmin10" ), is( new BigDecimal(2) ) );
+        assertThat( context.get( "DTmin11" ), is( new BigDecimal(1) ) );
+        
+        assertThat( context.get( "DTmax10" ), is( new BigDecimal(3) ) );
+        assertThat( context.get( "DTmax11" ), is( new BigDecimal(3) ) );
     }
 }

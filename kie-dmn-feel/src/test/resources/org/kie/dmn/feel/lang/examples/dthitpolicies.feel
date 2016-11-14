@@ -89,5 +89,57 @@
                                 hit policy: "O"
                             ),
                             
-    DToutputOrder11 : DToutputOrder(1,1)
+    DToutputOrder11 : DToutputOrder(1,1),
+    
+    DTcount : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, "A" ],
+                                    [ >0,  -, "B" ],
+                                    [ - ,  -, "B" ]
+                                ],
+                                hit policy: "C#"
+                            ),
+    DTcount10 : DTcount(1,0),
+    DTcount11 : DTcount(1,1),
+    
+    DTsum : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, 1 ],
+                                    [ >0,  -, 2 ],
+                                    [ - ,  -, 3 ]
+                                ],
+                                hit policy: "C+"
+                            ),
+    DTsum10 : DTsum(1,0),
+    DTsum11 : DTsum(1,1),
+    
+    DTmin : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, 1 ],
+                                    [ >0,  -, 2 ],
+                                    [ - ,  -, 3 ]
+                                ],
+                                hit policy: "C<"
+                            ),
+    DTmin10 : DTmin(1,0),
+    DTmin11 : DTmin(1,1),
+    
+    DTmax : decision table (
+                                outputs: "Out",
+                                input expression list: ["In1", "In2"],
+                                rule list: [
+                                    [ >0, >0, 1 ],
+                                    [ >0,  -, 2 ],
+                                    [ - ,  -, 3 ]
+                                ],
+                                hit policy: "C>"
+                            ),
+    DTmax10 : DTmax(1,0),
+    DTmax11 : DTmax(1,1)
 }

@@ -19,6 +19,9 @@ package org.kie.dmn.feel.runtime.decisiontables;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,10 +37,10 @@ public enum HitPolicy {
     PRIORITY( "P", "PRIORITY", HitPolicy::priority ),
     ANY( "A", "ANY", HitPolicy::any ),
     COLLECT( "C", "COLLECT", HitPolicy::ruleOrder ),    // Collect – return a list of the outputs in arbitrary order 
-    COLLECT_SUM( "C+", "COLLECT SUM" ),
-    COLLECT_COUNT( "C#", "COLLECT COUNT" ),
-    COLLECT_MIN( "C<", "COLLECT MIN" ),
-    COLLECT_MAX( "C>", "COLLECT MAX" ),
+    COLLECT_SUM( "C+", "COLLECT SUM", HitPolicy::sumCollect ),
+    COLLECT_COUNT( "C#", "COLLECT COUNT", HitPolicy::countCollect ),
+    COLLECT_MIN( "C<", "COLLECT MIN", HitPolicy::minCollect ),
+    COLLECT_MAX( "C>", "COLLECT MAX", HitPolicy::maxCollect ),
     RULE_ORDER( "R", "RULE ORDER", HitPolicy::ruleOrder ),
     OUTPUT_ORDER( "O", "OUTPUT ORDER", HitPolicy::outputOrder );
 
@@ -230,13 +233,17 @@ public enum HitPolicy {
                 .collect( Collectors.toList() );
     }
     
-    public static Object countingCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
+    public static <T> Collector<T, ?, Object> singleValueOrList() {
+        return new SingleValueOrListCollector<T>();
+    }
+    
+    public static Object countCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
                 .map( DTDecisionRule::getOutputEntry )
                 .collect( Collectors.toList() );
        return range(0, outputs.size()).mapToObj( c ->
            raw.stream().map( r -> r.get(c) ).collect( Collectors.toSet() ).size()
-       ).collect(Collectors.toList());
+       ).collect( singleValueOrList() );
     }
     
     public static Object minCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
@@ -244,8 +251,8 @@ public enum HitPolicy {
                  .map( DTDecisionRule::getOutputEntry )
                  .collect( Collectors.toList() );
         return range(0, outputs.size()).mapToObj( c ->
-            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.minBy( Comparator.naturalOrder() ) )
-        ).collect(Collectors.toList());
+            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.minBy( Comparator.naturalOrder() ) ).orElse(null)
+        ).collect( singleValueOrList() );
     }
     
     public static Object maxCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
@@ -253,8 +260,8 @@ public enum HitPolicy {
                  .map( DTDecisionRule::getOutputEntry )
                  .collect( Collectors.toList() );
         return range(0, outputs.size()).mapToObj( c ->
-            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.maxBy( Comparator.naturalOrder() ) )
-        ).collect(Collectors.toList());
+            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.maxBy( Comparator.naturalOrder() ) ).orElse(null)
+        ).collect( singleValueOrList() );
     }
     
     public static Object sumCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
@@ -267,8 +274,6 @@ public enum HitPolicy {
                     .map(n -> new BigDecimal( n.toString() ))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             }) 
-        ).collect(Collectors.toList());
+        ).collect( singleValueOrList() );
     }
-    
-    
 }
