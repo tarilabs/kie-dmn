@@ -17,8 +17,14 @@
 package org.kie.dmn.feel.runtime.decisiontables;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.IntStream.range;
+
+import java.math.BigDecimal;
 
 import org.kie.dmn.feel.model.v1_1.DecisionRule;
 
@@ -223,4 +229,46 @@ public enum HitPolicy {
                 .map( HitPolicy::hitToOutput )
                 .collect( Collectors.toList() );
     }
+    
+    public static Object countingCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
+       List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
+                .map( DTDecisionRule::getOutputEntry )
+                .collect( Collectors.toList() );
+       return range(0, outputs.size()).mapToObj( c ->
+           raw.stream().map( r -> r.get(c) ).collect( Collectors.toSet() ).size()
+       ).collect(Collectors.toList());
+    }
+    
+    public static Object minCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
+        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
+                 .map( DTDecisionRule::getOutputEntry )
+                 .collect( Collectors.toList() );
+        return range(0, outputs.size()).mapToObj( c ->
+            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.minBy( Comparator.naturalOrder() ) )
+        ).collect(Collectors.toList());
+    }
+    
+    public static Object maxCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
+        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
+                 .map( DTDecisionRule::getOutputEntry )
+                 .collect( Collectors.toList() );
+        return range(0, outputs.size()).mapToObj( c ->
+            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.maxBy( Comparator.naturalOrder() ) )
+        ).collect(Collectors.toList());
+    }
+    
+    public static Object sumCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
+        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
+                 .map( DTDecisionRule::getOutputEntry )
+                 .collect( Collectors.toList() );
+        return range(0, outputs.size()).mapToObj( c ->
+            raw.stream().map( r -> r.get(c) ).reduce( BigDecimal.ZERO , (a, b) -> {
+                return Stream.of(a, b).filter(x->x instanceof Number)
+                    .map(n -> new BigDecimal( n.toString() ))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            }) 
+        ).collect(Collectors.toList());
+    }
+    
+    
 }
