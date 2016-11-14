@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -237,43 +238,49 @@ public enum HitPolicy {
         return new SingleValueOrListCollector<T>();
     }
     
+    public static Object generalizedCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs,
+            Function<Stream<Object>, Object> resultCollector) {
+        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
+                 .map( DTDecisionRule::getOutputEntry )
+                 .collect( Collectors.toList() );
+        return range(0, outputs.size()).mapToObj( c ->
+            resultCollector.apply( raw.stream().map( r -> r.get(c) ) )
+        ).collect( singleValueOrList() );
+    }
+    
+    /**
+     * C# – return the count of the outputs
+     */
     public static Object countCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
-       List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
-                .map( DTDecisionRule::getOutputEntry )
-                .collect( Collectors.toList() );
-       return range(0, outputs.size()).mapToObj( c ->
-           raw.stream().map( r -> r.get(c) ).collect( Collectors.toSet() ).size()
-       ).collect( singleValueOrList() );
+       return generalizedCollect(params, decisionRules, inputs, outputs, 
+               x -> x.collect( Collectors.toSet() ).size() );
     }
-    
+
+    /**
+     * C< – return the minimum-valued output
+     */
     public static Object minCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
-        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
-                 .map( DTDecisionRule::getOutputEntry )
-                 .collect( Collectors.toList() );
-        return range(0, outputs.size()).mapToObj( c ->
-            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.minBy( Comparator.naturalOrder() ) ).orElse(null)
-        ).collect( singleValueOrList() );
+        return generalizedCollect(params, decisionRules, inputs, outputs, 
+                x -> x.map( y -> (Comparable) y ).collect( Collectors.minBy( Comparator.naturalOrder() ) ).orElse(null) );
     }
     
+    /**
+     * C> – return the maximum-valued output
+     */
     public static Object maxCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
-        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
-                 .map( DTDecisionRule::getOutputEntry )
-                 .collect( Collectors.toList() );
-        return range(0, outputs.size()).mapToObj( c ->
-            raw.stream().map( r -> (Comparable) r.get(c) ).collect( Collectors.maxBy( Comparator.naturalOrder() ) ).orElse(null)
-        ).collect( singleValueOrList() );
+        return generalizedCollect(params, decisionRules, inputs, outputs,
+                x -> x.map( y -> (Comparable) y ).collect( Collectors.maxBy( Comparator.naturalOrder() ) ).orElse(null) );
     }
     
+    /**
+     * C+ – return the sum of the outputs 
+     */
     public static Object sumCollect(Object[] params, List<DTDecisionRule> decisionRules, List<DTInputClause> inputs, List<DTOutputClause> outputs) {
-        List<List<Object>> raw = matchingDecisionRules(params, decisionRules, inputs).stream()
-                 .map( DTDecisionRule::getOutputEntry )
-                 .collect( Collectors.toList() );
-        return range(0, outputs.size()).mapToObj( c ->
-            raw.stream().map( r -> r.get(c) ).reduce( BigDecimal.ZERO , (a, b) -> {
-                return Stream.of(a, b).filter(x->x instanceof Number)
-                    .map(n -> new BigDecimal( n.toString() ))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            }) 
-        ).collect( singleValueOrList() );
+        return generalizedCollect(params, decisionRules, inputs, outputs,
+                x -> x.reduce( BigDecimal.ZERO , (a, b) -> {
+                    return Stream.of(a, b).filter(n->n instanceof Number)
+                        .map(n -> new BigDecimal( n.toString() ))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                }) );
     }
 }
