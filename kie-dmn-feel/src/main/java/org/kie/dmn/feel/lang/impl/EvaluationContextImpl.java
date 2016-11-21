@@ -71,7 +71,7 @@ public class EvaluationContextImpl implements EvaluationContext {
 
     @Override
     public void setValue(String name, Object value) {
-        peek().setValue( name, EvalHelper.coherceNumber( value ) );
+        peek().setValue( name, EvalHelper.coerceNumber( value ) );
     }
 
     @Override

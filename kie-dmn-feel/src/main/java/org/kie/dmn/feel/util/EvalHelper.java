@@ -48,7 +48,7 @@ public class EvalHelper {
         return (BigDecimal) value;
     }
     
-    public static Object coherceNumber(Object value) {
+    public static Object coerceNumber(Object value) {
         if ( value instanceof Number && !( value instanceof BigDecimal )  ) {
             return getBigDecimalOrNull(value);
         } else {
@@ -123,7 +123,7 @@ public class EvalHelper {
             Method getter = getAccessor( current.getClass(), property );
             current = getter.invoke( current );
         }
-        return current;
+        return coerceNumber( current );
     }
 
     public static Method getAccessor(Class<?> clazz, String field) {

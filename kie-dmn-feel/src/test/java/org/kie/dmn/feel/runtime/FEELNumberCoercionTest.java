@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.ast.InfixOpNode.InfixOperator;
 
-public class FEELNumberCohercionTest {
+public class FEELNumberCoercionTest {
     private final FEEL feel = FEEL.newInstance();
     
     private Object evaluateInfix(Object x, InfixOperator op, Object y) {
@@ -71,6 +71,9 @@ public class FEELNumberCohercionTest {
         assertThat( evaluate("ceiling( x )", var("x", 1.01d )) , is( getBigDecimalOrNull( 2d ) ) );
         assertThat( ((Map) evaluate("{ myf : function( v1, v2 ) ceiling(v1), invoked: myf(v2: false, v1: x) }", var("x", 1.01d) )).get("invoked"), is( getBigDecimalOrNull( 2d ) ) );
         assertThat( ((Map) evaluate("{ myf : function( v1, v2 ) v1, invoked: myf(v2: false, v1: x) }", var("x", 1.01d) )).get("invoked"), is( getBigDecimalOrNull( 1.01d ) ) );
+
+        assertThat( evaluate(" x.y ", var("x", new HashMap(){{ put("y", 1.01d); }} )), is( getBigDecimalOrNull( 1.01d ) ) );
+        assertThat( evaluate("ceiling( x.y )", var("x", new HashMap(){{ put("y", 1.01d); }} )), is( getBigDecimalOrNull( 2d ) ) );
     }
     
     
