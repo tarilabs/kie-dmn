@@ -47,6 +47,14 @@ public class EvalHelper {
         }
         return (BigDecimal) value;
     }
+    
+    public static Object coherceNumber(Object value) {
+        if ( value instanceof Number && !( value instanceof BigDecimal )  ) {
+            return getBigDecimalOrNull(value);
+        } else {
+            return value;
+        }
+    }
 
     public static Boolean getBooleanOrNull(Object value) {
         if ( value == null || !(value instanceof Boolean) ) {
