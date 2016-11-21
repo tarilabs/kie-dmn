@@ -18,6 +18,7 @@ package org.kie.dmn.feel.parser.feel11;
 
 import org.antlr.v4.runtime.*;
 import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.lang.impl.CustomType;
 import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.SyntaxErrorEvent;
@@ -38,6 +39,9 @@ public class FEELParser {
 
         // pre-loads the parser with symbols
         defineVariables( inputVariableTypes, inputVariables, parser );
+        
+        parser.getHelper().dump();
+        
         return parser;
     }
 
@@ -58,6 +62,17 @@ public class FEELParser {
         inputVariableTypes.forEach( (name, type) -> {
             if( ! inputVariables.containsKey( name ) ) {
                 parser.getHelper().defineVariable( name );
+            }
+            if( type instanceof CustomType ) {
+                try {
+                    parser.getHelper().pushName( name );
+                    parser.getHelper().pushScope();
+                    parser.getHelper().defineVariable("first name");
+                    parser.getHelper().defineVariable("last name");
+                } finally {
+                    parser.getHelper().popScope();
+                    parser.getHelper().popName();
+                }
             }
         } );
     }

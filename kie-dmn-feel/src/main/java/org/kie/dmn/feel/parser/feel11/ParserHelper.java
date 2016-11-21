@@ -45,7 +45,9 @@ public class ParserHelper {
     }
 
     public void pushScope() {
-        currentScope = new ScopeImpl( currentName.peek(), currentScope );
+        ScopeImpl newScope = new ScopeImpl( currentName.peek(), currentScope );
+        currentScope.addChildScope( newScope );
+        currentScope = newScope;
     }
 
     public void popScope() {
@@ -118,6 +120,10 @@ public class ParserHelper {
             }
         }
         return tokens;
+    }
+
+    public void dump() {
+        System.out.println("dump"+currentName);
     }
 
 }

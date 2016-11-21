@@ -18,13 +18,17 @@ package org.kie.dmn.feel.runtime;
 
 import org.junit.runners.Parameterized;
 import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.lang.impl.CustomType;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.kie.dmn.feel.runtime.impl.RangeImpl;
+
+import test.Person;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FEELStaticTypeTest
         extends BaseFEELCompilerTest {
@@ -43,7 +47,45 @@ public class FEELStaticTypeTest
                     }},
                     new HashMap<String,Object>() {{
                         put( "name", "John Doe" );
-                    }} }
+                    }} },
+//                { "{ name : person.first name + person.last name }",
+//                  new HashMap<String, Type>() {{
+//                      put( "person", new Type() {
+//                        @Override
+//                        public String toString(Object value) {
+//                            return null;
+//                        }
+//                        
+//                        @Override
+//                        public String getName() { return "Matteo";
+//                        }
+//                        
+//                        @Override
+//                        public Object fromString(String value) {
+//                            return null;
+//                        }
+//                    } );
+//                  }},
+//                  new HashMap<String, Object>() {{
+//                      Map<String, String> person = new HashMap<>();
+//                      person.put("first name", "John");
+//                      person.put("last name", "Doe");
+//                      put( "person", person ); 
+//                  }},
+//                  new HashMap<String,Object>() {{
+//                      put( "name", "John Doe" );
+//                  }} },
+                { "{ name : person.first name + person.last name }",
+                  new HashMap<String, Type>() {{
+                      put( "person", new CustomType() );
+                  }},
+                  new HashMap<String, Object>() {{
+                      put( "person", new Person("John", "Doe") ); 
+                  }},
+                  new HashMap<String,Object>() {{
+                      put( "name", "John Doe" );
+                  }} }
+                
         };
         return Arrays.asList( cases );
     }
