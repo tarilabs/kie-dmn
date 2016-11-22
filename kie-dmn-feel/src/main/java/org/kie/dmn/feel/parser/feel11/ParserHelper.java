@@ -22,6 +22,7 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.kie.dmn.feel.lang.Scope;
+import org.kie.dmn.feel.lang.types.CustomTypeSymbol;
 import org.kie.dmn.feel.lang.types.ScopeImpl;
 import org.kie.dmn.feel.lang.types.SymbolTable;
 import org.kie.dmn.feel.lang.types.VariableSymbol;
@@ -45,9 +46,7 @@ public class ParserHelper {
     }
 
     public void pushScope() {
-        ScopeImpl newScope = new ScopeImpl( currentName.peek(), currentScope );
-        currentScope.addChildScope( newScope );
-        currentScope = newScope;
+        currentScope = new ScopeImpl( currentName.peek(), currentScope );
     }
 
     public void popScope() {
@@ -83,6 +82,12 @@ public class ParserHelper {
         popScope();
     }
 
+    public void defineType(String name) {
+        CustomTypeSymbol s = new CustomTypeSymbol(name);
+        System.out.println("defining custom type symbol.");
+        this.currentScope.define( s );
+    }
+    
     public void defineVariable(ParserRuleContext ctx) {
         defineVariable( getOriginalText( ctx ) );
     }

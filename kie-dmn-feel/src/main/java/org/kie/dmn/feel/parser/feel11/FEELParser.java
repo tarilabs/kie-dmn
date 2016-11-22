@@ -60,20 +60,10 @@ public class FEELParser {
             }
         } );
         inputVariableTypes.forEach( (name, type) -> {
-            if( ! inputVariables.containsKey( name ) ) {
-                parser.getHelper().defineVariable( name );
-            }
-            if( type instanceof CustomType ) {
-                try {
-                    parser.getHelper().pushName( name );
-                    parser.getHelper().pushScope();
-                    parser.getHelper().defineVariable("first name");
-                    parser.getHelper().defineVariable("last name");
-                } finally {
-                    parser.getHelper().popScope();
-                    parser.getHelper().popName();
-                }
-            }
+//            if( ! inputVariables.containsKey( name ) ) {
+//                parser.getHelper().defineVariable( name );
+//            }
+            parser.getHelper().defineType( name );
         } );
     }
 

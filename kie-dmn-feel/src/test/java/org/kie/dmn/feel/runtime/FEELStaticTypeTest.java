@@ -36,18 +36,22 @@ public class FEELStaticTypeTest
     @Parameterized.Parameters(name = "{index}: {0} ({1} | {2}) = {3}")
     public static Collection<Object[]> data() {
         final Object[][] cases = new Object[][] {
-                { "{ name : first name + last name }",
-                    new HashMap<String, Type>() {{
-                        put( "first name", BuiltInType.STRING );
-                        put( "last name", BuiltInType.STRING );
-                    }},
-                    new HashMap<String, Object>() {{
-                        put( "first name", "John " );
-                        put( "last name", "Doe" );
-                    }},
-                    new HashMap<String,Object>() {{
-                        put( "name", "John Doe" );
-                    }} },
+                
+            
+//            { "{ name : first name + last name }",
+//                    new HashMap<String, Type>() {{
+//                        put( "first name", BuiltInType.STRING );
+//                        put( "last name", BuiltInType.STRING );
+//                    }},
+//                    new HashMap<String, Object>() {{
+//                        put( "first name", "John " );
+//                        put( "last name", "Doe" );
+//                    }},
+//                    new HashMap<String,Object>() {{
+//                        put( "name", "John Doe" );
+//                    }} },
+                
+                
 //                { "{ name : person.first name + person.last name }",
 //                  new HashMap<String, Type>() {{
 //                      put( "person", new Type() {

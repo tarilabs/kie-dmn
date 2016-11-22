@@ -21,10 +21,12 @@ import org.antlr.v4.runtime.Token;
 import org.kie.dmn.feel.parser.feel11.FEEL_1_1Lexer;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Symbol;
+import org.kie.dmn.feel.lang.types.CustomTypeSymbol.Field;
 import org.kie.dmn.feel.util.EvalHelper;
 import org.kie.dmn.feel.util.TokenTree;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class ScopeImpl
         implements Scope {
@@ -112,6 +114,7 @@ public class ScopeImpl
     }
 
     public void start( String token ) {
+        System.out.println("start() "+token);
         if( tokenTree == null ) {
             initializeTokenTree();
         }
@@ -129,10 +132,19 @@ public class ScopeImpl
 
     private void initializeTokenTree() {
         tokenTree = new TokenTree();
-        for( String symbol : symbols.keySet() ) {
-            List<String> tokens = tokenize( symbol );
+        for( Entry<String, Symbol> kv : symbols.entrySet() ) {
+            List<String> tokens = tokenize( kv.getKey() );
             tokenTree.addName( tokens );
+            Symbol symbol = kv.getValue();
+            if ( symbol instanceof CustomTypeSymbol ) {
+                CustomTypeSymbol typeSymbol = (CustomTypeSymbol) symbol;
+                for ( Field f : typeSymbol.fields() ) {
+                    tokenTree.addName( tokenize( symbol.getId() + "." + f.name ) );
+                    System.out.println("adding" + tokenize( symbol.getId() + "." + f.name ));
+                }
+            }
         }
+        System.out.println("initializeTokenTree() "+tokenTree);
     }
 
     private List<String> tokenize(String symbol) {
