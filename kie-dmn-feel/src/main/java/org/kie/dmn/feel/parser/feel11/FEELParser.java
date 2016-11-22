@@ -46,6 +46,16 @@ public class FEELParser {
     }
 
     private static void defineVariables(Map<String, Type> inputVariableTypes, Map<String, Object> inputVariables, FEEL_1_1Parser parser) {
+
+        // switched order
+        
+        inputVariableTypes.forEach( (name, type) -> {
+//          if( ! inputVariables.containsKey( name ) ) {
+//              parser.getHelper().defineVariable( name );
+//          }
+            parser.getHelper().defineVariable( name, type );
+        } );
+        
         inputVariables.forEach( (name, value) -> {
             parser.getHelper().defineVariable( name );
             if( value instanceof Map ) {
@@ -59,12 +69,7 @@ public class FEELParser {
                 }
             }
         } );
-        inputVariableTypes.forEach( (name, type) -> {
-//            if( ! inputVariables.containsKey( name ) ) {
-//                parser.getHelper().defineVariable( name );
-//            }
-            parser.getHelper().defineType( name, type );
-        } );
+
     }
 
     public static class FEELErrorHandler extends DefaultErrorStrategy {

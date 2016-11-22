@@ -24,8 +24,8 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Symbol;
 import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.lang.types.CustomTypeSymbol;
-import org.kie.dmn.feel.lang.types.CustomTypeSymbol.Field;
+import org.kie.dmn.feel.lang.impl.CustomType;
+import org.kie.dmn.feel.lang.impl.CustomType.Field;
 import org.kie.dmn.feel.lang.types.ScopeImpl;
 import org.kie.dmn.feel.lang.types.SymbolTable;
 import org.kie.dmn.feel.lang.types.VariableSymbol;
@@ -74,11 +74,11 @@ public class ParserHelper {
 
     public void recoverScope( String name ) {
         System.out.println("recoverScope( name: "+name+") with currentScope:"+currentScope);
-        if ( "person".equals(name) ) {
-            CustomTypeSymbol typeSymbol = (CustomTypeSymbol) this.currentScope.resolve(name);
+        if ( this.currentScope.resolve(name).getType() instanceof CustomType ) {
+            CustomType type = (CustomType) this.currentScope.resolve(name).getType();
             pushName(name);
             pushScope();
-            for ( Field f : typeSymbol.fields() ) {
+            for ( Field f : type.fields() ) {
                 this.currentScope.define(new VariableSymbol( f.name ));
             }
         } else {
@@ -96,12 +96,6 @@ public class ParserHelper {
     public void dismissScope() {
         popScope();
     }
-
-    public void defineType(String name, Type type) {
-        CustomTypeSymbol s = new CustomTypeSymbol(name, type);
-        System.out.println("defining custom type symbol.");
-        this.currentScope.define( s );
-    }
     
     public void defineVariable(ParserRuleContext ctx) {
         defineVariable( getOriginalText( ctx ) );
@@ -109,6 +103,12 @@ public class ParserHelper {
 
     public void defineVariable(String variable) {
         VariableSymbol var = new VariableSymbol( variable );
+        this.currentScope.define( var );
+    }
+    
+    public void defineVariable(String variable, Type type) {
+        System.out.println("defining custom type symbol.");
+        VariableSymbol var = new VariableSymbol( variable, type );
         this.currentScope.define( var );
     }
 

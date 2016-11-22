@@ -21,7 +21,6 @@ import org.antlr.v4.runtime.Token;
 import org.kie.dmn.feel.parser.feel11.FEEL_1_1Lexer;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Symbol;
-import org.kie.dmn.feel.lang.types.CustomTypeSymbol.Field;
 import org.kie.dmn.feel.util.EvalHelper;
 import org.kie.dmn.feel.util.TokenTree;
 
