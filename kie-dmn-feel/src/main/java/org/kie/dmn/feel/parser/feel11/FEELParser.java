@@ -63,7 +63,7 @@ public class FEELParser {
 //            if( ! inputVariables.containsKey( name ) ) {
 //                parser.getHelper().defineVariable( name );
 //            }
-            parser.getHelper().defineType( name );
+            parser.getHelper().defineType( name, type );
         } );
     }
 

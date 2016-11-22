@@ -23,6 +23,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Symbol;
+import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.types.CustomTypeSymbol;
 import org.kie.dmn.feel.lang.types.CustomTypeSymbol.Field;
 import org.kie.dmn.feel.lang.types.ScopeImpl;
@@ -96,8 +97,8 @@ public class ParserHelper {
         popScope();
     }
 
-    public void defineType(String name) {
-        CustomTypeSymbol s = new CustomTypeSymbol(name);
+    public void defineType(String name, Type type) {
+        CustomTypeSymbol s = new CustomTypeSymbol(name, type);
         System.out.println("defining custom type symbol.");
         this.currentScope.define( s );
     }

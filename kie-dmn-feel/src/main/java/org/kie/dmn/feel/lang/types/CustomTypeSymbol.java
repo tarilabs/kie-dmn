@@ -1,34 +1,34 @@
 package org.kie.dmn.feel.lang.types;
 
+import java.beans.MethodDescriptor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+import org.kie.dmn.feel.lang.FEELAccessor;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.lang.impl.CustomType;
 
 public class CustomTypeSymbol extends BaseSymbol {
-    public CustomTypeSymbol() {
-        super();
-    }
-
-    public CustomTypeSymbol(String id, Scope scope) {
-        super(id, scope);
-    }
-
-    public CustomTypeSymbol(String id, Type type, Scope scope) {
-        super(id, type, scope);
-    }
+    
+    private List<Field> fields = new ArrayList<>();
 
     public CustomTypeSymbol(String id, Type type) {
         super(id, type);
-    }
-
-    public CustomTypeSymbol(String id) {
-        super(id);
+        if (type instanceof CustomType) {
+            CustomType customType = (CustomType) type;
+            Stream.of( customType.getWrapped().getMethods() )
+                .filter( m -> m.getAnnotation(FEELAccessor.class) != null )
+                .forEach( m -> fields.add( new Field( m.getAnnotation(FEELAccessor.class).value() , m.getReturnType()) ) );
+                ;
+        }
     }
 
     public List<Field> fields() {
-        return Arrays.asList( new Field[]{ new Field("first name", String.class), new Field("last name", String.class)  } );
+        return fields;
     }
 
     public static class Field {

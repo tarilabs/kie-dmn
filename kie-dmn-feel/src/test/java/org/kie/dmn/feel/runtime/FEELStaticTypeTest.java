@@ -38,18 +38,18 @@ public class FEELStaticTypeTest
         final Object[][] cases = new Object[][] {
                 
             
-//            { "{ name : first name + last name }",
-//                    new HashMap<String, Type>() {{
-//                        put( "first name", BuiltInType.STRING );
-//                        put( "last name", BuiltInType.STRING );
-//                    }},
-//                    new HashMap<String, Object>() {{
-//                        put( "first name", "John " );
-//                        put( "last name", "Doe" );
-//                    }},
-//                    new HashMap<String,Object>() {{
-//                        put( "name", "John Doe" );
-//                    }} },
+            { "{ name : first name + last name }",
+                    new HashMap<String, Type>() {{
+                        put( "first name", BuiltInType.STRING );
+                        put( "last name", BuiltInType.STRING );
+                    }},
+                    new HashMap<String, Object>() {{
+                        put( "first name", "John " );
+                        put( "last name", "Doe" );
+                    }},
+                    new HashMap<String,Object>() {{
+                        put( "name", "John Doe" );
+                    }} },
                 
                 
 //                { "{ name : person.first name + person.last name }",
@@ -79,15 +79,16 @@ public class FEELStaticTypeTest
 //                  new HashMap<String,Object>() {{
 //                      put( "name", "John Doe" );
 //                  }} },
+            
                 { "{ myFeelVar : person.first name + person.last name }",
                   new HashMap<String, Type>() {{
-                      put( "person", new CustomType() );
+                      put( "person", new CustomType(Person.class) );
                   }},
                   new HashMap<String, Object>() {{
-                      put( "person", new Person("John", "Doe") ); 
+                      put( "person", new Person("John ", "Doe") ); 
                   }},
                   new HashMap<String,Object>() {{
-                      put( "name", "John Doe" );
+                      put( "myFeelVar", "John Doe" );
                   }} }
                 
         };
