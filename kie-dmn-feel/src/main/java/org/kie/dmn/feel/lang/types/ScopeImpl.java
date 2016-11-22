@@ -114,7 +114,7 @@ public class ScopeImpl
     }
 
     public void start( String token ) {
-        System.out.println("start() "+token);
+        System.out.println("["+name + "]: start() "+token);
         if( tokenTree == null ) {
             initializeTokenTree();
         }
@@ -125,26 +125,19 @@ public class ScopeImpl
     }
 
     public boolean followUp( String token, boolean isPredict ) {
+        System.out.println("["+name + "]: followUp() "+token);
         // must call followup on parent scope
         boolean parent = this.parentScope != null ? this.parentScope.followUp( token, isPredict ) : false;
         return this.tokenTree.followUp( token, !isPredict ) || parent;
     }
 
     private void initializeTokenTree() {
+        System.out.println("["+name + "]: initializeTokenTree()");
         tokenTree = new TokenTree();
-        for( Entry<String, Symbol> kv : symbols.entrySet() ) {
-            List<String> tokens = tokenize( kv.getKey() );
+        for( String symbol : symbols.keySet() ) {
+            List<String> tokens = tokenize( symbol );
             tokenTree.addName( tokens );
-            Symbol symbol = kv.getValue();
-            if ( symbol instanceof CustomTypeSymbol ) {
-                CustomTypeSymbol typeSymbol = (CustomTypeSymbol) symbol;
-                for ( Field f : typeSymbol.fields() ) {
-                    tokenTree.addName( tokenize( symbol.getId() + "." + f.name ) );
-                    System.out.println("adding" + tokenize( symbol.getId() + "." + f.name ));
-                }
-            }
         }
-        System.out.println("initializeTokenTree() "+tokenTree);
     }
 
     private List<String> tokenize(String symbol) {

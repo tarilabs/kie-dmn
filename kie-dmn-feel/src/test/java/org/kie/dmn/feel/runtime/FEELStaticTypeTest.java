@@ -79,7 +79,7 @@ public class FEELStaticTypeTest
 //                  new HashMap<String,Object>() {{
 //                      put( "name", "John Doe" );
 //                  }} },
-                { "{ name : person.first name + person.last name }",
+                { "{ myFeelVar : person.first name + person.last name }",
                   new HashMap<String, Type>() {{
                       put( "person", new CustomType() );
                   }},

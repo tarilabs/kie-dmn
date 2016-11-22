@@ -49,7 +49,7 @@ public class FEELImpl
         ParseTree tree = parser.compilation_unit();
         ASTBuilderVisitor v = new ASTBuilderVisitor();
         BaseNode expr = v.visit( tree );
-        CompiledExpression ce = new CompiledExpressionImpl( expr );
+        CompiledExpression ce = new CompiledExpressionImpl( expr, ctx.getInputVariableTypes() );
         return ce;
     }
 

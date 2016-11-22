@@ -22,8 +22,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
+
+import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.Type;
+
+import test.Person;
 
 public class EvalHelper {
 
@@ -120,13 +127,36 @@ public class EvalHelper {
         } else if ( current instanceof Map ) {
             current = ((Map) current).get( property );
         } else {
-            Method getter = getAccessor( current.getClass(), property );
+            Method getter = getGenericAccessor( current.getClass(), property );
             current = getter.invoke( current );
         }
         return coerceNumber( current );
     }
-
+    
+    /**
+     * FEEL annotated or else Java accessor.
+     * @param clazz
+     * @param field
+     * @return
+     */
+    public static Method getGenericAccessor(Class<?> clazz, String field) {
+        return Stream.of(clazz.getMethods())
+                .filter( m -> Optional.ofNullable( m.getAnnotation(FEELAccessor.class) )
+                                .map( ann -> ann.value().equals(field) )
+                                .orElse( false ) 
+                        )
+                .findFirst()
+                .orElse( getAccessor( clazz, field ) );
+    }
+    
+    /**
+     * JavaBean -spec compliant accessor.
+     * @param clazz
+     * @param field
+     * @return
+     */
     public static Method getAccessor(Class<?> clazz, String field) {
+        System.out.println("getAccessor("+clazz+", "+field+")");
         try {
             return clazz.getMethod( "get" + ucFirst( field ) );
         } catch ( NoSuchMethodException e ) {

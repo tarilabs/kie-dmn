@@ -22,7 +22,9 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.kie.dmn.feel.lang.Scope;
+import org.kie.dmn.feel.lang.Symbol;
 import org.kie.dmn.feel.lang.types.CustomTypeSymbol;
+import org.kie.dmn.feel.lang.types.CustomTypeSymbol.Field;
 import org.kie.dmn.feel.lang.types.ScopeImpl;
 import org.kie.dmn.feel.lang.types.SymbolTable;
 import org.kie.dmn.feel.lang.types.VariableSymbol;
@@ -70,11 +72,23 @@ public class ParserHelper {
     }
 
     public void recoverScope( String name ) {
-        Scope s = this.currentScope.getChildScopes().get( name );
-        if( s != null ) {
-            currentScope = s;
-        } else {
+        System.out.println("recoverScope( name: "+name+") with currentScope:"+currentScope);
+        if ( "person".equals(name) ) {
+            CustomTypeSymbol typeSymbol = (CustomTypeSymbol) this.currentScope.resolve(name);
+            pushName(name);
             pushScope();
+            for ( Field f : typeSymbol.fields() ) {
+                this.currentScope.define(new VariableSymbol( f.name ));
+            }
+        } else {
+        
+            Scope s = this.currentScope.getChildScopes().get( name );
+            if( s != null ) {
+                currentScope = s;
+            } else {
+                pushScope();
+            }
+        
         }
     }
 

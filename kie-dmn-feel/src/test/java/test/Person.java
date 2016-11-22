@@ -1,5 +1,6 @@
 package test;
 
+import org.kie.dmn.feel.lang.FEELAccessor;
 
 public class Person {
     private String firstName;
@@ -10,6 +11,7 @@ public class Person {
         this.lastName = lastName;
     }
     
+    @FEELAccessor("first name")
     public String getFirstName() {
         return firstName;
     }
@@ -18,12 +20,13 @@ public class Person {
         this.firstName = firstName;
     }
     
+    @FEELAccessor("last name")
     public String getLastName() {
         return lastName;
     }
     
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = lastName;   
     }
 
     @Override
