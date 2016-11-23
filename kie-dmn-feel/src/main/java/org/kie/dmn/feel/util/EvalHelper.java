@@ -28,9 +28,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.FEELAccessor;
-import org.kie.dmn.feel.lang.Type;
-
-import test.Person;
 
 public class EvalHelper {
 

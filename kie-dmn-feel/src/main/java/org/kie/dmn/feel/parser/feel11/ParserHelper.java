@@ -74,8 +74,9 @@ public class ParserHelper {
 
     public void recoverScope( String name ) {
         System.out.println("recoverScope( name: "+name+") with currentScope:"+currentScope);
-        if ( this.currentScope.resolve(name).getType() instanceof CustomType ) {
-            CustomType type = (CustomType) this.currentScope.resolve(name).getType();
+        Symbol resolved = this.currentScope.resolve(name);
+        if ( resolved != null && resolved.getType() instanceof CustomType ) {
+            CustomType type = (CustomType) resolved.getType();
             pushName(name);
             pushScope();
             for ( Field f : type.fields() ) {

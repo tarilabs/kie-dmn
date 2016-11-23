@@ -47,7 +47,7 @@ public class FEELParser {
 
     private static void defineVariables(Map<String, Type> inputVariableTypes, Map<String, Object> inputVariables, FEEL_1_1Parser parser) {
 
-        // switched order
+        // switched order:
         
         inputVariableTypes.forEach( (name, type) -> {
 //          if( ! inputVariables.containsKey( name ) ) {
@@ -56,6 +56,7 @@ public class FEELParser {
             parser.getHelper().defineVariable( name, type );
         } );
         
+        // TODO the following may be no longer necessary:
         inputVariables.forEach( (name, value) -> {
             parser.getHelper().defineVariable( name );
             if( value instanceof Map ) {
