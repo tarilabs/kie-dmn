@@ -17,7 +17,7 @@ public class JavaBackedType implements CustomType {
         this.wrapped = class1;
         Stream.of( class1.getMethods() )
             .filter( m -> m.getAnnotation(FEELAccessor.class) != null )
-            .forEach( m -> fields.add( new Field( m.getAnnotation(FEELAccessor.class).value() , m.getReturnType()) ) );
+            .forEach( m -> fields.add( new Field( m.getAnnotation(FEELAccessor.class).value() , Type.determineTypeFromClass(m.getReturnType()) ) ) );
             ;
     }
 

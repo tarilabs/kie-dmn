@@ -54,8 +54,8 @@ public class FEELStaticTypeTest
                 { "{ name : person.first name + person.last name }",
                   new HashMap<String, Type>() {{
                       put( "person", new MapBackedType()
-                                      .addField("first name", String.class)
-                                      .addField("last name", String.class)
+                                      .addField( "first name", BuiltInType.STRING )
+                                      .addField( "last name", BuiltInType.STRING )
                       );
                   }},
                   new HashMap<String, Object>() {{

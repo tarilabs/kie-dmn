@@ -2,6 +2,7 @@ package org.kie.dmn.feel.lang.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.CustomType;
@@ -15,6 +16,16 @@ public class MapBackedType implements CustomType {
     public MapBackedType() {
     }
 
+    /**
+     * Utility constructor by reflection over key-value pairs.
+     * @param fields
+     */
+    public MapBackedType(Map<String, ?> map) {
+        map.entrySet().stream()
+            .map( kv -> new Field( kv.getKey(), Type.determineTypeFromClass( kv.getValue().getClass()) ) )
+            .forEach( f -> fields.add(f) );
+    }
+    
     public MapBackedType(List<Field> fields) {
         this.fields.addAll(fields);
     }
@@ -39,7 +50,7 @@ public class MapBackedType implements CustomType {
         return fields;
     }
     
-    public MapBackedType addField(String name, Class<?> type) {
+    public MapBackedType addField(String name, Type type) {
         fields.add(new Field(name, type));
         return this;
     }

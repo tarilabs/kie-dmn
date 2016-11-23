@@ -83,7 +83,7 @@ public class ParserHelper {
             pushName(name);
             pushScope();
             for ( Field f : type.fields() ) {
-                this.currentScope.define(new VariableSymbol( f.getName() ));
+                this.currentScope.define(new VariableSymbol( f.getName(), f.getType() ));
             }
         } else {
         
