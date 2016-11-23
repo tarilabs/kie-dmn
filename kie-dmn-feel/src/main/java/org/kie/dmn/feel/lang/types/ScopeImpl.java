@@ -114,6 +114,11 @@ public class ScopeImpl
     public void setChildScopes(Map<String, Scope> childScopes) {
         this.childScopes = childScopes;
     }
+    
+    @Override
+    public Map<String, Symbol> getSymbols() {
+        return symbols;
+    }
 
     public void start( String token ) {
         LOG.trace("[{}]: start() {}", name, token);

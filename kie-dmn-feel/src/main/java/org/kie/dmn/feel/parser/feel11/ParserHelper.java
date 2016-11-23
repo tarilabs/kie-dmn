@@ -76,17 +76,19 @@ public class ParserHelper {
     }
 
     public void recoverScope( String name ) {
-        LOG.trace("recoverScope( name: {}) with currentScope: {}", name, currentScope);
+        LOG.trace("[{}] recoverScope( name: {}) with currentScope: {}", this.currentScope.getName(), name, currentScope);
         Symbol resolved = this.currentScope.resolve(name);
         if ( resolved != null && resolved.getType() instanceof CustomType ) {
             CustomType type = (CustomType) resolved.getType();
+            LOG.trace(".. using type: {} with fields: {}", type, type.fields());
             pushName(name);
             pushScope();
             for ( Field f : type.fields() ) {
                 this.currentScope.define(new VariableSymbol( f.getName(), f.getType() ));
             }
+            LOG.trace(".. PUSHED, scope name {} with symbols {}", this.currentName.peek(), this.currentScope.getSymbols());
         } else {
-        
+            LOG.trace(".. else branch.");
             Scope s = this.currentScope.getChildScopes().get( name );
             if( s != null ) {
                 currentScope = s;
@@ -98,6 +100,7 @@ public class ParserHelper {
     }
 
     public void dismissScope() {
+        LOG.trace("dismissScope()");
         popScope();
     }
     

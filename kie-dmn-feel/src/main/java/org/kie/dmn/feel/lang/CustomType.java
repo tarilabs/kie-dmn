@@ -22,6 +22,12 @@ public interface CustomType extends Type {
         public Type getType() {
             return type;
         }
-        
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Field [name=").append(name).append(", type=").append(type).append("]");
+            return builder.toString();
+        }
     }
 }

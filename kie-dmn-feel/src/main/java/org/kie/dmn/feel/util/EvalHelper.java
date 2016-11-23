@@ -140,6 +140,7 @@ public class EvalHelper {
      * @return
      */
     public static Method getGenericAccessor(Class<?> clazz, String field) {
+        LOG.trace("getGenericAccessor({}, {})", clazz, field);
         return Stream.of(clazz.getMethods())
                 .filter( m -> Optional.ofNullable( m.getAnnotation(FEELAccessor.class) )
                                 .map( ann -> ann.value().equals(field) )
