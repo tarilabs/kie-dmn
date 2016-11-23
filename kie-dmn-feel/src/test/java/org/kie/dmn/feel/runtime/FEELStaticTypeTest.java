@@ -19,6 +19,7 @@ package org.kie.dmn.feel.runtime;
 import org.junit.runners.Parameterized;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.impl.JavaBackedType;
+import org.kie.dmn.feel.lang.impl.MapBackedType;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.kie.dmn.feel.runtime.impl.RangeImpl;
 
@@ -36,9 +37,8 @@ public class FEELStaticTypeTest
     @Parameterized.Parameters(name = "{index}: {0} ({1} | {2}) = {3}")
     public static Collection<Object[]> data() {
         final Object[][] cases = new Object[][] {
-                
             
-            { "{ name : first name + last name }",
+                { "{ name : first name + last name }",
                     new HashMap<String, Type>() {{
                         put( "first name", BuiltInType.STRING );
                         put( "last name", BuiltInType.STRING );
@@ -51,34 +51,22 @@ public class FEELStaticTypeTest
                         put( "name", "John Doe" );
                     }} },
                 
-                
-//                { "{ name : person.first name + person.last name }",
-//                  new HashMap<String, Type>() {{
-//                      put( "person", new Type() {
-//                        @Override
-//                        public String toString(Object value) {
-//                            return null;
-//                        }
-//                        
-//                        @Override
-//                        public String getName() { return "Matteo";
-//                        }
-//                        
-//                        @Override
-//                        public Object fromString(String value) {
-//                            return null;
-//                        }
-//                    } );
-//                  }},
-//                  new HashMap<String, Object>() {{
-//                      Map<String, String> person = new HashMap<>();
-//                      person.put("first name", "John");
-//                      person.put("last name", "Doe");
-//                      put( "person", person ); 
-//                  }},
-//                  new HashMap<String,Object>() {{
-//                      put( "name", "John Doe" );
-//                  }} },
+                { "{ name : person.first name + person.last name }",
+                  new HashMap<String, Type>() {{
+                      put( "person", new MapBackedType()
+                                      .addField("first name", String.class)
+                                      .addField("last name", String.class)
+                      );
+                  }},
+                  new HashMap<String, Object>() {{
+                      Map<String, String> person = new HashMap<>();
+                      person.put("first name", "John ");
+                      person.put("last name", "Doe");
+                      put( "person", person ); 
+                  }},
+                  new HashMap<String,Object>() {{
+                      put( "name", "John Doe" );
+                  }} },
             
                 { "{ myFeelVar : person.first name + person.last name }",
                   new HashMap<String, Type>() {{
