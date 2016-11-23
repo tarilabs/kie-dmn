@@ -39,46 +39,46 @@ public class FEELStaticTypeTest
     public static Collection<Object[]> data() {
         final Object[][] cases = new Object[][] {
             
-//                { "{ name : first name + last name }",
-//                    new HashMap<String, Type>() {{
-//                        put( "first name", BuiltInType.STRING );
-//                        put( "last name", BuiltInType.STRING );
-//                    }},
-//                    new HashMap<String, Object>() {{
-//                        put( "first name", "John " );
-//                        put( "last name", "Doe" );
-//                    }},
-//                    new HashMap<String,Object>() {{
-//                        put( "name", "John Doe" );
-//                    }} },
-//                
-//                { "{ name : person.first name + person.last name }",
-//                  new HashMap<String, Type>() {{
-//                      put( "person", new MapBackedType()
-//                                      .addField( "first name", BuiltInType.STRING )
-//                                      .addField( "last name", BuiltInType.STRING )
-//                      );
-//                  }},
-//                  new HashMap<String, Object>() {{
-//                      Map<String, String> person = new HashMap<>();
-//                      person.put("first name", "John ");
-//                      person.put("last name", "Doe");
-//                      put( "person", person ); 
-//                  }},
-//                  new HashMap<String,Object>() {{
-//                      put( "name", "John Doe" );
-//                  }} },
-//            
-//                { "{ myFeelVar : person.first name + person.last name }",
-//                  new HashMap<String, Type>() {{
-//                      put( "person", new JavaBackedType(Person.class) );
-//                  }},
-//                  new HashMap<String, Object>() {{
-//                      put( "person", new Person("John ", "Doe") ); 
-//                  }},
-//                  new HashMap<String,Object>() {{
-//                      put( "myFeelVar", "John Doe" );
-//                  }} },
+                { "{ name : first name + last name }",
+                    new HashMap<String, Type>() {{
+                        put( "first name", BuiltInType.STRING );
+                        put( "last name", BuiltInType.STRING );
+                    }},
+                    new HashMap<String, Object>() {{
+                        put( "first name", "John " );
+                        put( "last name", "Doe" );
+                    }},
+                    new HashMap<String,Object>() {{
+                        put( "name", "John Doe" );
+                    }} },
+                
+                { "{ name : person.first name + person.last name }",
+                  new HashMap<String, Type>() {{
+                      put( "person", new MapBackedType()
+                                      .addField( "first name", BuiltInType.STRING )
+                                      .addField( "last name", BuiltInType.STRING )
+                      );
+                  }},
+                  new HashMap<String, Object>() {{
+                      Map<String, String> person = new HashMap<>();
+                      person.put("first name", "John ");
+                      person.put("last name", "Doe");
+                      put( "person", person ); 
+                  }},
+                  new HashMap<String,Object>() {{
+                      put( "name", "John Doe" );
+                  }} },
+            
+                { "{ myFeelVar : person.first name + person.last name }",
+                  new HashMap<String, Type>() {{
+                      put( "person", new JavaBackedType(Person.class) );
+                  }},
+                  new HashMap<String, Object>() {{
+                      put( "person", new Person("John ", "Doe") ); 
+                  }},
+                  new HashMap<String,Object>() {{
+                      put( "myFeelVar", "John Doe" );
+                  }} },
                 
 //                { "{ myFeelVar : person.first name + person.last name + \" resides in \" + person.home address.street name }",
                 { "{ myFeelVar : person.home address.street name }",
