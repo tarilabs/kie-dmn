@@ -21,19 +21,22 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.kie.dmn.feel.lang.CustomType;
+import org.kie.dmn.feel.lang.CustomType.Field;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Symbol;
 import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.lang.impl.CustomType;
-import org.kie.dmn.feel.lang.impl.CustomType.Field;
 import org.kie.dmn.feel.lang.types.ScopeImpl;
 import org.kie.dmn.feel.lang.types.SymbolTable;
 import org.kie.dmn.feel.lang.types.VariableSymbol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Stack;
 
 public class ParserHelper {
+    public static final Logger LOG = LoggerFactory.getLogger(ParserHelper.class);
 
     private SymbolTable   symbols      = new SymbolTable();
     private Scope         currentScope = symbols.getGlobalScope();
@@ -73,14 +76,14 @@ public class ParserHelper {
     }
 
     public void recoverScope( String name ) {
-        System.out.println("recoverScope( name: "+name+") with currentScope:"+currentScope);
+        LOG.trace("recoverScope( name: {}) with currentScope: {}", name, currentScope);
         Symbol resolved = this.currentScope.resolve(name);
         if ( resolved != null && resolved.getType() instanceof CustomType ) {
             CustomType type = (CustomType) resolved.getType();
             pushName(name);
             pushScope();
             for ( Field f : type.fields() ) {
-                this.currentScope.define(new VariableSymbol( f.name ));
+                this.currentScope.define(new VariableSymbol( f.getName() ));
             }
         } else {
         
@@ -108,7 +111,7 @@ public class ParserHelper {
     }
     
     public void defineVariable(String variable, Type type) {
-        System.out.println("defining custom type symbol.");
+        LOG.trace("defining custom type symbol.");
         VariableSymbol var = new VariableSymbol( variable, type );
         this.currentScope.define( var );
     }
@@ -144,7 +147,7 @@ public class ParserHelper {
     }
 
     public void dump() {
-        System.out.println("dump"+currentName);
+        LOG.trace("dump"+currentName);
     }
 
 }

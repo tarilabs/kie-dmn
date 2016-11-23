@@ -18,7 +18,7 @@ package org.kie.dmn.feel.runtime;
 
 import org.junit.runners.Parameterized;
 import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.lang.impl.CustomType;
+import org.kie.dmn.feel.lang.impl.JavaBackedType;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.kie.dmn.feel.runtime.impl.RangeImpl;
 
@@ -82,7 +82,7 @@ public class FEELStaticTypeTest
             
                 { "{ myFeelVar : person.first name + person.last name }",
                   new HashMap<String, Type>() {{
-                      put( "person", new CustomType(Person.class) );
+                      put( "person", new JavaBackedType(Person.class) );
                   }},
                   new HashMap<String, Object>() {{
                       put( "person", new Person("John ", "Doe") ); 

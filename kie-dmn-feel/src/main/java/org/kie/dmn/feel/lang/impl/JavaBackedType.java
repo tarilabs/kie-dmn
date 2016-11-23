@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.kie.dmn.feel.lang.CustomType;
 import org.kie.dmn.feel.lang.FEELAccessor;
 import org.kie.dmn.feel.lang.Type;
 
-public class CustomType implements Type {
+public class JavaBackedType implements CustomType {
     
     private List<Field> fields = new ArrayList<>();
     private Class<?> wrapped;
 
-    public CustomType(Class<?> class1) {
+    public JavaBackedType(Class<?> class1) {
         this.wrapped = class1;
         Stream.of( class1.getMethods() )
             .filter( m -> m.getAnnotation(FEELAccessor.class) != null )
@@ -22,7 +23,7 @@ public class CustomType implements Type {
 
     @Override
     public String getName() {
-        return "Matteo";
+        return wrapped.getName();
     }
 
     @Override
@@ -39,17 +40,10 @@ public class CustomType implements Type {
         return wrapped;
     }
     
+    @Override
     public List<Field> fields() {
         return fields;
     }
 
-    public static class Field {
-        public final String name;
-        public final Class<?> type;
-        public Field(String name, Class<?> type) {
-            super();
-            this.name = name;
-            this.type = type;
-        }
-    }
+
 }

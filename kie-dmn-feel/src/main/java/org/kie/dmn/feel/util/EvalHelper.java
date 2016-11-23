@@ -28,8 +28,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.FEELAccessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EvalHelper {
+    public static final Logger LOG = LoggerFactory.getLogger(EvalHelper.class);
 
     public static String normalizeVariableName(String name) {
         return name.replaceAll( "\\s+", " " );
@@ -153,7 +156,7 @@ public class EvalHelper {
      * @return
      */
     public static Method getAccessor(Class<?> clazz, String field) {
-        System.out.println("getAccessor("+clazz+", "+field+")");
+        LOG.trace("getAccessor({}, {})", clazz, field);
         try {
             return clazz.getMethod( "get" + ucFirst( field ) );
         } catch ( NoSuchMethodException e ) {
