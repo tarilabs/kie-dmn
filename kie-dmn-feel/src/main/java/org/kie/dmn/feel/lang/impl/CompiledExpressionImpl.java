@@ -17,24 +17,16 @@
 package org.kie.dmn.feel.lang.impl;
 
 import org.kie.dmn.feel.lang.CompiledExpression;
-import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.ast.ASTNode;
-import org.kie.dmn.feel.lang.ast.BaseNode;
 import org.kie.dmn.feel.lang.types.SymbolTable;
 
 import java.util.Map;
 
 public class CompiledExpressionImpl implements CompiledExpression {
     private ASTNode     expression;
-    private Map<String, Type> inputVariableTypes;
 
     public CompiledExpressionImpl(ASTNode expression) {
         this.expression = expression;
-    }
-
-    public CompiledExpressionImpl(ASTNode expr, Map<String, Type> inputVariableTypes) {
-       this(expr);
-       this.inputVariableTypes = inputVariableTypes;
     }
 
     public ASTNode getExpression() {
