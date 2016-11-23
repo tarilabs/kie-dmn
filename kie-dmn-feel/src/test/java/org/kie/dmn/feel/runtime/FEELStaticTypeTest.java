@@ -80,8 +80,7 @@ public class FEELStaticTypeTest
                       put( "myFeelVar", "John Doe" );
                   }} },
                 
-//                { "{ myFeelVar : person.first name + person.last name + \" resides in \" + person.home address.street name }",
-                { "{ myFeelVar : person.home address.street name }",
+                { "{ myFeelVar : person.first name + person.last name + \" resides in \" + person.home address.street name }",
                       new HashMap<String, Type>() {{
                           put( "person", new JavaBackedType(Person.class) );
                       }},

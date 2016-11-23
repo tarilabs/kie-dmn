@@ -52,14 +52,17 @@ public class ParserHelper {
     }
 
     public void pushScope() {
+        LOG.trace("pushScope()");
         currentScope = new ScopeImpl( currentName.peek(), currentScope );
     }
 
     public void popScope() {
+        LOG.trace("popScope()");
         currentScope = currentScope.getParentScope();
     }
 
     public void pushName( String name ) {
+        LOG.trace("pushName() {}", name);
         this.currentName.push( name );
     }
 
@@ -68,6 +71,7 @@ public class ParserHelper {
     }
 
     public void popName() {
+        LOG.trace("popName()");
         this.currentName.pop();
     }
 
@@ -77,24 +81,20 @@ public class ParserHelper {
 
     public void recoverScope( String name ) {
         LOG.trace("[{}] recoverScope( name: {}) with currentScope: {}", this.currentScope.getName(), name, currentScope);
-            LOG.trace(".. else branch.");
-            Scope s = this.currentScope.getChildScopes().get( name );
-            if( s != null ) {
-                pushName(name);
-                currentScope = s;
-            } else {
-                pushName(name);
-                pushScope();
-                Symbol resolved = this.currentScope.resolve(name);
-                if ( resolved != null && resolved.getType() instanceof CustomType ) {
-                    CustomType type = (CustomType) resolved.getType();
-                    for ( Field f : type.fields() ) {
-                        this.currentScope.define(new VariableSymbol( f.getName(), f.getType() ));
-                    }
-                    LOG.trace(".. PUSHED, scope name {} with symbols {}", this.currentName.peek(), this.currentScope.getSymbols());
+        Scope s = this.currentScope.getChildScopes().get( name );
+        if( s != null ) {
+            currentScope = s;
+        } else {
+            pushScope();
+            Symbol resolved = this.currentScope.resolve(name);
+            if ( resolved != null && resolved.getType() instanceof CustomType ) {
+                CustomType type = (CustomType) resolved.getType();
+                for ( Field f : type.fields() ) {
+                    this.currentScope.define(new VariableSymbol( f.getName(), f.getType() ));
                 }
+                LOG.trace(".. PUSHED, scope name {} with symbols {}", this.currentName.peek(), this.currentScope.getSymbols());
             }
-        
+        }
     }
 
     public void dismissScope() {
