@@ -3,11 +3,10 @@ package org.kie.dmn.feel.lang.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.CustomType;
-import org.kie.dmn.feel.lang.FEELAccessor;
 import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.parser.feel11.ParserHelper;
 
 public class MapBackedType implements CustomType {
     
@@ -22,7 +21,7 @@ public class MapBackedType implements CustomType {
      */
     public MapBackedType(Map<String, ?> map) {
         map.entrySet().stream()
-            .map( kv -> new Field( kv.getKey(), Type.determineTypeFromClass( kv.getValue().getClass()) ) )
+            .map( kv -> new Field( kv.getKey(), ParserHelper.determineTypeFromClass( kv.getValue().getClass()) ) )
             .forEach( f -> fields.add(f) );
     }
     

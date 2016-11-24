@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.CustomType;
 import org.kie.dmn.feel.lang.FEELAccessor;
-import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.parser.feel11.ParserHelper;
 
 public class JavaBackedType implements CustomType {
     
@@ -17,7 +17,7 @@ public class JavaBackedType implements CustomType {
         this.wrapped = class1;
         Stream.of( class1.getMethods() )
             .filter( m -> m.getAnnotation(FEELAccessor.class) != null )
-            .forEach( m -> fields.add( new Field( m.getAnnotation(FEELAccessor.class).value() , Type.determineTypeFromClass(m.getReturnType()) ) ) );
+            .forEach( m -> fields.add( new Field( m.getAnnotation(FEELAccessor.class).value() , ParserHelper.determineTypeFromClass(m.getReturnType()) ) ) );
             ;
     }
 

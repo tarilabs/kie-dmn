@@ -40,8 +40,6 @@ public class FEELParser {
         // pre-loads the parser with symbols
         defineVariables( inputVariableTypes, inputVariables, parser );
         
-        parser.getHelper().dump();
-        
         return parser;
     }
 
