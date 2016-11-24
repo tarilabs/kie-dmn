@@ -23,7 +23,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.kie.dmn.feel.lang.CustomType;
 import org.kie.dmn.feel.lang.FEELAccessor;
-import org.kie.dmn.feel.lang.CustomType.Field;
+import org.kie.dmn.feel.lang.Property;
 import org.kie.dmn.feel.lang.impl.JavaBackedType;
 import org.kie.dmn.feel.lang.Scope;
 import org.kie.dmn.feel.lang.Symbol;
@@ -105,7 +105,7 @@ public class ParserHelper {
             Symbol resolved = this.currentScope.resolve(name);
             if ( resolved != null && resolved.getType() instanceof CustomType ) {
                 CustomType type = (CustomType) resolved.getType();
-                for ( Field f : type.fields() ) {
+                for ( Property f : type.getProperties().values() ) {
                     this.currentScope.define(new VariableSymbol( f.getName(), f.getType() ));
                 }
                 LOG.trace(".. PUSHED, scope name {} with symbols {}", this.currentName.peek(), this.currentScope.getSymbols());

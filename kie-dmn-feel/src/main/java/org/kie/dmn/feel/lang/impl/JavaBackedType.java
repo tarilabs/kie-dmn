@@ -1,23 +1,25 @@
 package org.kie.dmn.feel.lang.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.CustomType;
 import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.Property;
 import org.kie.dmn.feel.parser.feel11.ParserHelper;
 
 public class JavaBackedType implements CustomType {
-    
-    private List<Field> fields = new ArrayList<>();
     private Class<?> wrapped;
+    private Map<String, Property> properties = new HashMap<>();
 
     public JavaBackedType(Class<?> class1) {
         this.wrapped = class1;
         Stream.of( class1.getMethods() )
             .filter( m -> m.getAnnotation(FEELAccessor.class) != null )
-            .forEach( m -> fields.add( new Field( m.getAnnotation(FEELAccessor.class).value() , ParserHelper.determineTypeFromClass(m.getReturnType()) ) ) );
+            .forEach( m -> properties.put( m.getAnnotation(FEELAccessor.class).value() , new PropertyImpl( m.getAnnotation(FEELAccessor.class).value() , ParserHelper.determineTypeFromClass(m.getReturnType()) ) ) );
             ;
     }
 
@@ -39,11 +41,9 @@ public class JavaBackedType implements CustomType {
     public Class<?> getWrapped() {
         return wrapped;
     }
-    
+
     @Override
-    public List<Field> fields() {
-        return fields;
+    public Map<String, Property> getProperties() {
+        return this.properties;
     }
-
-
 }
