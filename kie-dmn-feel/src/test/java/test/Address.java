@@ -1,6 +1,6 @@
 package test;
 
-import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.FEELProperty;
 
 public class Address {
     private String streetName;
@@ -10,7 +10,7 @@ public class Address {
         this.streetName = streetName;
     }
 
-    @FEELAccessor("street name")
+    @FEELProperty("street name")
     public String getStreetName() {
         return streetName;
     }

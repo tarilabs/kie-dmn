@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(ElementType.METHOD)
-public @interface FEELAccessor {
+public @interface FEELProperty {
 
     String value();
 

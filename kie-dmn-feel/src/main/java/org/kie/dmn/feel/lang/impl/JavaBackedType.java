@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.kie.dmn.feel.lang.CustomType;
-import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.FEELProperty;
 import org.kie.dmn.feel.lang.Property;
 import org.kie.dmn.feel.parser.feel11.ParserHelper;
 
@@ -18,8 +18,8 @@ public class JavaBackedType implements CustomType {
     public JavaBackedType(Class<?> class1) {
         this.wrapped = class1;
         Stream.of( class1.getMethods() )
-            .filter( m -> m.getAnnotation(FEELAccessor.class) != null )
-            .forEach( m -> properties.put( m.getAnnotation(FEELAccessor.class).value() , new PropertyImpl( m.getAnnotation(FEELAccessor.class).value() , ParserHelper.determineTypeFromClass(m.getReturnType()) ) ) );
+            .filter( m -> m.getAnnotation(FEELProperty.class) != null )
+            .forEach( m -> properties.put( m.getAnnotation(FEELProperty.class).value() , new PropertyImpl( m.getAnnotation(FEELProperty.class).value() , ParserHelper.determineTypeFromClass(m.getReturnType()) ) ) );
             ;
     }
 

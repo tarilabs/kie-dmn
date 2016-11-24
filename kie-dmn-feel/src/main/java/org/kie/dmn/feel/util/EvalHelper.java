@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.FEELProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,7 +142,7 @@ public class EvalHelper {
     public static Method getGenericAccessor(Class<?> clazz, String field) {
         LOG.trace("getGenericAccessor({}, {})", clazz, field);
         return Stream.of(clazz.getMethods())
-                .filter( m -> Optional.ofNullable( m.getAnnotation(FEELAccessor.class) )
+                .filter( m -> Optional.ofNullable( m.getAnnotation(FEELProperty.class) )
                                 .map( ann -> ann.value().equals(field) )
                                 .orElse( false ) 
                         )

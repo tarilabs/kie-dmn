@@ -22,7 +22,7 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.kie.dmn.feel.lang.CustomType;
-import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.FEELProperty;
 import org.kie.dmn.feel.lang.Property;
 import org.kie.dmn.feel.lang.impl.JavaBackedType;
 import org.kie.dmn.feel.lang.Scope;
@@ -190,7 +190,7 @@ public class ParserHelper {
             return BuiltInType.LIST;
         } else if( Map.class.isAssignableFrom(clazz) ) {     // TODO not so sure about this one..
             return BuiltInType.CONTEXT;
-        } else if (Stream.of(clazz.getMethods()).anyMatch(m->m.getAnnotation(FEELAccessor.class)!=null)) {
+        } else if (Stream.of(clazz.getMethods()).anyMatch(m->m.getAnnotation(FEELProperty.class)!=null)) {
             return new JavaBackedType(clazz);
         }
         return BuiltInType.UNKNOWN;

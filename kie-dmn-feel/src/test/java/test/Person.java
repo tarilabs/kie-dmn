@@ -1,6 +1,6 @@
 package test;
 
-import org.kie.dmn.feel.lang.FEELAccessor;
+import org.kie.dmn.feel.lang.FEELProperty;
 
 public class Person {
     private String firstName;
@@ -18,7 +18,7 @@ public class Person {
         this.homeAddress = homeAddress;
     }
     
-    @FEELAccessor("first name")
+    @FEELProperty("first name")
     public String getFirstName() {
         return firstName;
     }
@@ -27,7 +27,7 @@ public class Person {
         this.firstName = firstName;
     }
     
-    @FEELAccessor("last name")
+    @FEELProperty("last name")
     public String getLastName() {
         return lastName;
     }
@@ -36,7 +36,7 @@ public class Person {
         this.lastName = lastName;   
     }
     
-    @FEELAccessor("home address")
+    @FEELProperty("home address")
     public Address getHomeAddress() {
         return homeAddress;
     }
