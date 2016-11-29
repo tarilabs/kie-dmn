@@ -20,6 +20,7 @@ import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Symbol;
 import org.kie.dmn.feel.runtime.FEELFunction;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.util.Either;
 import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
@@ -49,11 +50,6 @@ public abstract class BaseFEELFunction implements FEELFunction {
     private String name;
     private Symbol symbol;
     
-    private EvaluationContext evalCtx;
-    protected EvaluationContext getEvalCtx() {
-        return this.evalCtx;
-    }
-    
     public BaseFEELFunction( String name ) {
         this.name = name;
         this.symbol = new FunctionSymbol( name, this );
@@ -77,7 +73,6 @@ public abstract class BaseFEELFunction implements FEELFunction {
     @Override
     public Object applyReflectively(EvaluationContext ctx, Object[] params) {
         // use reflection to call the appropriate apply method
-        this.evalCtx = ctx;
         try {
             boolean isNamedParams = params.length > 0 && params[0] instanceof NamedParameter;
             if ( ! isCustomFunction() ) {
@@ -94,15 +89,20 @@ public abstract class BaseFEELFunction implements FEELFunction {
                     Object result = cm.apply.invoke( this, cm.actualParams );
                     
                     if (result instanceof Either) {
-                        Either<String, Object> either = (Either<String, Object>) result;
+                        @SuppressWarnings("unchecked")
+                        Either<FEELEvent, Object> either = (Either<FEELEvent, Object>) result;
                         
                         Object eitherResult = either.cata((left) -> { 
-                            FEELEventListenersManager.notifyListeners(getEvalCtx().getEventsManager(), () -> {
-                                return new InvalidParametersEvent(Severity.ERROR, 
-                                                                  left, 
-                                                                  getName(), 
-                                                                  Stream.of( cm.apply.getParameters()).map(p->p.getAnnotation(ParameterName.class).value()).collect(Collectors.toList()), 
-                                                                  Arrays.asList( cm.actualParams ) );
+                            FEELEventListenersManager.notifyListeners(ctx.getEventsManager(), () -> {
+                                if (left instanceof InvalidParametersEvent ) {
+                                    InvalidParametersEvent invalidParametersEvent = (InvalidParametersEvent) left;
+                                    invalidParametersEvent.setNodeName(getName());
+                                    invalidParametersEvent.setActualParameters(
+                                            Stream.of( cm.apply.getParameters()).map(p->p.getAnnotation(ParameterName.class).value()).collect(Collectors.toList()), 
+                                            Arrays.asList( cm.actualParams ) 
+                                            );
+                                }
+                                return left;
                             }
                             );
                             return null;
@@ -143,8 +143,6 @@ public abstract class BaseFEELFunction implements FEELFunction {
             }
         } catch ( Exception e ) {
             logger.error( "Error trying to call function "+getName()+".", e );
-        } finally {
-            this.evalCtx = null;
         }
         return null;
     }

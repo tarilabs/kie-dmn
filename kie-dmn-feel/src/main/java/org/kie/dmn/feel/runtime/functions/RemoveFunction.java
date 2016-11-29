@@ -20,6 +20,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.util.Either;
 
 public class RemoveFunction
@@ -29,12 +32,18 @@ public class RemoveFunction
         super( "remove" );
     }
 
-    public Either<String, List> apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
-        if ( list == null || position == null ) { 
-            return Either.ofLeft("remove function called on a null parameter");
+    public Either<FEELEvent, List> apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
+        if ( list == null ) { 
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'list' cannot be null."));
         }
-        if ( position.intValue() == 0 || position.abs().intValue() > list.size() ) {
-            return Either.ofLeft("remove function called on an invalid 'position' parameter");
+        if ( position == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'position' cannot be null."));
+        }
+        if ( position.intValue() == 0 ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'position' cannot be zero (parameter 'position' is 1-based)."));
+        }
+        if ( position.abs().intValue() > list.size() ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'position' inconsistent with 'list' size."));
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );

@@ -33,8 +33,12 @@ public class InvalidParametersEvent
         extends FEELEventBase
         implements FEELEvent {
 
-    private final String nodeName;
+    private String nodeName;
     private final Map<String, Object> actualParameters = new HashMap<>();
+    
+    public InvalidParametersEvent(Severity severity, String msg) {
+        super( severity, msg, null );
+    }
 
     public InvalidParametersEvent(Severity severity, String msg, String nodeName, Map<String, Object> actualParameterKV) {
         super( severity, msg, null );
@@ -46,12 +50,21 @@ public class InvalidParametersEvent
     public InvalidParametersEvent(Severity severity, String msg, String nodeName, List<String> parameterNames, List<Object> parameterValues) {
         super( severity, msg, null );
         this.nodeName = nodeName;
-        IntStream.range(0, parameterNames.size())
-            .forEach( idx -> actualParameters.put(parameterNames.get(idx), parameterValues.get(idx)) );
+        setActualParameters(parameterNames, parameterValues);
+    }
+    
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public String getNodeName() {
         return nodeName;
+    }
+    
+    public void setActualParameters(List<String> parameterNames, List<Object> parameterValues) {
+        this.actualParameters.clear();
+        IntStream.range(0, parameterNames.size())
+            .forEach( idx -> actualParameters.put(parameterNames.get(idx), parameterValues.get(idx)) );
     }
 
     public Map<String, Object> getActualParameters() {

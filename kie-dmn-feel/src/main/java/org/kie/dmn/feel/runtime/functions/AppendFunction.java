@@ -24,6 +24,7 @@ import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
 public class AppendFunction
@@ -33,9 +34,12 @@ public class AppendFunction
         super( "append" );
     }
 
-    public Either<String, List> apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
-        if ( list == null || items == null ) {
-            return Either.ofLeft("append function called on a null parameter");
+    public Either<FEELEvent, List> apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
+        if ( list == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "append function parameter 'list' cannot be null."));
+        }
+        if ( items == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "append function parameter 'item' cannot be null"));
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );
