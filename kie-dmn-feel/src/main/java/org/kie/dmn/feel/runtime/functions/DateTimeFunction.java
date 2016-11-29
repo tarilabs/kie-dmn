@@ -21,6 +21,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class DateTimeFunction
         extends BaseFEELFunction {
 
@@ -28,25 +33,38 @@ public class DateTimeFunction
         super( "date and time" );
     }
 
-    public TemporalAccessor apply(@ParameterName( "from" ) String val) {
-        if ( val != null ) {
-            try {
-                return DateTimeFormatter.ISO_DATE_TIME.parseBest( val, ZonedDateTime::from, OffsetDateTime::from, LocalDateTime::from );
-            } catch ( Exception e ) {
-                // no luck, return null
-            }
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "from" ) String val) {
+        if ( val == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
-        return null;
+        
+        try {
+            return Either.ofRight( DateTimeFormatter.ISO_DATE_TIME.parseBest( val, ZonedDateTime::from, OffsetDateTime::from, LocalDateTime::from ) );
+        } catch ( Exception e ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null", e));
+        }
     }
 
-    public TemporalAccessor apply(@ParameterName( "date" ) Temporal date, @ParameterName( "time" ) Temporal time) {
-        if ( date != null && time != null ) {
-            if( date instanceof LocalDate && time instanceof LocalTime ) {
-                return LocalDateTime.of( (LocalDate) date, (LocalTime) time );
-            } else if( date instanceof LocalDate && time instanceof OffsetTime ) {
-                return ZonedDateTime.of( (LocalDate) date, LocalTime.from( time ), ZoneOffset.from( time ) );
-            }
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "date" ) Temporal date, @ParameterName( "time" ) Temporal time) {
+        if ( date == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "date", "cannot be null"));
         }
-        return null;
+        if ( !(date instanceof LocalDate) ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "date", "must be an instance of LocalDate"));
+        }
+        if ( time == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time", "cannot be null"));
+        }
+        if ( !(time instanceof LocalTime || time instanceof OffsetTime) ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time", "must be an instance of LocalTime or OffsetTime"));
+        }
+        
+        if( date instanceof LocalDate && time instanceof LocalTime ) {
+            return Either.ofRight( LocalDateTime.of( (LocalDate) date, (LocalTime) time ) );
+        } else if( date instanceof LocalDate && time instanceof OffsetTime ) {
+            return Either.ofRight( ZonedDateTime.of( (LocalDate) date, LocalTime.from( time ), ZoneOffset.from( time ) ) );
+        }
+        
+        return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "cannot apply function for the input parameters"));
     }
 }

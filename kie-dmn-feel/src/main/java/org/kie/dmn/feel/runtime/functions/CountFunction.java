@@ -20,6 +20,11 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class CountFunction
         extends BaseFEELFunction {
 
@@ -27,16 +32,20 @@ public class CountFunction
         super( "count" );
     }
 
-    public BigDecimal apply(@ParameterName( "list" ) List list) {
+    public Either<FEELEvent, BigDecimal> apply(@ParameterName( "list" ) List list) {
         if ( list == null ) {
-            return null;
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         } else {
-            return BigDecimal.valueOf( list.size() );
+            return Either.ofRight( BigDecimal.valueOf( list.size() ) );
         }
     }
 
-    public BigDecimal apply(@ParameterName( "c" ) Object[] list) {
-        return apply( Arrays.asList( list ) );
+    public Either<FEELEvent, BigDecimal> apply(@ParameterName( "c" ) Object[] list) {
+        if ( list == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "c", "cannot be null"));
+        } else {
+            return apply( Arrays.asList( list ) );
+        }
     }
 
 }

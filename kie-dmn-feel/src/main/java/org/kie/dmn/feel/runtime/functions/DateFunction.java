@@ -16,9 +16,15 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
 
 public class DateFunction
         extends BaseFEELFunction {
@@ -27,25 +33,46 @@ public class DateFunction
         super( "date" );
     }
 
-    public TemporalAccessor apply(@ParameterName( "from" ) String val) {
-        if ( val != null ) {
-            return LocalDate.from( DateTimeFormatter.ISO_DATE.parse( val ) );
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "from" ) String val) {
+        if ( val == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
-        return null;
+        
+        try {
+            return Either.ofRight( LocalDate.from( DateTimeFormatter.ISO_DATE.parse( val ) ) );
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+        }
     }
 
-    public TemporalAccessor apply(@ParameterName( "year" ) Number year, @ParameterName( "month" ) Number month, @ParameterName( "day" ) Number day) {
-        if ( year != null && month != null && day != null ) {
-            return LocalDate.of( year.intValue(), month.intValue(), day.intValue() );
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "year" ) Number year, @ParameterName( "month" ) Number month, @ParameterName( "day" ) Number day) {
+        if ( year == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "year", "cannot be null"));
         }
-        return null;
+        if ( month == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "month", "cannot be null"));
+        }
+        if ( day == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "day", "cannot be null"));
+        }
+        
+        try {
+            return Either.ofRight( LocalDate.of( year.intValue(), month.intValue(), day.intValue() ) );
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "input parameters date-parsing exception", e));
+        }
     }
 
-    public TemporalAccessor apply(@ParameterName( "from" ) TemporalAccessor date) {
-        if ( date != null ) {
-            return LocalDate.from( date );
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "from" ) TemporalAccessor date) {
+        if ( date == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
-        return null;
+        
+        try {
+            return Either.ofRight( LocalDate.from( LocalDate.from( date ) ) );
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+        }
     }
 
 

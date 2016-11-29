@@ -33,10 +33,21 @@ public class InvalidParametersEvent
         extends FEELEventBase
         implements FEELEvent {
 
+    private String genericProblem;
     private String paramNameInError;
     private String paramProblem;
     private String nodeName;
     private final Map<String, Object> actualParameters = new HashMap<>();
+    
+    public InvalidParametersEvent(Severity severity, String genericProblem) {
+        super( severity, null, null );
+        this.genericProblem = genericProblem;
+    }
+    
+    public InvalidParametersEvent(Severity severity, String genericProblem, Throwable sourceException ) {
+        super( severity, null, sourceException );
+        this.genericProblem = genericProblem;
+    }
     
     public InvalidParametersEvent(Severity severity, String paramNameInError, String paramProblem) {
         super( severity, null, null );
@@ -44,22 +55,19 @@ public class InvalidParametersEvent
         this.paramProblem = paramProblem;
     }
     
-    @Override
-    public String getMessage() {
-        return "The parameter '"+paramNameInError+"', in function "+getNodeName()+"(), "+paramProblem+".";
-    }
-
-    public InvalidParametersEvent(Severity severity, String msg, String nodeName, Map<String, Object> actualParameterKV) {
-        super( severity, msg, null );
-        this.nodeName = nodeName;
-        if (actualParameterKV != null) 
-            this.actualParameters.putAll( actualParameterKV );
+    public InvalidParametersEvent(Severity severity, String paramNameInError, String paramProblem, Throwable sourceException ) {
+        super( severity, null, sourceException );
+        this.paramNameInError = paramNameInError;
+        this.paramProblem = paramProblem;
     }
     
-    public InvalidParametersEvent(Severity severity, String msg, String nodeName, List<String> parameterNames, List<Object> parameterValues) {
-        super( severity, msg, null );
-        this.nodeName = nodeName;
-        setActualParameters(parameterNames, parameterValues);
+    @Override
+    public String getMessage() {
+        if (genericProblem == null ) {
+            return "The parameter '"+paramNameInError+"', in function "+getNodeName()+"(), "+paramProblem+".";
+        } else {
+            return genericProblem;
+        }
     }
     
     public void setNodeName(String nodeName) {
@@ -82,12 +90,17 @@ public class InvalidParametersEvent
 
     @Override
     public String toString() {
-        return "InvalidParametersEvent{" +
-               "severity=" + getSeverity() +
-               ", nodeName='" + nodeName + '\'' +
-               ", message='" + getMessage() + '\'' +
-               ", actualParameters='" + formatMap(actualParameters) + '\'' +
-               '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("InvalidParametersEvent{")
+            .append("getSeverity()=").append(getSeverity())
+            .append(", nodeName=").append(nodeName)
+            .append(", message=").append(getMessage())
+            .append(", actualParameters=").append(formatMap(actualParameters))
+            .append(", paramNameInError=").append(paramNameInError)
+            .append(", paramProblem=").append(paramProblem)
+            .append(", getSourceException()=").append(getSourceException())
+            .append("}");
+        return builder.toString();
     }
 
     private String formatMap(Map<String, Object> actualParameters) {
