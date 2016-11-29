@@ -101,7 +101,7 @@ public abstract class BaseFEELFunction implements FEELFunction {
                                 return new InvalidParametersEvent(Severity.ERROR, 
                                                                   left, 
                                                                   getName(), 
-                                                                  Stream.of( cm.apply.getParameters()).map(Parameter::getName).collect(Collectors.toList()), 
+                                                                  Stream.of( cm.apply.getParameters()).map(p->p.getAnnotation(ParameterName.class).value()).collect(Collectors.toList()), 
                                                                   Arrays.asList( cm.actualParams ) );
                             }
                             );
