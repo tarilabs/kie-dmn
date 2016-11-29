@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * An event class to report a syntax error as returned by the parser
+ * An event class to report an evaluation error occured due to invalid parameters.
  */
 public class InvalidParametersEvent
         extends FEELEventBase
@@ -60,7 +60,7 @@ public class InvalidParametersEvent
 
     @Override
     public String toString() {
-        return "InvalidInputEvent{" +
+        return "InvalidParametersEvent{" +
                "severity=" + getSeverity() +
                ", message='" + getMessage() + '\'' +
                ", nodeName='" + nodeName + '\'' +
