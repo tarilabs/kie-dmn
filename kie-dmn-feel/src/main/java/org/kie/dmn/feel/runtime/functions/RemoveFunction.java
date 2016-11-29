@@ -34,16 +34,16 @@ public class RemoveFunction
 
     public Either<FEELEvent, List> apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
         if ( list == null ) { 
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'list' cannot be null."));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         if ( position == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'position' cannot be null."));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "position", "cannot be null"));
         }
         if ( position.intValue() == 0 ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'position' cannot be zero (parameter 'position' is 1-based)."));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "position", "cannot be zero (parameter 'position' is 1-based)"));
         }
         if ( position.abs().intValue() > list.size() ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "remove function parameter 'position' inconsistent with 'list' size."));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "position", "inconsistent with 'list' size"));
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );

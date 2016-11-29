@@ -18,6 +18,11 @@ package org.kie.dmn.feel.runtime.functions;
 
 import java.math.BigDecimal;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class CeilingFunction
         extends BaseFEELFunction {
 
@@ -25,10 +30,10 @@ public class CeilingFunction
         super( "ceiling" );
     }
 
-    public BigDecimal apply(@ParameterName( "n" ) BigDecimal n) {
+    public Either<FEELEvent, BigDecimal> apply(@ParameterName( "n" ) BigDecimal n) {
         if ( n == null ) {
-            return null;
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "n", "cannot be null"));
         }
-        return n.setScale( 0, BigDecimal.ROUND_CEILING );
+        return Either.ofRight( n.setScale( 0, BigDecimal.ROUND_CEILING ) );
     }
 }

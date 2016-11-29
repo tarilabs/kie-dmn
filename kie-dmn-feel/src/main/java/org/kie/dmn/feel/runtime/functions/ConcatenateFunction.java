@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class ConcatenateFunction
         extends BaseFEELFunction {
 
@@ -27,9 +32,9 @@ public class ConcatenateFunction
         super( "concatenate" );
     }
 
-    public List apply(@ParameterName("list") Object[] lists) {
+    public Either<FEELEvent, List> apply(@ParameterName("list") Object[] lists) {
         if ( lists == null ) {
-            return null;
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         // spec requires us to return a new list
         List result = new ArrayList();
@@ -42,6 +47,6 @@ public class ConcatenateFunction
                 return null;
             }
         }
-        return result;
+        return Either.ofRight( result );
     }
 }

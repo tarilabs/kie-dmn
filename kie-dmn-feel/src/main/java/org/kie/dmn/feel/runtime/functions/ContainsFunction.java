@@ -16,6 +16,11 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class ContainsFunction
         extends BaseFEELFunction {
 
@@ -23,11 +28,14 @@ public class ContainsFunction
         super( "contains" );
     }
 
-    public Boolean apply(@ParameterName("string") String string, @ParameterName("match") String match) {
-        if ( string == null || match == null ) {
-            return null;
+    public Either<FEELEvent, Boolean> apply(@ParameterName("string") String string, @ParameterName("match") String match) {
+        if ( string == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
+        }
+        if ( match == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
         } else {
-            return string.indexOf( match ) >= 0;
+            return Either.ofRight( string.indexOf( match ) >= 0 );
         }
     }
 

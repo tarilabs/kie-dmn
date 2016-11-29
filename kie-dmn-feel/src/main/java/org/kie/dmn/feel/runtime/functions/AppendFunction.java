@@ -36,10 +36,10 @@ public class AppendFunction
 
     public Either<FEELEvent, List> apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
         if ( list == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "append function parameter 'list' cannot be null."));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         if ( items == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "append function parameter 'item' cannot be null"));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "item", "cannot be null"));
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );

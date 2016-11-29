@@ -33,11 +33,20 @@ public class InvalidParametersEvent
         extends FEELEventBase
         implements FEELEvent {
 
+    private String paramNameInError;
+    private String paramProblem;
     private String nodeName;
     private final Map<String, Object> actualParameters = new HashMap<>();
     
-    public InvalidParametersEvent(Severity severity, String msg) {
-        super( severity, msg, null );
+    public InvalidParametersEvent(Severity severity, String paramNameInError, String paramProblem) {
+        super( severity, null, null );
+        this.paramNameInError = paramNameInError;
+        this.paramProblem = paramProblem;
+    }
+    
+    @Override
+    public String getMessage() {
+        return "The parameter '"+paramNameInError+"', in function "+getNodeName()+"(), "+paramProblem+".";
     }
 
     public InvalidParametersEvent(Severity severity, String msg, String nodeName, Map<String, Object> actualParameterKV) {
@@ -75,8 +84,8 @@ public class InvalidParametersEvent
     public String toString() {
         return "InvalidParametersEvent{" +
                "severity=" + getSeverity() +
-               ", message='" + getMessage() + '\'' +
                ", nodeName='" + nodeName + '\'' +
+               ", message='" + getMessage() + '\'' +
                ", actualParameters='" + formatMap(actualParameters) + '\'' +
                '}';
     }
