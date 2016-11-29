@@ -20,6 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
+import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+
 public class AppendFunction
         extends BaseFEELFunction {
 
@@ -27,13 +33,13 @@ public class AppendFunction
         super( "append" );
     }
 
-    public List apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
+    public Either<String, List> apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
         if ( list == null || items == null ) {
-            return null;
+            return Either.ofLeft("append function called on a null parameter");
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );
         Stream.of( items ).forEach( i -> result.add( i ) );
-        return result;
+        return Either.ofRight( result );
     }
 }

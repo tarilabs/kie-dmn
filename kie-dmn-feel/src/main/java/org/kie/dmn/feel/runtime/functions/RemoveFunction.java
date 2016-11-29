@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kie.dmn.feel.util.Either;
+
 public class RemoveFunction
         extends BaseFEELFunction {
 
@@ -27,9 +29,12 @@ public class RemoveFunction
         super( "remove" );
     }
 
-    public List apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
-        if ( list == null || position == null || position.intValue() == 0 || position.abs().intValue() > list.size() ) {
-            return null;
+    public Either<String, List> apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
+        if ( list == null || position == null ) { 
+            return Either.ofLeft("remove function called on a null parameter");
+        }
+        if ( position.intValue() == 0 || position.abs().intValue() > list.size() ) {
+            return Either.ofLeft("remove function called on an invalid 'position' parameter");
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );
@@ -38,6 +43,6 @@ public class RemoveFunction
         } else {
             result.remove( list.size()+position.intValue() );
         }
-        return result;
+        return Either.ofRight( result );
     }
 }

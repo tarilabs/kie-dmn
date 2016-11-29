@@ -71,6 +71,26 @@
 
   <build>
     <plugins>
+    
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <fork>true</fork>
+            <meminitial>128m</meminitial>
+            <maxmem>512m</maxmem>
+            <showDeprecation>true</showDeprecation>
+            <showWarnings>true</showWarnings>
+            <source>1.8</source>
+            <target>1.8</target>
+            <testSource>1.8</testSource>
+            <testTarget>1.8</testTarget>
+            <compilerArgs>
+              <arg>-Xlint:unchecked</arg>
+              <arg>-parameters</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>

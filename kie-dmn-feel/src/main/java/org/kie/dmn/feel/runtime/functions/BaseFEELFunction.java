@@ -19,6 +19,10 @@ package org.kie.dmn.feel.runtime.functions;
 import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Symbol;
 import org.kie.dmn.feel.runtime.FEELFunction;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.lang.impl.NamedParameter;
 import org.kie.dmn.feel.lang.types.FunctionSymbol;
 import org.slf4j.Logger;
@@ -26,11 +30,16 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.math.BigDecimal;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public abstract class BaseFEELFunction implements FEELFunction {
@@ -39,7 +48,12 @@ public abstract class BaseFEELFunction implements FEELFunction {
 
     private String name;
     private Symbol symbol;
-
+    
+    private EvaluationContext evalCtx;
+    protected EvaluationContext getEvalCtx() {
+        return this.evalCtx;
+    }
+    
     public BaseFEELFunction( String name ) {
         this.name = name;
         this.symbol = new FunctionSymbol( name, this );
@@ -63,6 +77,7 @@ public abstract class BaseFEELFunction implements FEELFunction {
     @Override
     public Object applyReflectively(EvaluationContext ctx, Object[] params) {
         // use reflection to call the appropriate apply method
+        this.evalCtx = ctx;
         try {
             boolean isNamedParams = params.length > 0 && params[0] instanceof NamedParameter;
             if ( ! isCustomFunction() ) {
@@ -77,6 +92,25 @@ public abstract class BaseFEELFunction implements FEELFunction {
 
                 if( cm != null ) {
                     Object result = cm.apply.invoke( this, cm.actualParams );
+                    
+                    if (result instanceof Either) {
+                        Either<String, Object> either = (Either<String, Object>) result;
+                        
+                        Object eitherResult = either.cata((left) -> { 
+                            FEELEventListenersManager.notifyListeners(getEvalCtx().getEventsManager(), () -> {
+                                return new InvalidParametersEvent(Severity.ERROR, 
+                                                                  left, 
+                                                                  getName(), 
+                                                                  Stream.of( cm.apply.getParameters()).map(Parameter::getName).collect(Collectors.toList()), 
+                                                                  Arrays.asList( cm.actualParams ) );
+                            }
+                            );
+                            return null;
+                        }, Function.identity() );
+                        
+                        return eitherResult;
+                    }
+                    
                     return result;
                 } else {
                     String ps = Arrays.toString( classes );
@@ -102,10 +136,15 @@ public abstract class BaseFEELFunction implements FEELFunction {
                 } else {
                     logger.error( "Unable to find function '" + toString() +"'" );
                 }
+                
+                
+                
                 return normalizeResult( result );
             }
         } catch ( Exception e ) {
             logger.error( "Error trying to call function "+getName()+".", e );
+        } finally {
+            this.evalCtx = null;
         }
         return null;
     }
