@@ -16,6 +16,11 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class StringFunction
         extends BaseFEELFunction {
 
@@ -23,11 +28,11 @@ public class StringFunction
         super( "string" );
     }
 
-    public String apply(@ParameterName("from") Object val) {
+    public Either<FEELEvent, String> apply(@ParameterName("from") Object val) {
         if ( val == null ) {
-            return null;
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "val", "cannot be null"));
         } else {
-            return val.toString();
+            return Either.ofRight( val.toString() );
         }
     }
 }

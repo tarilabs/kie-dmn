@@ -16,6 +16,11 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class StringLowerCaseFunction
         extends BaseFEELFunction {
 
@@ -23,11 +28,11 @@ public class StringLowerCaseFunction
         super( "lower case" );
     }
 
-    public String apply(@ParameterName("string") String string) {
+    public Either<FEELEvent, String> apply(@ParameterName("string") String string) {
         if ( string == null ) {
-            return null;
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
         } else {
-            return string.toLowerCase();
+            return Either.ofRight( string.toLowerCase() );
         }
     }
 }

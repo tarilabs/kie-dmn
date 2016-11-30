@@ -16,6 +16,11 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
+
 public class StartsWithFunction
         extends BaseFEELFunction {
 
@@ -23,12 +28,15 @@ public class StartsWithFunction
         super( "starts with" );
     }
 
-    public Boolean apply(@ParameterName("string") String string, @ParameterName("match") String match) {
-        if ( string == null || match == null ) {
-            return null;
-        } else {
-            return string.startsWith( match );
+    public Either<FEELEvent, Boolean> apply(@ParameterName("string") String string, @ParameterName("match") String match) {
+        if ( string == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
         }
+        if ( match == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
+        }
+        
+        return Either.ofRight( string.startsWith( match ) );
     }
 
 }
