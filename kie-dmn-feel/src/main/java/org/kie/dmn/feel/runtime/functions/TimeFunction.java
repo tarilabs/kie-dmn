@@ -16,12 +16,18 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
 
 public class TimeFunction
         extends BaseFEELFunction {
@@ -30,31 +36,48 @@ public class TimeFunction
         super( "time" );
     }
 
-    public TemporalAccessor apply(@ParameterName("from") String val) {
-        if ( val != null ) {
-            return DateTimeFormatter.ISO_TIME.parseBest( val, OffsetTime::from, LocalTime::from );
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName("from") String val) {
+        if ( val == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
-        return null;
+        
+        try {
+            return Either.ofRight( DateTimeFormatter.ISO_TIME.parseBest( val, OffsetTime::from, LocalTime::from ) );
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+        }
     }
 
-    public TemporalAccessor apply(
+    public Either<FEELEvent, TemporalAccessor> apply(
             @ParameterName("hour") Number hour, @ParameterName("minute") Number minute,
             @ParameterName("second") Number seconds, @ParameterName("offset") Duration offset) {
-        if ( hour != null && minute != null && seconds != null ) {
-            if ( offset == null ) {
-                return LocalTime.of( hour.intValue(), minute.intValue(), seconds.intValue() );
-            } else {
-                return OffsetTime.of( hour.intValue(), minute.intValue(), seconds.intValue(), 0, ZoneOffset.ofTotalSeconds( (int) offset.getSeconds() ) );
-            }
+        if ( hour == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "hour", "cannot be null"));
         }
-        return null;
+        if ( minute == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "minute", "cannot be null"));
+        }
+        if ( seconds == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "seconds", "cannot be null"));
+        }
+        
+        if ( offset == null ) {
+            return Either.ofRight( LocalTime.of( hour.intValue(), minute.intValue(), seconds.intValue() ) );
+        } else {
+            return Either.ofRight( OffsetTime.of( hour.intValue(), minute.intValue(), seconds.intValue(), 0, ZoneOffset.ofTotalSeconds( (int) offset.getSeconds() ) ) );
+        }
     }
 
-    public TemporalAccessor apply(@ParameterName("from") TemporalAccessor date) {
-        if ( date != null ) {
-            return OffsetTime.from( date );
+    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName("from") TemporalAccessor date) {
+        if ( date == null ) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
-        return null;
+        
+        try {
+            return Either.ofRight( OffsetTime.from( date ) );
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+        }
     }
 
 }

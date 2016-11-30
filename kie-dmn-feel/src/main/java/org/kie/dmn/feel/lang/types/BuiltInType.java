@@ -65,7 +65,7 @@ public enum BuiltInType implements Type {
             case NUMBER: return BuiltInFunctions.getFunction( NumberFunction.class).apply( value, null, null ).cata(BuiltInType.justNull(), Function.identity());
             case STRING: return value;
             case DATE: return BuiltInFunctions.getFunction( DateFunction.class ).apply( value ).cata(BuiltInType.justNull(), Function.identity());
-            case TIME: return BuiltInFunctions.getFunction( TimeFunction.class ).apply( value );
+            case TIME: return BuiltInFunctions.getFunction( TimeFunction.class ).apply( value ).cata(BuiltInType.justNull(), Function.identity());
             case DATE_TIME: return BuiltInFunctions.getFunction( DateTimeFunction.class ).apply( value ).cata(BuiltInType.justNull(), Function.identity());
             case DURATION: return BuiltInFunctions.getFunction( DurationFunction.class ).apply( value ).cata(BuiltInType.justNull(), Function.identity());
             case BOOLEAN: return Boolean.parseBoolean( value );
