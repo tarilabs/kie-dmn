@@ -41,7 +41,7 @@ public class DateTimeFunction
         try {
             return Either.ofRight( DateTimeFormatter.ISO_DATE_TIME.parseBest( val, ZonedDateTime::from, OffsetDateTime::from, LocalDateTime::from ) );
         } catch ( Exception e ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null", e));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
         }
     }
 
@@ -59,12 +59,15 @@ public class DateTimeFunction
             return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time", "must be an instance of LocalTime or OffsetTime"));
         }
         
-        if( date instanceof LocalDate && time instanceof LocalTime ) {
-            return Either.ofRight( LocalDateTime.of( (LocalDate) date, (LocalTime) time ) );
-        } else if( date instanceof LocalDate && time instanceof OffsetTime ) {
-            return Either.ofRight( ZonedDateTime.of( (LocalDate) date, LocalTime.from( time ), ZoneOffset.from( time ) ) );
+        try {
+            if( date instanceof LocalDate && time instanceof LocalTime ) {
+                return Either.ofRight( LocalDateTime.of( (LocalDate) date, (LocalTime) time ) );
+            } else if( date instanceof LocalDate && time instanceof OffsetTime ) {
+                return Either.ofRight( ZonedDateTime.of( (LocalDate) date, LocalTime.from( time ), ZoneOffset.from( time ) ) );
+            }
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "cannot apply function for the input parameters"));
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "input parameters date-parsing exception", e));
         }
-        
-        return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "cannot apply function for the input parameters"));
     }
 }
