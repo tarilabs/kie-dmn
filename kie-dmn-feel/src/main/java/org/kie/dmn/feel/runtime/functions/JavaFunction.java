@@ -17,6 +17,11 @@
 package org.kie.dmn.feel.runtime.functions;
 
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.FEELEventBase;
+import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +50,12 @@ public class JavaFunction
         return Arrays.asList( parameters );
     }
 
-    public Object apply(EvaluationContext ctx, Object[] params) {
-        if ( params.length != parameters.size() ) {
-            logger.error( "Illegal invocation of function. Expecting " + getSignature() + " but got " + getName() + "( " + Arrays.asList( params ) + " )" );
-            return null;
+    public Either<FEELEvent, Object> apply(EvaluationContext ctx, Object[] params) {
+        if( params.length != parameters.size() ) {
+            return Either.ofLeft(new InvalidInputEvent(Severity.ERROR, "Illegal invocation of function", getName(), getName() + "( " + Arrays.asList(params)+" )", getSignature()));
         }
+        
+        FEELEvent capturedException = null;
         try {
             ctx.enterFrame();
             for ( int i = 0; i < parameters.size(); i++ ) {
@@ -57,13 +63,13 @@ public class JavaFunction
             }
             Object[] actualParams = prepareParams( params );
             Object result = method.invoke( clazz, actualParams );
-            return result;
+            return Either.ofRight( result );
         } catch ( Exception e ) {
-            logger.error( "Error invoking function " + getSignature() + ".", e );
+            capturedException = new FEELEventBase(Severity.ERROR, "Error invoking function", new RuntimeException("Error invoking function " + getSignature() + ".", e));
         } finally {
             ctx.exitFrame();
         }
-        return null;
+        return Either.ofLeft( capturedException );
     }
 
     private Object[] prepareParams(Object[] params) {
