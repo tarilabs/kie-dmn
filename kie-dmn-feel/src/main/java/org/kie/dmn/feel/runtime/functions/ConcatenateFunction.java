@@ -44,7 +44,8 @@ public class ConcatenateFunction
             } else if ( list != null ) {
                 result.add( list );
             } else {
-                return null;
+                // TODO review accordingly to spec, original behavior was: return null;
+                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "on of the element in the list was null"));
             }
         }
         return Either.ofRight( result );

@@ -34,9 +34,8 @@ public class ContainsFunction
         }
         if ( match == null ) {
             return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
-        } else {
-            return Either.ofRight( string.indexOf( match ) >= 0 );
         }
+        
+        return Either.ofRight( string.indexOf( match ) >= 0 );
     }
-
 }

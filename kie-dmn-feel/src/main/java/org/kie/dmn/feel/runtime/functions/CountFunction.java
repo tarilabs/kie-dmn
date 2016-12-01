@@ -35,17 +35,16 @@ public class CountFunction
     public Either<FEELEvent, BigDecimal> apply(@ParameterName( "list" ) List list) {
         if ( list == null ) {
             return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
-        } else {
-            return Either.ofRight( BigDecimal.valueOf( list.size() ) );
         }
+        
+        return Either.ofRight( BigDecimal.valueOf( list.size() ) );
     }
 
     public Either<FEELEvent, BigDecimal> apply(@ParameterName( "c" ) Object[] list) {
         if ( list == null ) {
             return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "c", "cannot be null"));
-        } else {
-            return apply( Arrays.asList( list ) );
         }
+        
+        return apply( Arrays.asList( list ) );
     }
-
 }
