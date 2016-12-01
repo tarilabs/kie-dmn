@@ -24,6 +24,7 @@ import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.runtime.events.FEELEventBase;
 import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.util.EvalHelper;
 import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.lang.impl.NamedParameter;
 import org.kie.dmn.feel.lang.types.FunctionSymbol;
@@ -273,7 +274,7 @@ public abstract class BaseFEELFunction implements FEELFunction {
 
     private Object normalizeResult(Object result) {
         // this is to normalize types returned by external functions
-        return result != null && result instanceof Number && !(result instanceof BigDecimal) ? new BigDecimal( result.toString() ) : result;
+        return result != null && result instanceof Number && !(result instanceof BigDecimal) ? EvalHelper.getBigDecimalOrNull( result.toString() ) : result;
     }
 
     protected boolean isCustomFunction() {

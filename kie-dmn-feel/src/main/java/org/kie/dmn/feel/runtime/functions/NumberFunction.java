@@ -51,8 +51,7 @@ public class NumberFunction
         }
         
         try {
-            // TODO: here cannot call EvalHelper.bigDecimalOrNull as it doesn't support String as parameter for input, but then how to set MathContext.DECIMAL128 ?
-            return Either.ofRight( new BigDecimal( from ) );
+            return Either.ofRight( EvalHelper.getBigDecimalOrNull( from ) );
         } catch (Exception e) {
             return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "unable to calculate final number result", e));
         }
