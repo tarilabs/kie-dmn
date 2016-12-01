@@ -39,7 +39,7 @@ public class SumFunction
             if ( element instanceof BigDecimal ) {
                 sum = sum.add( (BigDecimal) element );
             } else if ( element instanceof Number ) {
-                sum = sum.add( new BigDecimal( ((Number) element).toString() ) );
+                sum = sum.add( EvalHelper.getBigDecimalOrNull( element ) );
             } else {
                 return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "an element in the list is not suitable for the sum"));
             }

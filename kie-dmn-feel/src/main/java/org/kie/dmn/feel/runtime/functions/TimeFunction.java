@@ -44,7 +44,7 @@ public class TimeFunction
         try {
             return Either.ofRight( DateTimeFormatter.ISO_TIME.parseBest( val, OffsetTime::from, LocalTime::from ) );
         } catch (DateTimeException e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "time-parsing exception", e));
         }
     }
 
@@ -61,10 +61,14 @@ public class TimeFunction
             return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "seconds", "cannot be null"));
         }
         
-        if ( offset == null ) {
-            return Either.ofRight( LocalTime.of( hour.intValue(), minute.intValue(), seconds.intValue() ) );
-        } else {
-            return Either.ofRight( OffsetTime.of( hour.intValue(), minute.intValue(), seconds.intValue(), 0, ZoneOffset.ofTotalSeconds( (int) offset.getSeconds() ) ) );
+        try {
+            if ( offset == null ) {
+                return Either.ofRight( LocalTime.of( hour.intValue(), minute.intValue(), seconds.intValue() ) );
+            } else {
+                return Either.ofRight( OffsetTime.of( hour.intValue(), minute.intValue(), seconds.intValue(), 0, ZoneOffset.ofTotalSeconds( (int) offset.getSeconds() ) ) );
+            }
+        } catch (DateTimeException e) {
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time-parsing exception", e));
         }
     }
 
@@ -76,7 +80,7 @@ public class TimeFunction
         try {
             return Either.ofRight( OffsetTime.from( date ) );
         } catch (DateTimeException e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "time-parsing exception", e));
         }
     }
 

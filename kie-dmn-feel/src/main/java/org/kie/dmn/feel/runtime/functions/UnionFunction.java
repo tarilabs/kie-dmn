@@ -47,6 +47,7 @@ public class UnionFunction
                 // singleton list
                 if ( !result.contains( list ) ) result.add( list );
             } else {
+                // TODO review accordingly to spec, original behavior was: return null;
                 return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "lists", "one of the elements in list is null"));
             }
         }

@@ -42,8 +42,9 @@ public class SubstringAfterFunction
         } else if( index < 0 ) {
             return Either.ofRight( string );
         }
-        // unreachable code?
-        return null;
+        
+        // unreachable code.
+        return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "was an unreachable condition for this function"));
     }
 
 }

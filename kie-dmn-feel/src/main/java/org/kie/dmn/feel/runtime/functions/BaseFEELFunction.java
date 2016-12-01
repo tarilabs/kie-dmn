@@ -146,7 +146,27 @@ public abstract class BaseFEELFunction implements FEELFunction {
                     );
                 }
                 
-                
+                if (result instanceof Either) {
+                    @SuppressWarnings("unchecked")
+                    Either<FEELEvent, Object> either = (Either<FEELEvent, Object>) result;
+                    
+                    final Object[] usedParams = params;
+                    
+                    Object eitherResult = either.cata((left) -> { 
+                        FEELEventListenersManager.notifyListeners(ctx.getEventsManager(), () -> {
+                            if (left instanceof InvalidParametersEvent ) {
+                                InvalidParametersEvent invalidParametersEvent = (InvalidParametersEvent) left;
+                                invalidParametersEvent.setNodeName(getName());
+                                invalidParametersEvent.setActualParameters( IntStream.of(0, usedParams.length).mapToObj(i->"arg"+i).collect(Collectors.toList()), Arrays.asList( usedParams ) );
+                            }
+                            return left;
+                        }
+                        );
+                        return null;
+                    }, Function.identity() );
+                    
+                    return normalizeResult(eitherResult);
+                }
                 
                 return normalizeResult( result );
             }

@@ -52,13 +52,13 @@ public class SublistFunction
         if ( start.intValue() > 0 ) {
             int end = length != null ? start.intValue() - 1 + length.intValue() : list.size();
             if ( end > list.size() ) {
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "inconsistencies in attempting to create a sublist bigger than the original list"));
+                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "attempting to create a sublist bigger than the original list"));
             }
             return Either.ofRight( list.subList( start.intValue() - 1, end ) );
         } else {
             int end = length != null ? list.size() + start.intValue() + length.intValue() : list.size();
             if ( end > list.size() ) {
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "inconsistencies in attempting to create a sublist bigger than the original list"));
+                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "attempting to create a sublist bigger than the original list"));
             }
             return Either.ofRight( list.subList( list.size() + start.intValue(), end ) );
         }
