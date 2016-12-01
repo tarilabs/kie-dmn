@@ -22,6 +22,7 @@ import org.kie.dmn.feel.runtime.FEELFunction;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.runtime.events.FEELEventBase;
 import org.kie.dmn.feel.util.Either;
 import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.lang.impl.NamedParameter;
@@ -115,6 +116,10 @@ public abstract class BaseFEELFunction implements FEELFunction {
                 } else {
                     String ps = Arrays.toString( classes );
                     logger.error( "Unable to find function '" + getName() + "( " + ps.substring( 1, ps.length()-1 ) +" )'" );
+                    FEELEventListenersManager.notifyListeners(ctx.getEventsManager(), () -> {
+                            return new FEELEventBase(Severity.ERROR, "Unable to find function '" + getName() + "( " + ps.substring( 1, ps.length()-1 ) +" )'", null);
+                        }
+                    );
                 }
             } else {
                 Object result = null;
@@ -135,6 +140,10 @@ public abstract class BaseFEELFunction implements FEELFunction {
                     result = ((DTInvokerFunction)this).apply( ctx, params );
                 } else {
                     logger.error( "Unable to find function '" + toString() +"'" );
+                    FEELEventListenersManager.notifyListeners(ctx.getEventsManager(), () -> {
+                            return new FEELEventBase(Severity.ERROR, "Unable to find function '" + toString() +"'", null);
+                        }
+                    );
                 }
                 
                 
@@ -143,6 +152,10 @@ public abstract class BaseFEELFunction implements FEELFunction {
             }
         } catch ( Exception e ) {
             logger.error( "Error trying to call function "+getName()+".", e );
+            FEELEventListenersManager.notifyListeners(ctx.getEventsManager(), () -> {
+                    return new FEELEventBase(Severity.ERROR, "Error trying to call function "+getName()+".", e);
+                }
+            );
         }
         return null;
     }
