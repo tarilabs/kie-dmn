@@ -19,7 +19,7 @@ package org.kie.dmn.feel.runtime.functions;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class SubstringAfterFunction
         extends BaseFEELFunction {
@@ -28,23 +28,23 @@ public class SubstringAfterFunction
         super( "substring after" );
     }
 
-    public Either<FEELEvent, String> apply(@ParameterName( "string" ) String string, @ParameterName( "match" ) String match) {
+    public FEELFnResult<String> apply(@ParameterName( "string" ) String string, @ParameterName( "match" ) String match) {
         if ( string == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
         }
         if ( match == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
         }
         
         int index = string.indexOf( match );
         if( index >= 0 ) {
-            return Either.ofRight( string.substring( index+match.length() ) );
+            return FEELFnResult.ofResult( string.substring( index+match.length() ) );
         } else if( index < 0 ) {
-            return Either.ofRight( string );
+            return FEELFnResult.ofResult( string );
         }
         
         // unreachable code.
-        return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "was an unreachable condition for this function"));
+        return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "was an unreachable condition for this function"));
     }
 
 }

@@ -19,7 +19,7 @@ package org.kie.dmn.feel.runtime.functions;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class StringFunction
         extends BaseFEELFunction {
@@ -28,11 +28,11 @@ public class StringFunction
         super( "string" );
     }
 
-    public Either<FEELEvent, String> apply(@ParameterName("from") Object val) {
+    public FEELFnResult<String> apply(@ParameterName("from") Object val) {
         if ( val == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "val", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "val", "cannot be null"));
         } else {
-            return Either.ofRight( val.toString() );
+            return FEELFnResult.ofResult( val.toString() );
         }
     }
 }

@@ -23,7 +23,7 @@ import java.time.temporal.TemporalAmount;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class YearsAndMonthsFunction
         extends BaseFEELFunction {
@@ -32,15 +32,15 @@ public class YearsAndMonthsFunction
         super( "years and months duration" );
     }
 
-    public Either<FEELEvent, TemporalAmount> apply(@ParameterName("from") LocalDate from, @ParameterName("to") LocalDate to) {
+    public FEELFnResult<TemporalAmount> apply(@ParameterName("from") LocalDate from, @ParameterName("to") LocalDate to) {
         if ( from == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         if ( to == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         
-        return Either.ofRight( Period.between( from, to ).withDays( 0 ) );
+        return FEELFnResult.ofResult( Period.between( from, to ).withDays( 0 ) );
     }
 
 }

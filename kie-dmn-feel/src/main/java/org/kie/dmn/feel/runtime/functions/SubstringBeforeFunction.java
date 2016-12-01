@@ -19,7 +19,7 @@ package org.kie.dmn.feel.runtime.functions;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class SubstringBeforeFunction
         extends BaseFEELFunction {
@@ -28,19 +28,19 @@ public class SubstringBeforeFunction
         super( "substring before" );
     }
 
-    public Either<FEELEvent, String> apply(@ParameterName("string") String string, @ParameterName("match") String match) {
+    public FEELFnResult<String> apply(@ParameterName("string") String string, @ParameterName("match") String match) {
         if ( string == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
         }
         if ( match == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
         }
 
         int index = string.indexOf( match );
         if ( index > 0 ) {
-            return Either.ofRight( string.substring( 0, index ) );
+            return FEELFnResult.ofResult( string.substring( 0, index ) );
         } else {
-            return Either.ofRight( "" );
+            return FEELFnResult.ofResult( "" );
         }
     }
 

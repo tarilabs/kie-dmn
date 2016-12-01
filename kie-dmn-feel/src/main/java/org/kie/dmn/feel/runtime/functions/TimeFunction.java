@@ -27,7 +27,7 @@ import java.time.temporal.TemporalAccessor;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class TimeFunction
         extends BaseFEELFunction {
@@ -36,51 +36,51 @@ public class TimeFunction
         super( "time" );
     }
 
-    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName("from") String val) {
+    public FEELFnResult<TemporalAccessor> apply(@ParameterName("from") String val) {
         if ( val == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         
         try {
-            return Either.ofRight( DateTimeFormatter.ISO_TIME.parseBest( val, OffsetTime::from, LocalTime::from ) );
+            return FEELFnResult.ofResult( DateTimeFormatter.ISO_TIME.parseBest( val, OffsetTime::from, LocalTime::from ) );
         } catch (DateTimeException e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "time-parsing exception", e));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "time-parsing exception", e));
         }
     }
 
-    public Either<FEELEvent, TemporalAccessor> apply(
+    public FEELFnResult<TemporalAccessor> apply(
             @ParameterName("hour") Number hour, @ParameterName("minute") Number minute,
             @ParameterName("second") Number seconds, @ParameterName("offset") Duration offset) {
         if ( hour == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "hour", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "hour", "cannot be null"));
         }
         if ( minute == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "minute", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "minute", "cannot be null"));
         }
         if ( seconds == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "seconds", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "seconds", "cannot be null"));
         }
         
         try {
             if ( offset == null ) {
-                return Either.ofRight( LocalTime.of( hour.intValue(), minute.intValue(), seconds.intValue() ) );
+                return FEELFnResult.ofResult( LocalTime.of( hour.intValue(), minute.intValue(), seconds.intValue() ) );
             } else {
-                return Either.ofRight( OffsetTime.of( hour.intValue(), minute.intValue(), seconds.intValue(), 0, ZoneOffset.ofTotalSeconds( (int) offset.getSeconds() ) ) );
+                return FEELFnResult.ofResult( OffsetTime.of( hour.intValue(), minute.intValue(), seconds.intValue(), 0, ZoneOffset.ofTotalSeconds( (int) offset.getSeconds() ) ) );
             }
         } catch (DateTimeException e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time-parsing exception", e));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "time-parsing exception", e));
         }
     }
 
-    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName("from") TemporalAccessor date) {
+    public FEELFnResult<TemporalAccessor> apply(@ParameterName("from") TemporalAccessor date) {
         if ( date == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         
         try {
-            return Either.ofRight( OffsetTime.from( date ) );
+            return FEELFnResult.ofResult( OffsetTime.from( date ) );
         } catch (DateTimeException e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "time-parsing exception", e));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "time-parsing exception", e));
         }
     }
 

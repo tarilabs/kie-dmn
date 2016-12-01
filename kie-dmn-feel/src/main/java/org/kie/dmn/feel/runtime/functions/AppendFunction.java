@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
@@ -34,16 +34,16 @@ public class AppendFunction
         super( "append" );
     }
 
-    public Either<FEELEvent, List> apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
+    public FEELFnResult<List> apply( @ParameterName( "list" ) List list, @ParameterName( "item" ) Object[] items ) {
         if ( list == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         if ( items == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "item", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "item", "cannot be null"));
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );
         Stream.of( items ).forEach( i -> result.add( i ) );
-        return Either.ofRight( result );
+        return FEELFnResult.ofResult( result );
     }
 }

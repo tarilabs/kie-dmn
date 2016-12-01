@@ -22,7 +22,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class SublistFunction
         extends BaseFEELFunction {
@@ -31,36 +31,36 @@ public class SublistFunction
         super( "sublist" );
     }
 
-    public Either<FEELEvent, List> apply(@ParameterName("list") List list, @ParameterName("start position") BigDecimal start) {
+    public FEELFnResult<List> apply(@ParameterName("list") List list, @ParameterName("start position") BigDecimal start) {
         return apply( list, start, null );
     }
 
-    public Either<FEELEvent, List> apply(@ParameterName("list") List list, @ParameterName("start position") BigDecimal start, @ParameterName("length") BigDecimal length) {
+    public FEELFnResult<List> apply(@ParameterName("list") List list, @ParameterName("start position") BigDecimal start, @ParameterName("length") BigDecimal length) {
         if ( list == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         if ( start == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "start", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "start", "cannot be null"));
         }
         if ( start.equals( BigDecimal.ZERO ) ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "start", "cannot be zero"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "start", "cannot be zero"));
         }
         if ( start.abs().intValue() > list.size() ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "start", "is inconsistent with 'list' size"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "start", "is inconsistent with 'list' size"));
         }
         
         if ( start.intValue() > 0 ) {
             int end = length != null ? start.intValue() - 1 + length.intValue() : list.size();
             if ( end > list.size() ) {
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "attempting to create a sublist bigger than the original list"));
+                return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "attempting to create a sublist bigger than the original list"));
             }
-            return Either.ofRight( list.subList( start.intValue() - 1, end ) );
+            return FEELFnResult.ofResult( list.subList( start.intValue() - 1, end ) );
         } else {
             int end = length != null ? list.size() + start.intValue() + length.intValue() : list.size();
             if ( end > list.size() ) {
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "attempting to create a sublist bigger than the original list"));
+                return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "attempting to create a sublist bigger than the original list"));
             }
-            return Either.ofRight( list.subList( list.size() + start.intValue(), end ) );
+            return FEELFnResult.ofResult( list.subList( list.size() + start.intValue(), end ) );
         }
     }
 }

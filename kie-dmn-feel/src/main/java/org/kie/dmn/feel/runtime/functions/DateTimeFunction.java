@@ -24,7 +24,7 @@ import java.time.temporal.TemporalAccessor;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class DateTimeFunction
         extends BaseFEELFunction {
@@ -33,41 +33,41 @@ public class DateTimeFunction
         super( "date and time" );
     }
 
-    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "from" ) String val) {
+    public FEELFnResult<TemporalAccessor> apply(@ParameterName( "from" ) String val) {
         if ( val == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         
         try {
-            return Either.ofRight( DateTimeFormatter.ISO_DATE_TIME.parseBest( val, ZonedDateTime::from, OffsetDateTime::from, LocalDateTime::from ) );
+            return FEELFnResult.ofResult( DateTimeFormatter.ISO_DATE_TIME.parseBest( val, ZonedDateTime::from, OffsetDateTime::from, LocalDateTime::from ) );
         } catch ( Exception e ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", e));
         }
     }
 
-    public Either<FEELEvent, TemporalAccessor> apply(@ParameterName( "date" ) Temporal date, @ParameterName( "time" ) Temporal time) {
+    public FEELFnResult<TemporalAccessor> apply(@ParameterName( "date" ) Temporal date, @ParameterName( "time" ) Temporal time) {
         if ( date == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "date", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "date", "cannot be null"));
         }
         if ( !(date instanceof LocalDate) ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "date", "must be an instance of LocalDate"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "date", "must be an instance of LocalDate"));
         }
         if ( time == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "time", "cannot be null"));
         }
         if ( !(time instanceof LocalTime || time instanceof OffsetTime) ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "time", "must be an instance of LocalTime or OffsetTime"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "time", "must be an instance of LocalTime or OffsetTime"));
         }
         
         try {
             if( date instanceof LocalDate && time instanceof LocalTime ) {
-                return Either.ofRight( LocalDateTime.of( (LocalDate) date, (LocalTime) time ) );
+                return FEELFnResult.ofResult( LocalDateTime.of( (LocalDate) date, (LocalTime) time ) );
             } else if( date instanceof LocalDate && time instanceof OffsetTime ) {
-                return Either.ofRight( ZonedDateTime.of( (LocalDate) date, LocalTime.from( time ), ZoneOffset.from( time ) ) );
+                return FEELFnResult.ofResult( ZonedDateTime.of( (LocalDate) date, LocalTime.from( time ), ZoneOffset.from( time ) ) );
             }
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "cannot apply function for the input parameters"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "cannot apply function for the input parameters"));
         } catch (DateTimeException e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "input parameters date-parsing exception", e));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "input parameters date-parsing exception", e));
         }
     }
 }

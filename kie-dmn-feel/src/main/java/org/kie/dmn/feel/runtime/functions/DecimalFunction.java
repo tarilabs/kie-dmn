@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class DecimalFunction
         extends BaseFEELFunction {
@@ -30,14 +30,14 @@ public class DecimalFunction
         super( "decimal" );
     }
 
-    public Either<FEELEvent, BigDecimal> apply(@ParameterName( "n" ) BigDecimal n, @ParameterName( "scale" ) BigDecimal scale) {
+    public FEELFnResult<BigDecimal> apply(@ParameterName( "n" ) BigDecimal n, @ParameterName( "scale" ) BigDecimal scale) {
         if ( n == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "n", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "n", "cannot be null"));
         }
         if ( scale == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "scale", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "scale", "cannot be null"));
         }
         
-        return Either.ofRight( n.setScale( scale.intValue(), BigDecimal.ROUND_HALF_EVEN ) );
+        return FEELFnResult.ofResult( n.setScale( scale.intValue(), BigDecimal.ROUND_HALF_EVEN ) );
     }
 }

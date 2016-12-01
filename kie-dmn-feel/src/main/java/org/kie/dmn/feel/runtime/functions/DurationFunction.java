@@ -26,7 +26,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class DurationFunction
         extends BaseFEELFunction {
@@ -35,21 +35,21 @@ public class DurationFunction
         super( "duration" );
     }
 
-    public Either<FEELEvent, TemporalAmount> apply(@ParameterName( "from" ) String val) {
+    public FEELFnResult<TemporalAmount> apply(@ParameterName( "from" ) String val) {
         if ( val == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         
         try {
             // try to parse as days/hours/minute/seconds
-            return Either.ofRight( Duration.parse( val ) );
+            return FEELFnResult.ofResult( Duration.parse( val ) );
         } catch( DateTimeParseException e ) {
             // if it failed, try to parse as years/months
             try {
-                return Either.ofRight( Period.parse( val ) );
+                return FEELFnResult.ofResult( Period.parse( val ) );
             } catch( DateTimeParseException e2 ) {
                 // failed to parse, so return null according to the spec
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", 
+                return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "date-parsing exception", 
                                         new RuntimeException(new Throwable() { public final List<Throwable> causes = Arrays.asList( new Throwable[]{e, e2} );  } ))); 
             }
         }

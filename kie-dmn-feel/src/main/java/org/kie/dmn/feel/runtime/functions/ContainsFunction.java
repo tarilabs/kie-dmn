@@ -19,7 +19,7 @@ package org.kie.dmn.feel.runtime.functions;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class ContainsFunction
         extends BaseFEELFunction {
@@ -28,14 +28,14 @@ public class ContainsFunction
         super( "contains" );
     }
 
-    public Either<FEELEvent, Boolean> apply(@ParameterName("string") String string, @ParameterName("match") String match) {
+    public FEELFnResult<Boolean> apply(@ParameterName("string") String string, @ParameterName("match") String match) {
         if ( string == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "string", "cannot be null"));
         }
         if ( match == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "match", "cannot be null"));
         }
         
-        return Either.ofRight( string.indexOf( match ) >= 0 );
+        return FEELFnResult.ofResult( string.indexOf( match ) >= 0 );
     }
 }

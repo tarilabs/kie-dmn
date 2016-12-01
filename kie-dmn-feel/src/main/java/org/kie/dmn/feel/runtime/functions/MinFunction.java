@@ -23,7 +23,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class MinFunction
         extends BaseFEELFunction {
@@ -32,18 +32,18 @@ public class MinFunction
         super( "min" );
     }
 
-    public Either<FEELEvent, Object> apply(@ParameterName("list") List list) {
+    public FEELFnResult<Object> apply(@ParameterName("list") List list) {
         if ( list == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         } else {
-            return Either.ofRight( Collections.min( list ) );
+            return FEELFnResult.ofResult( Collections.min( list ) );
         }
     }
 
-    public Either<FEELEvent, Object> apply(@ParameterName("c") Object[] list) {
+    public FEELFnResult<Object> apply(@ParameterName("c") Object[] list) {
         if ( list == null ) { 
             // Arrays.asList does not accept null as parameter
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "c", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "c", "cannot be null"));
         }
         
         return apply( Arrays.asList( list ) );

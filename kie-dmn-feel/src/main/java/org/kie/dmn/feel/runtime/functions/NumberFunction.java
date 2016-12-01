@@ -22,7 +22,7 @@ import java.math.MathContext;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 import org.kie.dmn.feel.util.EvalHelper;
 
 public class NumberFunction
@@ -32,15 +32,15 @@ public class NumberFunction
         super( "number" );
     }
 
-    public Either<FEELEvent, BigDecimal> apply(@ParameterName("from") String from, @ParameterName("grouping separator") String group, @ParameterName("decimal separator") String decimal) {
+    public FEELFnResult<BigDecimal> apply(@ParameterName("from") String from, @ParameterName("grouping separator") String group, @ParameterName("decimal separator") String decimal) {
         if ( from == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "from", "cannot be null"));
         }
         if ( group != null && !group.equals( " " ) && !group.equals( "." ) && !group.equals( "," ) ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "group", "not a valid one, can only be one of: dot ('.'), comma (','), space (' ') "));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "group", "not a valid one, can only be one of: dot ('.'), comma (','), space (' ') "));
         }
         if ( decimal != null && ((!decimal.equals( "." ) && !decimal.equals( "," )) || (group != null && decimal.equals( group ))) ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "decimal", "invalid parameter 'decimal' used in conjuction with specified parameter 'group'"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "decimal", "invalid parameter 'decimal' used in conjuction with specified parameter 'group'"));
         }
         
         if ( group != null ) {
@@ -51,9 +51,9 @@ public class NumberFunction
         }
         
         try {
-            return Either.ofRight( EvalHelper.getBigDecimalOrNull( from ) );
+            return FEELFnResult.ofResult( EvalHelper.getBigDecimalOrNull( from ) );
         } catch (Exception e) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "unable to calculate final number result", e));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "unable to calculate final number result", e));
         }
     }
 

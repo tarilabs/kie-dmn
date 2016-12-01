@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class FloorFunction
         extends BaseFEELFunction {
@@ -30,10 +30,10 @@ public class FloorFunction
         super( "floor" );
     }
 
-    public Either<FEELEvent, BigDecimal> apply(@ParameterName( "n" ) BigDecimal n) {
+    public FEELFnResult<BigDecimal> apply(@ParameterName( "n" ) BigDecimal n) {
         if ( n == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "n", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "n", "cannot be null"));
         }
-        return Either.ofRight( n.setScale( 0, BigDecimal.ROUND_FLOOR ) );
+        return FEELFnResult.ofResult( n.setScale( 0, BigDecimal.ROUND_FLOOR ) );
     }
 }

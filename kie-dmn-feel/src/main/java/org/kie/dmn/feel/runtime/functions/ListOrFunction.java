@@ -22,7 +22,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class ListOrFunction
         extends BaseFEELFunction {
@@ -31,7 +31,7 @@ public class ListOrFunction
         super( "list or" );
     }
 
-    public Either<FEELEvent, Boolean> apply(@ParameterName( "list" ) List list) {
+    public FEELFnResult<Boolean> apply(@ParameterName( "list" ) List list) {
         boolean result = false;
         for ( Object element : list ) {
             if ( element instanceof Boolean ) {
@@ -40,20 +40,20 @@ public class ListOrFunction
                     break;
                 }
             } else {
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "an element in the list is not a Boolean"));
+                return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "an element in the list is not a Boolean"));
             }
         }
-        return Either.ofRight( result );
+        return FEELFnResult.ofResult( result );
     }
 
-    public Either<FEELEvent, Boolean> apply(@ParameterName( "list" ) Boolean single) {
-        return Either.ofRight( single );
+    public FEELFnResult<Boolean> apply(@ParameterName( "list" ) Boolean single) {
+        return FEELFnResult.ofResult( single );
     }
 
-    public Either<FEELEvent, Boolean> apply(@ParameterName( "b" ) Object[] list) {
+    public FEELFnResult<Boolean> apply(@ParameterName( "b" ) Object[] list) {
         if ( list == null ) { 
             // Arrays.asList does not accept null as parameter
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "b", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "b", "cannot be null"));
         }
         
         return apply( Arrays.asList( list ) );

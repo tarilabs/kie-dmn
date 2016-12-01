@@ -23,7 +23,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class UnionFunction
         extends BaseFEELFunction {
@@ -32,9 +32,9 @@ public class UnionFunction
         super( "union" );
     }
 
-    public Either<FEELEvent, List> apply(@ParameterName("list") Object[] lists) {
+    public FEELFnResult<List> apply(@ParameterName("list") Object[] lists) {
         if ( lists == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "lists", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "lists", "cannot be null"));
         }
         // spec requires us to return a new list
         List result = new ArrayList();
@@ -48,9 +48,9 @@ public class UnionFunction
                 if ( !result.contains( list ) ) result.add( list );
             } else {
                 // TODO review accordingly to spec, original behavior was: return null;
-                return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "lists", "one of the elements in list is null"));
+                return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "lists", "one of the elements in list is null"));
             }
         }
-        return Either.ofRight( result );
+        return FEELFnResult.ofResult( result );
     }
 }

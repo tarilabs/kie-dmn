@@ -23,7 +23,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class IndexOfFunction
         extends BaseFEELFunction {
@@ -32,9 +32,9 @@ public class IndexOfFunction
         super( "index of" );
     }
 
-    public Either<FEELEvent, List> apply(@ParameterName( "list" ) List list, @ParameterName( "match" ) Object match) {
+    public FEELFnResult<List> apply(@ParameterName( "list" ) List list, @ParameterName( "match" ) Object match) {
         if ( list == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         List result = new ArrayList();
         for( int i = 0; i < list.size(); i++ ) {
@@ -44,6 +44,6 @@ public class IndexOfFunction
                 result.add( BigDecimal.valueOf( i+1 ) );
             }
         }
-        return Either.ofRight( result );
+        return FEELFnResult.ofResult( result );
     }
 }

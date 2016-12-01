@@ -23,7 +23,7 @@ import org.kie.dmn.feel.runtime.events.FEELEventBase;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +49,9 @@ public class CustomFEELFunction
         return Arrays.asList( parameters );
     }
 
-    public Either<FEELEvent, Object> apply(EvaluationContext ctx, Object[] params ) {
+    public FEELFnResult<Object> apply(EvaluationContext ctx, Object[] params ) {
         if( params.length != parameters.size() ) {
-            return Either.ofLeft(new InvalidInputEvent(Severity.ERROR, "Illegal invocation of function", getName(), getName() + "( " + Arrays.asList(params)+" )", getSignature()));
+            return FEELFnResult.ofError(new InvalidInputEvent(Severity.ERROR, "Illegal invocation of function", getName(), getName() + "( " + Arrays.asList(params)+" )", getSignature()));
         }
         
         FEELEvent capturedException = null;
@@ -61,13 +61,13 @@ public class CustomFEELFunction
                 ctx.setValue( parameters.get( i ), params[i] );
             }
             Object result = this.body.evaluate( ctx );
-            return Either.ofRight( result );
+            return FEELFnResult.ofResult( result );
         } catch( Exception e ) {
             capturedException = new FEELEventBase(Severity.ERROR, "Error invoking function", new RuntimeException("Error invoking function " + getSignature() + ".", e));
         } finally {
             ctx.exitFrame();
         }
-        return Either.ofLeft( capturedException );
+        return FEELFnResult.ofError( capturedException );
     }
 
     private String getSignature() {

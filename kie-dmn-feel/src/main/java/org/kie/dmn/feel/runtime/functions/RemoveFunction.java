@@ -23,7 +23,7 @@ import java.util.List;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 
 public class RemoveFunction
         extends BaseFEELFunction {
@@ -32,18 +32,18 @@ public class RemoveFunction
         super( "remove" );
     }
 
-    public Either<FEELEvent, List> apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
+    public FEELFnResult<List> apply(@ParameterName( "list" ) List list, @ParameterName( "position" ) BigDecimal position) {
         if ( list == null ) { 
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "list", "cannot be null"));
         }
         if ( position == null ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "position", "cannot be null"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "position", "cannot be null"));
         }
         if ( position.intValue() == 0 ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "position", "cannot be zero (parameter 'position' is 1-based)"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "position", "cannot be zero (parameter 'position' is 1-based)"));
         }
         if ( position.abs().intValue() > list.size() ) {
-            return Either.ofLeft(new InvalidParametersEvent(Severity.ERROR, "position", "inconsistent with 'list' size"));
+            return FEELFnResult.ofError(new InvalidParametersEvent(Severity.ERROR, "position", "inconsistent with 'list' size"));
         }
         // spec requires us to return a new list
         List result = new ArrayList( list );
@@ -52,6 +52,6 @@ public class RemoveFunction
         } else {
             result.remove( list.size()+position.intValue() );
         }
-        return Either.ofRight( result );
+        return FEELFnResult.ofResult( result );
     }
 }

@@ -7,7 +7,7 @@ public class Either<L,R> {
     private final Optional<L> left;
     private final Optional<R> right;
     
-    private Either(Optional<L> left, Optional<R> right) {
+    protected Either(Optional<L> left, Optional<R> right) {
       this.left = left;
       this.right = right;
     }
