@@ -77,8 +77,11 @@ public class UnaryTestNode
     }
 
     @Override
-    public UnaryTest evaluate(EvaluationContext ctx) {
-        Object val = value.evaluate( ctx );
+    public ASTNodeResult<? extends UnaryTest> evaluate(EvaluationContext ctx) {
+        ASTNodeResult<?> expResult = value.evaluate( ctx );
+        if ( expResult.isLeft() ) return (ASTNodeResult<? extends UnaryTest>) expResult;
+        
+        Object val = value.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() );
         switch ( operator ) {
             case LTE:
                 return o -> o == null || val == null ? null : ((Comparable) o).compareTo( val ) <= 0;

@@ -18,6 +18,7 @@ package org.kie.dmn.feel.lang.ast;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.util.EvalHelper;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class NameDefNode
     }
 
     @Override
-    public String evaluate(EvaluationContext ctx) {
-        return EvalHelper.normalizeVariableName( getText() );
+    public ASTNodeResult<? extends String> evaluate(EvaluationContext ctx) {
+        return ASTNodeResult.ofResult( EvalHelper.normalizeVariableName( getText() ) );
     }
 }

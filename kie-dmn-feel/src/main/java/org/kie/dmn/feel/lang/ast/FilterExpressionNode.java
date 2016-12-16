@@ -18,6 +18,8 @@ package org.kie.dmn.feel.lang.ast;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.events.ASTEventBase;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,36 +56,39 @@ public class FilterExpressionNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
-        Object value = expression.evaluate( ctx );
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
+        ASTNodeResult<? extends Object> expResult = expression.evaluate( ctx );
+        if ( expResult.isLeft() ) return expResult;
+        
+        Object value = expResult.valueOrNotifyThenNull( ctx.getEventsManager() );
         // spec determines single values should be treated as lists of one element
         List list = value instanceof List ? (List) value : Arrays.asList( value );
 
         try {
             // check if index
-            Object f = filter.evaluate( ctx );
+            Object f = filter.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() );
             if ( f != null && f instanceof Number ) {
                 // what to do if Number is not an integer??
                 int i = ((Number) f).intValue();
                 if ( i > 0 && i <= list.size() ) {
-                    return list.get( i - 1 );
+                    return ASTNodeResult.ofResult( list.get( i - 1 ) );
                 } else if ( i < 0 && Math.abs( i ) <= list.size() ) {
-                    return list.get( list.size() + i );
+                    return ASTNodeResult.ofResult( list.get( list.size() + i ) );
                 } else {
-                    return null;
+                    return ASTNodeResult.ofError( new ASTEventBase(Severity.ERROR, "index out of bound", this) );
                 }
             } else {
                 List results = new ArrayList(  );
                 for( Object v : list ) {
                     evaluateExpressionInContext( ctx, results, v );
                 }
-                return results;
+                return ASTNodeResult.ofResult( results );
             }
         } catch ( Exception e ) {
-            logger.error( "Error executing list filter: " + getText(), e );
+            return ASTNodeResult.ofError( new ASTEventBase(Severity.ERROR, "Error executing list filter", this, e) );
         }
 
-        return null;
+        
     }
 
     private void evaluateExpressionInContext(EvaluationContext ctx, List results, Object v) {
@@ -101,7 +106,7 @@ public class FilterExpressionNode
                 }
             }
 
-            Object r = this.filter.evaluate( ctx );
+            Object r = this.filter.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() );
             if( r instanceof Boolean && ((Boolean)r) == Boolean.TRUE ) {
                 results.add( v );
             }

@@ -18,6 +18,7 @@ package org.kie.dmn.feel.lang.ast;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.runtime.functions.CustomFEELFunction;
 import org.kie.dmn.feel.runtime.functions.JavaFunction;
 import org.slf4j.Logger;
@@ -81,8 +82,8 @@ public class FunctionDefNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
-        List<String> params = formalParameters.stream().map( p -> p.evaluate( ctx ) ).collect( Collectors.toList() );
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
+        List<String> params = formalParameters.stream().map( p -> p.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() ) ).collect( Collectors.toList() );
         if( external ) {
             try {
                 // creating a simple algorithm to find the method in java

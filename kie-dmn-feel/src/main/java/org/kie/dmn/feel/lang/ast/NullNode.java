@@ -27,7 +27,8 @@ public class NullNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
-        return null;
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
+        // TODO not so sure about this...
+        return ASTNodeResult.ofResult( null );
     }
 }

@@ -56,17 +56,17 @@ public class ForExpressionNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
         try {
             ctx.enterFrame();
             List results = new ArrayList(  );
             ForIteration[] ictx = initializeContexts( ctx, iterationContexts);
 
             while ( nextIteration( ctx, ictx ) ) {
-                Object result = expression.evaluate( ctx );
+                Object result = expression.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() );
                 results.add( result );
             }
-            return results;
+            return ASTNodeResult.ofResult( results );
         } finally {
             ctx.exitFrame();
         }
