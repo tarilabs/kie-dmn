@@ -20,6 +20,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.runtime.Range;
 import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
 import java.util.List;
 
@@ -94,9 +95,8 @@ public class UnaryTestNode
                 return o -> o == null || val == null ? null : ((Comparable) o).compareTo( val ) != 0;
             case NOT:
                 return o -> {
-                    if( o == null || val == null ) {
-                        return null;
-                    }
+                    if ( o == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, "O is null")); return null; }
+                    if ( val == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "Val is null")); return null; }
                     List<Object> tests = (List<Object>) val;
                     for( Object test : tests ) {
                         if( test instanceof UnaryTest ) {
@@ -117,6 +117,7 @@ public class UnaryTestNode
                     return true;
                 };
         }
+        ctx.notifyEvt( astEvent(Severity.ERROR, "Null or unknown operator"));
         return null;
     }
 }
