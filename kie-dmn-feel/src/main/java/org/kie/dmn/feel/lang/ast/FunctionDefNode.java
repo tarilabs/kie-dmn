@@ -111,16 +111,20 @@ public class FunctionDefNode
                                     Method method = clazz.getMethod( methodName, paramTypes );
                                     return new JavaFunction( ANONYMOUS, params, clazz, method );
                                 } else {
-                                    ctx.notifyEvt( astEvent(Severity.ERROR, "Parameter count mismatch on function definition") );
+                                    ctx.notifyEvt( astEvent(Severity.ERROR, 
+                                                            String.format("Parameter count mismatch on function definition: ", getText())) );
                                     return null;
                                 }
                             }
                         }
                     }
                 }
-                ctx.notifyEvt( astEvent(Severity.ERROR, "Unable to find external function as defined by this node") );
+                ctx.notifyEvt( astEvent(Severity.ERROR,
+                                        String.format("Unable to find external function as defined by: ", getText()) ) );
             } catch( Exception e ) {
-                ctx.notifyEvt( astEvent(Severity.ERROR, "Error resolving external function as defined by this node", e) );
+                ctx.notifyEvt( astEvent(Severity.ERROR,
+                                        String.format("Error resolving external function as defined by: ", getText()),
+                                        e) );
             }
             return null;
         } else {
