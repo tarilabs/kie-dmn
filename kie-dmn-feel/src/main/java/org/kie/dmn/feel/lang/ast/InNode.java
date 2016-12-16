@@ -20,6 +20,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.runtime.Range;
 import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
 public class InNode
         extends BaseNode {
@@ -58,20 +59,21 @@ public class InNode
                 // evaluate in the collection
                 for ( Object e : ((Iterable) expr) ) {
                     // have to compare to Boolean.TRUE because in() might return null
-                    if ( in( value, e ) == Boolean.TRUE ) {
+                    if ( in( ctx, value, e ) == Boolean.TRUE ) {
                         return true;
                     }
                 }
                 return false;
             } else {
                 // evaluate single entity
-                return in( value, expr );
+                return in( ctx, value, expr );
             }
         }
+        ctx.notifyEvt( astEvent(Severity.ERROR, "Expression is null") );
         return null;
     }
 
-    private Boolean in(Object value, Object expr) {
+    private Boolean in(EvaluationContext ctx, Object value, Object expr) {
         // need to improve this to work with unary tests
         if ( expr == null ) {
             return value == expr;
@@ -79,6 +81,7 @@ public class InNode
             return ((UnaryTest) expr).apply( value );
         } else if ( expr instanceof Range ) {
             if( !( value instanceof Comparable ) ) {
+                ctx.notifyEvt( astEvent(Severity.ERROR, "Expression is Range but value is not Comparable"));
                 return null;
             }
             return ((Range) expr).includes( (Comparable) value );
@@ -86,6 +89,7 @@ public class InNode
             return value.equals( expr );
         } else {
             // value == null, expr != null and not Unary test
+            ctx.notifyEvt( astEvent(Severity.WARN, "value == null, expr != null and not Unary test, Evaluating this node as FALSE."));
             return Boolean.FALSE;
         }
     }
