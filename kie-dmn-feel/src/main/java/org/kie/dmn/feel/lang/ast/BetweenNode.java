@@ -18,6 +18,7 @@ package org.kie.dmn.feel.lang.ast;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
 public class BetweenNode
         extends BaseNode {
@@ -59,6 +60,13 @@ public class BetweenNode
 
     @Override
     public Object evaluate(EvaluationContext ctx) {
+        boolean problem = false;
+        if ( value == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "value is null") ); problem = true; }
+        if ( start == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "start is null") ); problem = true; }
+        if ( end == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, "end is null") ); problem = true; }
+        
+        if (problem) return null;
+        
         if ( value != null && start != null && end != null ) {
             Comparable val = (Comparable) value.evaluate( ctx );
             Comparable s = (Comparable) start.evaluate( ctx );
