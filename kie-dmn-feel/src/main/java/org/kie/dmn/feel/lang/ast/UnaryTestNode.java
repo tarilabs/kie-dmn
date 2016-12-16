@@ -95,8 +95,9 @@ public class UnaryTestNode
                 return o -> o == null || val == null ? null : ((Comparable) o).compareTo( val ) != 0;
             case NOT:
                 return o -> {
-                    if ( o == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, "O is null")); return null; }
-                    if ( val == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "Val is null")); return null; }
+                    if( o == null || val == null ) {
+                        return null;
+                    }
                     List<Object> tests = (List<Object>) val;
                     for( Object test : tests ) {
                         if( test instanceof UnaryTest ) {
