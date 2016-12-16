@@ -82,7 +82,9 @@ public class FilterExpressionNode
                 return results;
             }
         } catch ( Exception e ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, "Error executing list filter", e) );
+            ctx.notifyEvt( astEvent(Severity.ERROR,
+                                    String.format("Error executing list filter: %s", getText()), 
+                                    e) );
         }
 
         return null;
