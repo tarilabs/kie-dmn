@@ -56,10 +56,14 @@ public class ASTEventBase implements FEELEvent {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{" +
-               "severity=" + severity +
-               ", message='" + message + '\'' +
-               ", sourceException=" + sourceException +
-               '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("ASTEventBase [severity=").append(severity)
+        .append(", message=").append(message)
+        .append(", sourceException=").append(sourceException)
+        .append(", astNode=").append(astNode)
+        .append("]");
+        return builder.toString();
     }
+
+    
 }
