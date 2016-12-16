@@ -84,13 +84,10 @@ public class RangeNode
         boolean problem = false;
         if ( s == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "Start is null")); problem = true; }
         if ( e == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "End is null")); problem = true; }
-        if ( BuiltInType.determineTypeFromInstance( s ) != BuiltInType.determineTypeFromInstance( e ) ) { 
-            ctx.notifyEvt( astEvent(Severity.ERROR, "Start and End are not of the same type"));
-            problem = true;
-        }
         if (problem) { return null; }
-
-        if( s.getClass().isAssignableFrom( e.getClass() ) ) {
+        
+        if ( BuiltInType.determineTypeFromInstance( s ) != BuiltInType.determineTypeFromInstance( e ) 
+                && !s.getClass().isAssignableFrom( e.getClass() ) ) {
             ctx.notifyEvt( astEvent(Severity.ERROR, "Start and End are not of compatible types"));
             return null;
         }
