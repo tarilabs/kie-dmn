@@ -16,8 +16,15 @@
 
 package org.kie.dmn.feel.lang.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.events.ASTEventBase;
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
 public class BetweenNode
         extends BaseNode {
@@ -58,16 +65,26 @@ public class BetweenNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
-        if ( value != null && start != null && end != null ) {
-            Comparable val = (Comparable) value.evaluate( ctx );
-            Comparable s = (Comparable) start.evaluate( ctx );
-            Comparable e = (Comparable) end.evaluate( ctx );
-            if ( val != null && s != null && e != null &&
-                 val.getClass().isAssignableFrom( s.getClass() ) && val.getClass().isAssignableFrom( e.getClass() ) ) {
-                return val.compareTo( s ) >= 0 && val.compareTo( e ) <= 0;
-            }
-        }
-        return null;
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
+        List<FEELEvent> problems = new ArrayList<>();
+        
+        if ( value == null ) problems.add( new ASTEventBase(Severity.ERROR, "Node 'value' is null", this) );
+        if ( start == null ) problems.add( new ASTEventBase(Severity.ERROR, "Node 'start' is null", this) );
+        if ( end == null )   problems.add( new ASTEventBase(Severity.ERROR, "Node 'end' is null", this) );
+        
+        if ( problems.size() > 0 ) return ASTNodeResult.ofError(problems);
+        
+        Comparable val = (Comparable) value.evaluate( ctx ).cata(ps -> { problems.addAll(ps); return null; }, Function.identity() );
+        Comparable s = (Comparable) start.evaluate( ctx ).cata(ps -> { problems.addAll(ps); return null; }, Function.identity() );
+        Comparable e = (Comparable) end.evaluate( ctx ).cata(ps -> { problems.addAll(ps); return null; }, Function.identity() );
+        
+        if ( problems.size() > 0 ) return ASTNodeResult.ofError(problems);
+        
+        if ( !val.getClass().isAssignableFrom( s.getClass() ) ) problems.add( new ASTEventBase(Severity.ERROR, "The 'value' is incompatible with 'start'", this) );
+        if ( !val.getClass().isAssignableFrom( e.getClass() ) ) problems.add( new ASTEventBase(Severity.ERROR, "The 'value' is incompatible with 'end'", this) );
+        
+        if ( problems.size() > 0 ) return ASTNodeResult.ofError(problems);
+        
+        return ASTNodeResult.ofResult( val.compareTo( s ) >= 0 && val.compareTo( e ) <= 0 );
     }
 }

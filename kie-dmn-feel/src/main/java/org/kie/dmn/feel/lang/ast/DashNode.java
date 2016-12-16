@@ -28,8 +28,8 @@ public class DashNode
     }
 
     @Override
-    public UnaryTest evaluate(EvaluationContext ctx) {
+    public ASTNodeResult<UnaryTest> evaluate(EvaluationContext ctx) {
         // a dash is a unary test that always evaluates to true
-        return o -> Boolean.TRUE;
+        return ASTNodeResult.ofResult( o -> Boolean.TRUE );
     }
 }

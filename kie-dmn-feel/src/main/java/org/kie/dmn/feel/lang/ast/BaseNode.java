@@ -22,6 +22,9 @@ import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.impl.EvaluationContextImpl;
 import org.kie.dmn.feel.lang.types.BuiltInType;
+import org.kie.dmn.feel.runtime.events.ASTEventBase;
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 
 public class BaseNode
         implements ASTNode {
@@ -121,8 +124,9 @@ public class BaseNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
-        return null;
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
+        // TODO shouldn't be abstract class because of this ?
+        return ASTNodeResult.ofError( new ASTEventBase(Severity.ERROR, "Called BaseNode evaluate() default implementation", null) );
     }
 
     private String getOriginalText( ParserRuleContext ctx ) {

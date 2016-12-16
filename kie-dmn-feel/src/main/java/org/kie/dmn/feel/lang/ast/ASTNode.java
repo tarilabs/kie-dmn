@@ -19,6 +19,8 @@ package org.kie.dmn.feel.lang.ast;
 import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.impl.EvaluationContextImpl;
+import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.util.Either;
 
 /**
  * A super interface for all AST nodes
@@ -40,5 +42,5 @@ public interface ASTNode {
 
     Type getResultType();
 
-    Object evaluate(EvaluationContext ctx);
+    ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx);
 }

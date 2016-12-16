@@ -16,8 +16,11 @@
 
 package org.kie.dmn.feel.lang.ast;
 
+import java.util.function.Function;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 
 public class ContextEntryNode
         extends BaseNode {
@@ -52,11 +55,12 @@ public class ContextEntryNode
     }
 
     public String evaluateName( EvaluationContext ctx ) {
-        return (String) name.evaluate( ctx );
+        // this function short-circuit event reporting here.
+        return (String) name.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() );
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
         return value.evaluate( ctx );
     }
 }

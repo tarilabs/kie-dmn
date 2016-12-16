@@ -34,7 +34,7 @@ public class BooleanNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
-        return value;
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
+        return ASTNodeResult.ofResult(value);
     }
 }

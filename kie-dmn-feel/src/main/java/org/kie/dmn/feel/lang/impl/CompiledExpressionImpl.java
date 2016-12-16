@@ -19,8 +19,13 @@ package org.kie.dmn.feel.lang.impl;
 import org.kie.dmn.feel.lang.CompiledExpression;
 import org.kie.dmn.feel.lang.ast.ASTNode;
 import org.kie.dmn.feel.lang.types.SymbolTable;
+import org.kie.dmn.feel.runtime.events.InvalidParametersEvent;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CompiledExpressionImpl implements CompiledExpression {
     private ASTNode     expression;
@@ -36,7 +41,14 @@ public class CompiledExpressionImpl implements CompiledExpression {
     public Object evaluate(FEELEventListenersManager eventsManager, Map<String, Object> inputVariables) {
         EvaluationContextImpl ctx = new EvaluationContextImpl( eventsManager );
         inputVariables.entrySet().stream().forEach( e -> ctx.setValue( e.getKey(), e.getValue() ) );
-        return expression.evaluate( ctx );
+        // TODO REVIEW: Here I need to wrap with the EventsManager error dispatch.
+        Object eitherResult = expression.evaluate( ctx ).cata( (left) -> { 
+            left.forEach( evt -> {
+                FEELEventListenersManager.notifyListeners( eventsManager, () -> evt );
+            });
+            return null;
+        }, Function.identity() );
+        return eitherResult;
     }
 
     @Override

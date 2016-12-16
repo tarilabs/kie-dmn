@@ -49,13 +49,13 @@ public class ContextNode
     }
 
     @Override
-    public Object evaluate(EvaluationContext ctx) {
+    public ASTNodeResult<? extends Object> evaluate(EvaluationContext ctx) {
         try {
             ctx.enterFrame();
             Map<String, Object> c = new LinkedHashMap<>();
             for( ContextEntryNode cen : entries ) {
                 String name = EvalHelper.normalizeVariableName( cen.evaluateName( ctx ) );
-                Object value = cen.evaluate( ctx );
+                Object value = cen.evaluate( ctx ).valueOrNotifyThenNull( ctx.getEventsManager() );
                 if( value instanceof CustomFEELFunction ) {
                     // helpful for debugging
                     ((CustomFEELFunction) value).setName( name );
@@ -66,7 +66,7 @@ public class ContextNode
                 ctx.setValue( name, value );
                 c.put( name, value );
             }
-            return c;
+            return ASTNodeResult.ofResult(c);
         } finally {
             ctx.exitFrame();
         }
