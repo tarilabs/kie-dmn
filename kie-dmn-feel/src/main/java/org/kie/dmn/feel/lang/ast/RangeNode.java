@@ -23,6 +23,7 @@ import org.kie.dmn.feel.runtime.Range;
 import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.runtime.impl.RangeImpl;
+import org.kie.dmn.feel.util.Msg;
 
 public class RangeNode
         extends BaseNode {
@@ -82,13 +83,13 @@ public class RangeNode
         Comparable e = (Comparable) end.evaluate( ctx );
         
         boolean problem = false;
-        if ( s == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "Start is null")); problem = true; }
-        if ( e == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, "End is null")); problem = true; }
+        if ( s == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("Start"))); problem = true; }
+        if ( e == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("End"))); problem = true; }
         if (problem) { return null; }
         
         if ( BuiltInType.determineTypeFromInstance( s ) != BuiltInType.determineTypeFromInstance( e ) 
                 && !s.getClass().isAssignableFrom( e.getClass() ) ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, "Start and End are not of compatible types"));
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.typeIncompatible("Start", "End")));
             return null;
         }
 

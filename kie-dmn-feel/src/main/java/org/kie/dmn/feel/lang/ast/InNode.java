@@ -21,6 +21,7 @@ import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.runtime.Range;
 import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.util.Msg;
 
 public class InNode
         extends BaseNode {
@@ -69,7 +70,7 @@ public class InNode
                 return in( ctx, value, expr );
             }
         }
-        ctx.notifyEvt( astEvent(Severity.ERROR, "Expression is null") );
+        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("Expression")) );
         return null;
     }
 
@@ -81,7 +82,7 @@ public class InNode
             return ((UnaryTest) expr).apply( ctx, value );
         } else if ( expr instanceof Range ) {
             if( !( value instanceof Comparable ) ) {
-                ctx.notifyEvt( astEvent(Severity.ERROR, "Expression is Range but value is not Comparable"));
+                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.expressionIsRangeButValueNotComparable()));
                 return null;
             }
             return ((Range) expr).includes( (Comparable) value );
@@ -89,7 +90,7 @@ public class InNode
             return value.equals( expr );
         } else {
             // value == null, expr != null and not Unary test
-            ctx.notifyEvt( astEvent(Severity.WARN, "value == null, expr != null and not Unary test, Evaluating this node as FALSE."));
+            ctx.notifyEvt( astEvent(Severity.WARN, Msg.valueNullExprNotNullAndNotUnary()));
             return Boolean.FALSE;
         }
     }
