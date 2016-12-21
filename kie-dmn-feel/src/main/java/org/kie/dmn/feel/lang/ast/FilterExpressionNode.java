@@ -68,7 +68,7 @@ public class FilterExpressionNode
                 } else if ( i < 0 && Math.abs( i ) <= list.size() ) {
                     return list.get( list.size() + i );
                 } else {
-                    ctx.notifyEvt( astEvent(Severity.ERROR, Msg.indexOutOfBound()) );
+                    ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.INDEX_OUT_OF_BOUND)) );
                     return null;
                 }
             } else {
@@ -79,7 +79,7 @@ public class FilterExpressionNode
                 return results;
             }
         } catch ( Exception e ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.errorExecutingListFilter(getText()), e) );
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.ERROR_EXECUTING_LIST_FILTER, getText()), e) );
         }
 
         return null;

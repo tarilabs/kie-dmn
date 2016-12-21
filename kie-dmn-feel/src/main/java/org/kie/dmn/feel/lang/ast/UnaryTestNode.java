@@ -137,7 +137,7 @@ public class UnaryTestNode
                     return true;
                 };
         }
-        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.NullOrUnknownOperator()));
+        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.NULL_OR_UNKNOWN_OPERATOR)));
         return null;
     }
 }

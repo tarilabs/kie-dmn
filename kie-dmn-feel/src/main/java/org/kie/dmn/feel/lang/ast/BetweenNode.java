@@ -62,27 +62,27 @@ public class BetweenNode
     @Override
     public Object evaluate(EvaluationContext ctx) {
         boolean problem = false;
-        if ( value == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("value")) ); problem = true; }
-        if ( start == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("start")) ); problem = true; }
-        if ( end == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("end")) ); problem = true; }
+        if ( value == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.IS_NULL, "value")) ); problem = true; }
+        if ( start == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.IS_NULL, "start")) ); problem = true; }
+        if ( end == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.IS_NULL, "end")) ); problem = true; }
         if (problem) return null;
 
         Comparable val = (Comparable) value.evaluate( ctx );
         Comparable s = (Comparable) start.evaluate( ctx );
         Comparable e = (Comparable) end.evaluate( ctx );
         
-        if ( val == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.evaluatedToNull("value")) ); problem = true; }
-        if ( s == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.evaluatedToNull("start")) ); problem = true; }
-        if ( e == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.evaluatedToNull("end")) ); problem = true; }
+        if ( val == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.EVALUATED_TO_NULL, "value")) ); problem = true; }
+        if ( s == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.EVALUATED_TO_NULL, "start")) ); problem = true; }
+        if ( e == null )   { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.EVALUATED_TO_NULL, "end")) ); problem = true; }
         if (problem) return null;
         
         if ( !val.getClass().isAssignableFrom( s.getClass() ) ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.typeIncompatible("value", "start")) );
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.X_TYPE_INCOMPATIBLE_WITH_Y_TYPE, "value", "start")) );
             return null;
         }
         
         if ( !val.getClass().isAssignableFrom( e.getClass() ) ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.typeIncompatible("value", "end")) );
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.X_TYPE_INCOMPATIBLE_WITH_Y_TYPE, "value", "end")) );
             return null;
         }
         

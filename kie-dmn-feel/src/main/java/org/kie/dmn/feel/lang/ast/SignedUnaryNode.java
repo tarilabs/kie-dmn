@@ -61,7 +61,7 @@ public class SignedUnaryNode
     public Object evaluate(EvaluationContext ctx) {
         BigDecimal result = EvalHelper.getBigDecimalOrNull( expression.evaluate( ctx ) );
         if ( result == null ) {
-            ctx.notifyEvt( astEvent(Severity.WARN, Msg.negatingANull()));
+            ctx.notifyEvt( astEvent(Severity.WARN, Msg.createMessage(Msg.NEGATING_A_NULL)));
             return null;
         } else if ( Sign.NEGATIVE == sign ) {
             return BigDecimal.valueOf( -1 ).multiply( result );

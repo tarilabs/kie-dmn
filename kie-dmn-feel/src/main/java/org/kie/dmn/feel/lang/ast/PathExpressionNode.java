@@ -73,7 +73,7 @@ public class PathExpressionNode
                 return fetchValue( o );
             }
         } catch ( Exception e ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.errorEvaluatingPathExpression(expression.getText(), name.getText()), e) );
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.ERROR_EVALUATING_PATH_EXPRESSION, expression.getText(), name.getText()), e) );
         }
         return null;
     }

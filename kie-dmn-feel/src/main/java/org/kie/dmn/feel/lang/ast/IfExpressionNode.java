@@ -69,7 +69,7 @@ public class IfExpressionNode
                 return this.elseExpression.evaluate( ctx );
             }
         }
-        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.conditionWasNotABoolean()) );
+        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.CONDITION_WAS_NOT_A_BOOLEAN)) );
         return null;
     }
 }

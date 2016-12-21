@@ -109,16 +109,16 @@ public class FunctionDefNode
                                     Method method = clazz.getMethod( methodName, paramTypes );
                                     return new JavaFunction( ANONYMOUS, params, clazz, method );
                                 } else {
-                                    ctx.notifyEvt( astEvent(Severity.ERROR, Msg.parameterCountMismatch(getText()) ) );
+                                    ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.PARAMETER_COUNT_MISMATCH_ON_FUNCTION_DEFINITION, getText()) ) );
                                     return null;
                                 }
                             }
                         }
                     }
                 }
-                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.unableToFindExternalFunction(getText()) ) );
+                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.UNABLE_TO_FIND_EXTERNAL_FUNCTION_AS_DEFINED_BY, getText()) ) );
             } catch( Exception e ) {
-                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.errorResolvingExternalFunction(getText()), e) );
+                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.ERROR_RESOLVING_EXTERNAL_FUNCTION_AS_DEFINED_BY, getText()), e) );
             }
             return null;
         } else {

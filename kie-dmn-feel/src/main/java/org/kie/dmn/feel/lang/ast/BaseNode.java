@@ -135,7 +135,7 @@ public class BaseNode
 
     @Override
     public Object evaluate(EvaluationContext ctx) {
-        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.baseNodeEvaluateCalled() ) );
+        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.BASE_NODE_EVALUATE_CALLED) ) );
         return null;
     }
 

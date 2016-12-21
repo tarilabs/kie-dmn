@@ -89,7 +89,7 @@ public class QuantifiedExpressionNode
         if( quantifier == Quantifier.SOME || quantifier == Quantifier.EVERY ) {
             return iterateContexts( ctx, iterationContexts, expression, quantifier );
         }
-        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("Quantifier")) );
+        ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.IS_NULL, "Quantifier")) );
         return null;
     }
 

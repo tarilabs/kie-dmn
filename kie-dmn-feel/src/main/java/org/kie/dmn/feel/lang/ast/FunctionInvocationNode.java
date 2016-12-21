@@ -71,14 +71,14 @@ public class FunctionInvocationNode
                 Object result = function.invokeReflectively( ctx, p );
                 return result;
             } else {
-                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.functionNotFound(name.getText())) );
+                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.FUNCTION_NOT_FOUND, name.getText())) );
             }
         } else if( value instanceof UnaryTest ) {
             if( params.getElements().size() == 1 ) {
                 Object p = params.getElements().get( 0 ).evaluate( ctx );
                 return ((UnaryTest) value).apply( ctx, p );
             } else {
-                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.unaryTestMultipleParams( params.getElements().size()) ) );
+                ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.CAN_T_INVOKE_AN_UNARY_TEST_WITH_S_PARAMETERS_UNARY_TESTS_REQUIRE_1_SINGLE_PARAMETER, params.getElements().size()) ) );
             }
         }
         return null;

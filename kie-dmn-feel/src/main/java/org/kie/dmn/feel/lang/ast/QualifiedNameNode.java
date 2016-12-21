@@ -58,7 +58,7 @@ public class QualifiedNameNode
                 return current;
             }
         } catch ( Exception e ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.errorAccessingQualifiedName(getText()), e) );
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.ERROR_ACCESSING_QUALIFIED_NAME, getText()), e) );
             return null;
         }
         return null;

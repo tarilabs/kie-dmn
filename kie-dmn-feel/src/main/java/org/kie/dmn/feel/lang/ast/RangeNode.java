@@ -83,13 +83,13 @@ public class RangeNode
         Comparable e = (Comparable) end.evaluate( ctx );
         
         boolean problem = false;
-        if ( s == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("Start"))); problem = true; }
-        if ( e == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.isNull("End"))); problem = true; }
+        if ( s == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.IS_NULL, "Start"))); problem = true; }
+        if ( e == null ) { ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.IS_NULL, "End"))); problem = true; }
         if (problem) { return null; }
         
         if ( BuiltInType.determineTypeFromInstance( s ) != BuiltInType.determineTypeFromInstance( e ) 
                 && !s.getClass().isAssignableFrom( e.getClass() ) ) {
-            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.typeIncompatible("Start", "End")));
+            ctx.notifyEvt( astEvent(Severity.ERROR, Msg.createMessage(Msg.X_TYPE_INCOMPATIBLE_WITH_Y_TYPE, "Start", "End")));
             return null;
         }
 
