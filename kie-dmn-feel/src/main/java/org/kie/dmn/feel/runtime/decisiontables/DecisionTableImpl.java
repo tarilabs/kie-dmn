@@ -27,6 +27,7 @@ import org.kie.dmn.feel.runtime.events.HitPolicyViolationEvent;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.runtime.functions.FEELFnResult;
+import org.kie.dmn.feel.util.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -75,14 +77,15 @@ public class DecisionTableImpl {
      */
     public FEELFnResult<Object> evaluate(EvaluationContext ctx, Object[] params) {
         if ( decisionRules.isEmpty() ) {
-            return FEELFnResult.ofError(new FEELEventBase(Severity.ERROR, "Decision table is empty", null));
+            return FEELFnResult.ofError(new FEELEventBase(Severity.WARN, "Decision table is empty", null));
         }
         
         FEEL feel = FEEL.newInstance();
         Object[] actualInputs = resolveActualInputs( ctx, feel );
 
-        if ( ! actualInputsMatchInputValues( ctx, actualInputs ) ) {
-            return FEELFnResult.ofError(new FEELEventBase(Severity.ERROR, "Actual inputs does not match input values", null));
+        Either<FEELEvent, Object> actualInputMatch = actualInputsMatchInputValues( ctx, actualInputs );
+        if ( actualInputMatch.isLeft() ) {
+            return actualInputMatch.cata( e -> FEELFnResult.ofError(e), e -> FEELFnResult.ofError(null) );
         }
 
         List<DTDecisionRule> matches = findMatches( ctx, actualInputs );
@@ -121,7 +124,7 @@ public class DecisionTableImpl {
      * @param params
      * @return
      */
-    private boolean actualInputsMatchInputValues(EvaluationContext ctx, Object[] params) {
+    private Either<FEELEvent, Object> actualInputsMatchInputValues(EvaluationContext ctx, Object[] params) {
         // check that all the parameters match the input list values if they are defined
         for( int i = 0; i < params.length; i++ ) {
             final DTInputClause input = inputs.get( i );
@@ -131,20 +134,17 @@ public class DecisionTableImpl {
                 boolean satisfies = input.getInputValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
 
                 if ( !satisfies ) {
-                    FEELEventListenersManager.notifyListeners( ctx.getEventsManager(), () -> {
-                        String values = input.getInputValuesText();
-                        return new InvalidInputEvent( FEELEvent.Severity.ERROR,
-                                                      input.getInputExpression()+"='" + parameter + "' does not match any of the valid values " + values + " for decision table '" + getName() + "'.",
-                                                      getName(),
-                                                      null,
-                                                      values );
-                        }
-                    );
-                    return false;
+                    String values = input.getInputValuesText();
+                    return Either.ofLeft(new InvalidInputEvent( FEELEvent.Severity.ERROR,
+                                                  input.getInputExpression()+"='" + parameter + "' does not match any of the valid values " + values + " for decision table '" + getName() + "'.",
+                                                  getName(),
+                                                  null,
+                                                  values )
+                            );
                 }
             }
         }
-        return true;
+        return Either.ofRight(true);
     }
 
     /**
