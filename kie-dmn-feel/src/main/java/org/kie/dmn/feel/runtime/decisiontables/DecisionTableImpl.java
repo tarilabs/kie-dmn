@@ -22,8 +22,11 @@ import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.runtime.events.DecisionTableRulesMatchedEvent;
 import org.kie.dmn.feel.runtime.events.FEELEvent;
+import org.kie.dmn.feel.runtime.events.FEELEventBase;
 import org.kie.dmn.feel.runtime.events.HitPolicyViolationEvent;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
+import org.kie.dmn.feel.runtime.events.FEELEvent.Severity;
+import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,42 +73,36 @@ public class DecisionTableImpl {
      *               decision table that are expressions derived from these parameters
      * @return
      */
-    public Object evaluate(EvaluationContext ctx, Object[] params) {
+    public FEELFnResult<Object> evaluate(EvaluationContext ctx, Object[] params) {
         if ( decisionRules.isEmpty() ) {
-            return null;
+            return FEELFnResult.ofError(new FEELEventBase(Severity.ERROR, "Decision table is empty", null));
+        }
+        
+        FEEL feel = FEEL.newInstance();
+        Object[] actualInputs = resolveActualInputs( ctx, feel );
+
+        if ( ! actualInputsMatchInputValues( ctx, actualInputs ) ) {
+            return FEELFnResult.ofError(new FEELEventBase(Severity.ERROR, "Actual inputs does not match input values", null));
         }
 
-        try {
-            FEEL feel = FEEL.newInstance();
-            Object[] actualInputs = resolveActualInputs( ctx, feel );
+        List<DTDecisionRule> matches = findMatches( ctx, actualInputs );
+        if( !matches.isEmpty() ) {
+            List<Object> results = evaluateResults( ctx, feel, actualInputs, matches );
+            Object result = hitPolicy.getDti().dti( ctx, this, actualInputs, matches, results );
 
-            if ( ! actualInputsMatchInputValues( ctx, actualInputs ) ) {
-                return null;
-            }
-
-            List<DTDecisionRule> matches = findMatches( ctx, actualInputs );
-            if( !matches.isEmpty() ) {
-                List<Object> results = evaluateResults( ctx, feel, actualInputs, matches );
-                Object result = hitPolicy.getDti().dti( ctx, this, actualInputs, matches, results );
-
-                return result;
+            return FEELFnResult.ofResult( result );
+        } else {
+            // check if there is a default value set for the outputs
+            if( hasDefaultValues ) {
+                Object result = defaultToOutput( ctx, feel );
+                return FEELFnResult.ofResult( result );
             } else {
-                // check if there is a default value set for the outputs
-                if( hasDefaultValues ) {
-                    Object result = defaultToOutput( ctx, feel );
-                    return result;
-                } else {
-                    FEELEventListenersManager.notifyListeners(ctx.getEventsManager(), () -> new HitPolicyViolationEvent(
-                            FEELEvent.Severity.WARN,
-                            "No rule matched for decision table '" + name + "' and no default values were defined. Setting result to null.",
-                            name,
-                            Collections.EMPTY_LIST ) );
-                }
-                return null;
+                return FEELFnResult.ofError( new HitPolicyViolationEvent(
+                                                    Severity.WARN,
+                                                    "No rule matched for decision table '" + name + "' and no default values were defined. Setting result to null.",
+                                                    name,
+                                                    Collections.EMPTY_LIST ) );
             }
-        } catch ( Throwable e ) {
-            // no longer needed as DTInvokerFunction support Either for wrapping the exception : logger.error( "Error invoking decision table '" + getName() + "'.", e );
-            throw e;
         }
     }
 
