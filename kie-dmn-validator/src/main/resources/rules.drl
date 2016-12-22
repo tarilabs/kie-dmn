@@ -1,0 +1,103 @@
+/*
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+package org.kie.dmn.validator;
+
+import org.kie.dmn.feel.model.v1_1.*;
+
+rule ITEMDEF_NOT_UNIQUE
+when
+  $x : ItemDefinition()
+  $y : ItemDefinition( name == $x.name, this != $x )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $x, P.ITEMDEF_NOT_UNIQUE ) );
+end
+
+/** Not sure if this rule is really needed being a possible subset of ITEMDEF_NOT_UNIQUE */
+rule ITEMCOMP_DUPLICATED
+when
+  $ic1 : ItemDefinition( parent instanceof ItemDefinition )
+  $ic2 : ItemDefinition( name == $ic1.name, parent == $ic1.parent, this != $ic1 )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $ic1, P.ITEMCOMP_DUPLICATED ) );
+end
+
+rule DECISION_MISSING_VAR
+when
+    $d : Decision()
+    not( Decision( /variable{name == $d.name}, this == $d ) )
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $d, P.DECISION_MISSING_VAR ) );
+end
+
+rule DECISION_MISSING_EXPR
+when
+    $d : Decision( expression == null )
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $d, P.DECISION_MISSING_EXPR ) );
+end
+
+rule BKM_MISSING_VAR
+when
+    $d : BusinessKnowledgeModel()
+    not( BusinessKnowledgeModel( /variable{name == $d.name}, this == $d ) )
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $d, P.BKM_MISSING_VAR ) );
+end
+
+rule BKM_MISSING_EXPR
+when
+    $d : BusinessKnowledgeModel( encapsulatedLogic == null || encapsulatedLogic.expression == null )
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $d, P.BKM_MISSING_EXPR ) );
+end
+
+rule FORMAL_PARAM_DUPLICATED
+when
+    $fp1 : InformationItem( parent instanceof FunctionDefinition )
+    $fp2 : InformationItem( name == $fp1.name, parent == $fp1.parent, this != $fp1 )
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $fp1, P.FORMAL_PARAM_DUPLICATED ) );
+end
+
+rule DRGELEM_NOT_UNIQUE
+when
+  $x : DRGElement()
+  $y : DRGElement( name == $x.name, this != $x )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $x, P.DRGELEM_NOT_UNIQUE ) );
+end
+
+rule INPUTDATA_MISSING_VAR
+when
+    $id : InputData()
+    not( InputData( /variable{name == $id.name}, this == $id ) )
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $id, P.INPUTDATA_MISSING_VAR ) );
+end
+
+rule problems
+when
+  $p: Object() from entry-point "PROBLEMS"
+then
+  System.err.println($p);
+end
+
+rule Rsysoutdebug
+when
+  $x : DMNModelInstrumentedBase()
+then
+  System.out.println($x);
+end
