@@ -75,7 +75,7 @@ public class SimpleDecisionTablesTest
         assertThat( (Map<?, ?>) context.get( "result4" ), hasEntry("Out2", "io2a" ));
         assertThat( context.get( "result5" ), nullValue() );
         assertTrue( events.stream().anyMatch(e -> e instanceof HitPolicyViolationEvent
-                                                  && ((HitPolicyViolationEvent) e).getSeverity().equals(Severity.WARN) ) );
+                                                  && e.getSeverity().equals(Severity.WARN) ) );
         
         feel.removeListener(listener);
     }
