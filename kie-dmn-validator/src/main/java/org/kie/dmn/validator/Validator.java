@@ -23,6 +23,7 @@ import org.kie.dmn.feel.lang.impl.FEELImpl;
 import org.kie.dmn.feel.model.v1_1.Definitions;
 import org.kie.dmn.feel.runtime.events.FEELEventListener;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,5 +46,5 @@ public interface Validator {
 
     List<Problem> validate(Definitions dmnInput);
 
-    
+    List<Problem> validateXML(File xmlFile);
 }

@@ -2,6 +2,7 @@ package org.kie.dmn.validator;
 
 
 public enum P {
+    FAILED_XML_VALIDATION("Failed XML validation of DMN file"),
     ITEMDEF_NOT_UNIQUE("itemDefinition name is not unique in the model"),
     ITEMCOMP_DUPLICATED("itemComponent with duplicated name within a same parent itemDefinition"),
     DECISION_MISSING_VAR("Decision is missing variable or name does not matche the variable name"),

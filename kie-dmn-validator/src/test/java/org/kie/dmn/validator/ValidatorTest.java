@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.xml.XMLConstants;
@@ -14,6 +16,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Test;
 import org.kie.dmn.core.DMNInputRuntimeTest;
 import org.kie.dmn.core.api.DMNModel;
@@ -23,18 +26,9 @@ import org.kie.dmn.feel.model.v1_1.Definitions;
 import org.xml.sax.SAXException;
 
 public class ValidatorTest {
-    static SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    static Schema schema;
-    static {
-        try {
-            schema = sf.newSchema();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
-    public void testMain() {
+    public void testDryRun() {
         DMNRuntime runtime = DMNRuntimeUtil.createRuntime( "0001-input-data-string.dmn", DMNInputRuntimeTest.class );
         DMNModel dmnModel = runtime.getModel( "https://github.com/droolsjbpm/kie-dmn", "0001-input-data-string" );
         assertThat( dmnModel, notNullValue() );
@@ -46,11 +40,13 @@ public class ValidatorTest {
     }
     
     private Definitions utilDefinitions(String filename, String modelName) {
+        List<Problem> validateXML;
         try {
-            validateDMNasXMLagainstXSD(filename);
-        } catch (Exception e) {
+            validateXML = Validator.newInstance().validateXML( new File(this.getClass().getResource(filename).toURI()) );
+            assertThat( "using unit test method utilDefinitions must received a XML valid DMN file", validateXML, IsEmptyCollection.empty() );
+        } catch (URISyntaxException e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            fail("Unable for the test suite to locate the file for XML validation.");
         }
         
         DMNRuntime runtime = DMNRuntimeUtil.createRuntime( filename, this.getClass() );
@@ -62,9 +58,12 @@ public class ValidatorTest {
         return definitions;
     }
         
-    private void validateDMNasXMLagainstXSD(String filename) throws Exception {
-        Source s = new StreamSource(this.getClass().getResourceAsStream(filename));
-        schema.newValidator().validate(s);
+    @Test
+    public void testInvalidXml() throws URISyntaxException {
+        List<Problem> validateXML = Validator.newInstance().validateXML(new File(this.getClass().getResource( "invalidXml.dmn" ).toURI()));
+        assertTrue( !validateXML.isEmpty() );
+        
+        validateXML.forEach(System.err::println);
     }
 
     @Test
