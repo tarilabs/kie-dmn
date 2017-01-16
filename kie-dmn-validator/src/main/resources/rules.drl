@@ -88,6 +88,36 @@ then
     entryPoints["PROBLEMS"].insert( new Problem( $id, P.INPUTDATA_MISSING_VAR ) );
 end
 
+rule INVOCATION_MISSING_TARGET
+when
+    $inv : Invocation( $targetName : expression#LiteralExpression.text )
+    not( DRGElement( name == $targetName ) )  
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_MISSING_TARGET ) );
+end
+
+rule INVOCATION_WRONG_PARAM_COUNT
+when
+    $inv : Invocation( $targetName : expression#LiteralExpression.text )
+    BusinessKnowledgeModel( name == $targetName, encapsulatedLogic.formalParameter.size != $inv.binding.size ) 
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_WRONG_PARAM_COUNT ) );
+end
+
+// The parameter names in the Binding elements SHALL be a subset of the formalParameters of the calledFunction.
+rule INVOCATION_INCONSISTENT_PARAM_NAMES
+when
+    $inv : Invocation( $targetName : expression#LiteralExpression.text )
+    $target : BusinessKnowledgeModel( name == $targetName )
+    accumulate ( Binding($s : parameter.name) from $inv.binding ; 
+                 $names : collectSet($s)  ) 
+    accumulate ( InformationItem($ts : name) from $target.encapsulatedLogic.formalParameter ; 
+                 $targetNames : collectSet($ts) ;
+                 ! $targetNames.containsAll($names) ) 
+then
+    entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_INCONSISTENT_PARAM_NAMES ) );
+end
+
 rule problems
 when
   $p: Object() from entry-point "PROBLEMS"

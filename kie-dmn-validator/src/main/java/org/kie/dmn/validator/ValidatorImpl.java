@@ -42,7 +42,7 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public List<Problem> validateXML(File xmlFile) {
+    public List<Problem> validateOnlyXML(File xmlFile) {
         List<Problem> problems = new ArrayList<>();
         Source s = new StreamSource(xmlFile);
         try {
@@ -50,6 +50,7 @@ public class ValidatorImpl implements Validator {
         } catch (SAXException | IOException e) {
             problems.add(new Problem(e, P.FAILED_XML_VALIDATION));
         }
+        // TODO detect if the XSD is not provided through schemaLocation, and validate against embedded?
         return problems;
     }
     

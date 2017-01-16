@@ -17,6 +17,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kie.dmn.core.DMNInputRuntimeTest;
 import org.kie.dmn.core.api.DMNModel;
@@ -42,7 +43,7 @@ public class ValidatorTest {
     private Definitions utilDefinitions(String filename, String modelName) {
         List<Problem> validateXML;
         try {
-            validateXML = Validator.newInstance().validateXML( new File(this.getClass().getResource(filename).toURI()) );
+            validateXML = Validator.newInstance().validateOnlyXML( new File(this.getClass().getResource(filename).toURI()) );
             assertThat( "using unit test method utilDefinitions must received a XML valid DMN file", validateXML, IsEmptyCollection.empty() );
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -60,7 +61,7 @@ public class ValidatorTest {
         
     @Test
     public void testInvalidXml() throws URISyntaxException {
-        List<Problem> validateXML = Validator.newInstance().validateXML(new File(this.getClass().getResource( "invalidXml.dmn" ).toURI()));
+        List<Problem> validateXML = Validator.newInstance().validateOnlyXML(new File(this.getClass().getResource( "invalidXml.dmn" ).toURI()));
         assertTrue( !validateXML.isEmpty() );
         
         validateXML.forEach(System.err::println);
@@ -144,5 +145,38 @@ public class ValidatorTest {
         List<Problem> validate = Validator.newInstance().validate(definitions);
         
         assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.INPUTDATA_MISSING_VAR ) ) );
+    }
+    
+    @Test
+    public void testINVOCATION_MISSING_TARGET() {
+        Definitions definitions = utilDefinitions( "INVOCATION_MISSING_TARGET.dmn", "INVOCATION_MISSING_TARGET" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.INVOCATION_MISSING_TARGET ) ) );
+    }
+    
+    @Ignore("known current limitation")
+    @Test
+    public void testINVOCATION_MISSING_TARGETRbis() {
+        Definitions definitions = utilDefinitions( "INVOCATION_MISSING_TARGETbis.dmn", "INVOCATION_MISSING_TARGETbis" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.INVOCATION_MISSING_TARGET ) ) );
+    }
+    
+    @Test
+    public void testINVOCATION_WRONG_PARAM_COUNT() {
+        Definitions definitions = utilDefinitions( "INVOCATION_WRONG_PARAM_COUNT.dmn", "INVOCATION_WRONG_PARAM_COUNT" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.INVOCATION_WRONG_PARAM_COUNT ) ) );
+    }
+    
+    @Test
+    public void testINVOCATION_INCONSISTENT_PARAM_NAMES() {
+        Definitions definitions = utilDefinitions( "INVOCATION_INCONSISTENT_PARAM_NAMES.dmn", "INVOCATION_INCONSISTENT_PARAM_NAMES" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.INVOCATION_INCONSISTENT_PARAM_NAMES ) ) );
     }
 }

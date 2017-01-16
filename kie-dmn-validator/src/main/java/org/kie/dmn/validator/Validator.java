@@ -46,5 +46,5 @@ public interface Validator {
 
     List<Problem> validate(Definitions dmnInput);
 
-    List<Problem> validateXML(File xmlFile);
+    List<Problem> validateOnlyXML(File xmlFile);
 }
