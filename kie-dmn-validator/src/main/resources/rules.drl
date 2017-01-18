@@ -213,10 +213,14 @@ then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.ELEMREF_MISSING_TARGET ) );
 end
 
+function String rightOfHash(String input) {
+    return input.substring(input.indexOf("#")+1);
+}
+
 rule REQAUTH_NOT_KNOWLEDGESOURCE
 when
   AuthorityRequirement( $oc: requiredAuthority )
-  DMNElement( id == $oc.href.substring($oc.href.indexOf("#")+1) , !(this instanceof KnowledgeSource) ) 
+  DMNElement( id == rightOfHash( $oc.href ) , !(this instanceof KnowledgeSource) ) 
 then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.REQAUTH_NOT_KNOWLEDGESOURCE ) );
 end
