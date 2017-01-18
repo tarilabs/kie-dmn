@@ -27,7 +27,8 @@ public enum P {
     DTABLE_PRIORITY_MISSING_OUTVALS("Decision table with Priority as hit policy requires output to specify output values"),
     ELEMREF_NOHASH("Element reference should point to an anchor (using hash sign) for an element to be referenced"),
     ELEMREF_MISSING_TARGET("Element reference is pointing to a unknown target"),
-    REQAUTH_NOT_KNOWLEDGESOURCE("RequiredAuthority is not pointing to a KnowledgeSource")
+    REQAUTH_NOT_KNOWLEDGESOURCE("RequiredAuthority is not pointing to a KnowledgeSource"),
+    TYPEREF_NO_FEEL_TYPE("typeRef is not a valid built-in FEEL type")
     ;
 
     private String shortname;

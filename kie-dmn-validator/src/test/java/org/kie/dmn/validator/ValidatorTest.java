@@ -66,6 +66,14 @@ public class ValidatorTest {
         
         validateXML.forEach(System.err::println);
     }
+    
+    @Test
+    public void testTYPEREF_NO_NS() throws URISyntaxException {
+        List<Problem> validateXML = Validator.newInstance().validateOnlyXML(new File(this.getClass().getResource( "TYPEREF_NO_NS.dmn" ).toURI()));
+        assertTrue( !validateXML.isEmpty() );
+        
+        validateXML.forEach(System.err::println);
+    }
 
     @Test
     public void testITEMDEF_NOT_UNIQUE() {
@@ -282,5 +290,13 @@ public class ValidatorTest {
         List<Problem> validate = Validator.newInstance().validate(definitions);
 
         assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.REQAUTH_NOT_KNOWLEDGESOURCE ) ) );
+    }
+    
+    @Test
+    public void testTYPEREF_NO_FEEL_TYPE() {
+        Definitions definitions = utilDefinitions( "TYPEREF_NO_FEEL_TYPE.dmn", "TYPEREF_NO_FEEL_TYPE" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.TYPEREF_NO_FEEL_TYPE ) ) );
     }
 }

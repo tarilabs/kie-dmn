@@ -16,6 +16,7 @@
 package org.kie.dmn.validator;
 
 import org.kie.dmn.feel.model.v1_1.*;
+import org.kie.dmn.feel.lang.types.BuiltInType;
 
 rule ITEMDEF_NOT_UNIQUE
 when
@@ -205,17 +206,17 @@ then
   entryPoints["PROBLEMS"].insert( new Problem( $oc.getHref(), P.ELEMREF_NOHASH ) );
 end
 
+function String rightOfHash(String input) {
+    return input.substring(input.indexOf("#")+1);
+}
+
 rule ELEMREF_MISSING_TARGET
 when
-  $oc : DMNElementReference( $targetId : href.substring(href.indexOf("#")+1) )
+  $oc : DMNElementReference( $targetId : rightOfHash( href ) )
   not ( DMNElement( id == $targetId ) ) 
 then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.ELEMREF_MISSING_TARGET ) );
 end
-
-function String rightOfHash(String input) {
-    return input.substring(input.indexOf("#")+1);
-}
 
 rule REQAUTH_NOT_KNOWLEDGESOURCE
 when
@@ -224,6 +225,37 @@ when
 then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.REQAUTH_NOT_KNOWLEDGESOURCE ) );
 end
+
+rule TYPEREF_NO_FEEL_TYPE_p1
+when
+  Expression( getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+end
+
+rule TYPEREF_NO_FEEL_TYPE_p2
+when
+  InformationItem( getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+end
+
+rule TYPEREF_NO_FEEL_TYPE_p3
+when
+  ItemDefinition( getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+end
+
+rule TYPEREF_NO_FEEL_TYPE_p4
+when
+  OutputClause( getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+end
+
+
+
 
 
 rule problems
