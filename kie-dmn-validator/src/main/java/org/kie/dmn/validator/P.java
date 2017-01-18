@@ -24,7 +24,10 @@ public enum P {
     DTABLE_SINGLEOUT_NOTYPEREF("Decision table with single output should not have output typeRef"),
     DTABLE_MULTIPLEOUT_NAME("Decision table with multiple output should have output name"),
     DTABLE_MULTIPLEOUT_TYPEREF("Decision table with multiple output should have output typeRef"),
-    DTABLE_PRIORITY_MISSING_OUTVALS("Decision table with Priority as hit policy requires output to specify output values")
+    DTABLE_PRIORITY_MISSING_OUTVALS("Decision table with Priority as hit policy requires output to specify output values"),
+    ELEMREF_NOHASH("Element reference should point to an anchor (using hash sign) for an element to be referenced"),
+    ELEMREF_MISSING_TARGET("Element reference is pointing to a unknown target"),
+    REQAUTH_NOT_KNOWLEDGESOURCE("RequiredAuthority is not pointing to a KnowledgeSource")
     ;
 
     private String shortname;

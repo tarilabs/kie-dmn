@@ -190,6 +190,36 @@ then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_PRIORITY_MISSING_OUTVALS ) );
 end
 
+rule ELEMREF_NOHASH_p1
+when
+  $oc : DMNElementReference( !href.startsWith("#"), !( href contains ":" ) ) 
+then
+System.out.println("x");
+  entryPoints["PROBLEMS"].insert( new Problem( $oc.getHref(), P.ELEMREF_NOHASH ) );
+end
+
+rule ELEMREF_NOHASH_p2
+when
+  $oc : DMNElementReference( href contains ":", !href.substring(href.indexOf(":")+1).startsWith('#') )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc.getHref(), P.ELEMREF_NOHASH ) );
+end
+
+rule ELEMREF_MISSING_TARGET
+when
+  $oc : DMNElementReference( href.startsWith("#"), $targetId : href.substring(href.indexOf("#")+1) )
+  not ( DMNElement( id == $targetId ) ) 
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.ELEMREF_MISSING_TARGET ) );
+end
+
+rule REQAUTH_NOT_KNOWLEDGESOURCE
+when
+  $oc : DMNElementReference( parent instanceof AuthorityRequirement, this == parent.requiredAuthority, href.startsWith("#"), $targetId : href.substring(href.indexOf("#")+1) )
+  DMNElement( id == $targetId, !(this instanceof KnowledgeSource) ) 
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.REQAUTH_NOT_KNOWLEDGESOURCE ) );
+end
 
 
 rule problems

@@ -259,4 +259,28 @@ public class ValidatorTest {
         
         assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.DTABLE_PRIORITY_MISSING_OUTVALS ) ) );
     }
+    
+    @Test
+    public void testELEMREF_NOHASH() {
+        Definitions definitions = utilDefinitions( "ELEMREF_NOHASH.dmn", "ELEMREF_NOHASH" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.ELEMREF_NOHASH ) ) );
+    }
+    
+    @Test
+    public void testELEMREF_MISSING_TARGET() {
+        Definitions definitions = utilDefinitions( "ELEMREF_MISSING_TARGET.dmn", "ELEMREF_MISSING_TARGET" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.ELEMREF_MISSING_TARGET ) ) );
+    }
+    
+    @Test
+    public void testREQAUTH_NOT_KNOWLEDGESOURCE() {
+        Definitions definitions = utilDefinitions( "REQAUTH_NOT_KNOWLEDGESOURCE.dmn", "REQAUTH_NOT_KNOWLEDGESOURCE" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.REQAUTH_NOT_KNOWLEDGESOURCE ) ) );
+    }
 }

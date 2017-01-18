@@ -38,3 +38,6 @@ then
   System.out.println($ic1 + " " +$ic2);
   entryPoints["PROBLEMS"].insert( new Problem( $ic1, P.ITEMCOMP_DUPLICATED ) );
 end
+
+
+href.startsWith('#')   <<- Using single quote instead of double quote
