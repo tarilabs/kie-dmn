@@ -154,7 +154,44 @@ when
 then
   entryPoints["PROBLEMS"].insert( new Problem( $row, P.RELATION_ROW_CELLCOUNTMISMATCH ) );
 end
-  
+
+rule DTABLE_SINGLEOUT_NONAME
+when
+  $oc : OutputClause( parent instanceof DecisionTable, parent.output.size == 1, this.name != null )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_SINGLEOUT_NONAME ) );
+end
+
+rule DTABLE_SINGLEOUT_TYPEREF
+when
+  $oc : OutputClause( parent instanceof DecisionTable, parent.output.size == 1, this.typeRef != null )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_SINGLEOUT_NOTYPEREF ) );
+end
+
+rule DTABLE_MULTIPLEOUT_NAME
+when
+  $oc : OutputClause( parent instanceof DecisionTable, parent.output.size > 1, this.name == null )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_MULTIPLEOUT_NAME ) );
+end
+
+rule DTABLE_MULTIPLEOUT_TYPEREF
+when
+  $oc : OutputClause( parent instanceof DecisionTable, parent.output.size > 1, this.typeRef == null )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_MULTIPLEOUT_TYPEREF ) );
+end
+
+rule DTABLE_PRIORITY_MISSING_OUTVALS
+when
+  $oc : OutputClause( parent instanceof DecisionTable, parent#DecisionTable.hitPolicy == HitPolicy.PRIORITY, outputValues == null )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_PRIORITY_MISSING_OUTVALS ) );
+end
+
+
+
 rule problems
 when
   $p: Object() from entry-point "PROBLEMS"

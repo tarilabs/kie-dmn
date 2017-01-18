@@ -219,4 +219,44 @@ public class ValidatorTest {
         
         assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.RELATION_ROW_CELLCOUNTMISMATCH ) ) );
     }
+    
+    @Test
+    public void testDTABLE_SINGLEOUT_NONAME() {
+        Definitions definitions = utilDefinitions( "DTABLE_SINGLEOUTPUT_WRONG_OUTPUT.dmn", "DTABLE_SINGLEOUTPUT_WRONG_OUTPUT" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.DTABLE_SINGLEOUT_NONAME ) ) );
+    }
+    
+    @Test
+    public void testDTABLE_SINGLEOUT_NOTYPEREF() {
+        Definitions definitions = utilDefinitions( "DTABLE_SINGLEOUTPUT_WRONG_OUTPUT.dmn", "DTABLE_SINGLEOUTPUT_WRONG_OUTPUT" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.DTABLE_SINGLEOUT_NOTYPEREF ) ) );
+    }
+    
+    @Test
+    public void testDTABLE_MULTIPLEOUT_NAME() {
+        Definitions definitions = utilDefinitions( "DTABLE_MULTIPLEOUTPUT_WRONG_OUTPUT.dmn", "DTABLE_MULTIPLEOUTPUT_WRONG_OUTPUT" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.DTABLE_MULTIPLEOUT_NAME ) ) );
+    }
+    
+    @Test
+    public void testDTABLE_MULTIPLEOUT_TYPEREF() {
+        Definitions definitions = utilDefinitions( "DTABLE_MULTIPLEOUTPUT_WRONG_OUTPUT.dmn", "DTABLE_MULTIPLEOUTPUT_WRONG_OUTPUT" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.DTABLE_MULTIPLEOUT_TYPEREF ) ) );
+    }
+    
+    @Test
+    public void testDTABLE_PRIORITY_MISSING_OUTVALS() {
+        Definitions definitions = utilDefinitions( "DTABLE_PRIORITY_MISSING_OUTVALS.dmn", "DTABLE_PRIORITY_MISSING_OUTVALS" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.DTABLE_PRIORITY_MISSING_OUTVALS ) ) );
+    }
 }

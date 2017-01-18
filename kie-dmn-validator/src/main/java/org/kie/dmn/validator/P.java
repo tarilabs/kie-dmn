@@ -19,7 +19,12 @@ public enum P {
     CONTEXT_ENTRY_NOTYPEREF("Context entry is missing typeRef"),
     RELATION_DUP_COLUMN("Relation contains duplicate column name"),
     RELATION_ROW_CELL_NOTLITERAL("Relation contains a row with a cell which is not a literalExpression"),
-    RELATION_ROW_CELLCOUNTMISMATCH("Relation contains a row with wrong number of cells")
+    RELATION_ROW_CELLCOUNTMISMATCH("Relation contains a row with wrong number of cells"),
+    DTABLE_SINGLEOUT_NONAME("Decision table with single output should not have output name"),
+    DTABLE_SINGLEOUT_NOTYPEREF("Decision table with single output should not have output typeRef"),
+    DTABLE_MULTIPLEOUT_NAME("Decision table with multiple output should have output name"),
+    DTABLE_MULTIPLEOUT_TYPEREF("Decision table with multiple output should have output typeRef"),
+    DTABLE_PRIORITY_MISSING_OUTVALS("Decision table with Priority as hit policy requires output to specify output values")
     ;
 
     private String shortname;
