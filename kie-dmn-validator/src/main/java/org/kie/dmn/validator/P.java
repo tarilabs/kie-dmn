@@ -14,7 +14,12 @@ public enum P {
     INPUTDATA_MISSING_VAR("InputData is missing variable or name does not matche the variable name"),
     INVOCATION_MISSING_TARGET("Invocation referencing a DRGElement target not found"),
     INVOCATION_WRONG_PARAM_COUNT("Invocation referecing a DRGElement but number of parameters is not consistent with target"),
-    INVOCATION_INCONSISTENT_PARAM_NAMES("Invocation Binding parameter names SHALL be a subset of the formalParameters of the calledFunction")
+    INVOCATION_INCONSISTENT_PARAM_NAMES("Invocation Binding parameter names SHALL be a subset of the formalParameters of the calledFunction"),
+    CONTEXT_DUP_ENTRY("Context contains duplicate context entry keys"),
+    CONTEXT_ENTRY_NOTYPEREF("Context entry is missing typeRef"),
+    RELATION_DUP_COLUMN("Relation contains duplicate column name"),
+    RELATION_ROW_CELL_NOTLITERAL("Relation contains a row with a cell which is not a literalExpression"),
+    RELATION_ROW_CELLCOUNTMISMATCH("Relation contains a row with wrong number of cells")
     ;
 
     private String shortname;

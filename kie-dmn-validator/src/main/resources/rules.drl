@@ -118,6 +118,43 @@ then
     entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_INCONSISTENT_PARAM_NAMES ) );
 end
 
+rule CONTEXT_DUP_ENTRY
+when
+  $ce1 : ContextEntry( parent instanceof Context )
+  $ce2 : ContextEntry( variable!.name == $ce1.variable!.name, parent == $ce1.parent, this != $ce1 )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $ce1, P.CONTEXT_DUP_ENTRY ) );
+end
+
+rule CONTEXT_ENTRY_NOTYPEREF
+when
+  $ce1 : ContextEntry( variable != null, variable.typeRef == null )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $ce1, P.CONTEXT_ENTRY_NOTYPEREF ) );
+end
+
+rule RELATION_DUP_COLUMN
+when
+  $c1 : InformationItem( parent instanceof Relation )
+  $c2 : InformationItem( name == $c1.name, parent == $c1.parent, this != $c1 )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $c1, P.RELATION_DUP_COLUMN ) );
+end
+
+rule RELATION_ROW_CELL_NOTLITERAL
+when
+  $e : Expression( parent instanceof org.kie.dmn.feel.model.v1_1.List, parent.parent instanceof Relation, ! (this instanceof LiteralExpression) )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $e, P.RELATION_ROW_CELL_NOTLITERAL ) );
+end
+
+rule RELATION_ROW_CELLCOUNTMISMATCH
+when
+  $row : org.kie.dmn.feel.model.v1_1.List( parent instanceof Relation, expression.size != parent.column.size )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( $row, P.RELATION_ROW_CELLCOUNTMISMATCH ) );
+end
+  
 rule problems
 when
   $p: Object() from entry-point "PROBLEMS"

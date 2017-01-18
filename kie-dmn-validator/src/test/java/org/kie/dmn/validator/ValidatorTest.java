@@ -179,4 +179,44 @@ public class ValidatorTest {
         
         assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.INVOCATION_INCONSISTENT_PARAM_NAMES ) ) );
     }
+    
+    @Test
+    public void testCONTEXT_DUP_ENTRY() {
+        Definitions definitions = utilDefinitions( "CONTEXT_DUP_ENTRY.dmn", "CONTEXT_DUP_ENTRY" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.CONTEXT_DUP_ENTRY ) ) );
+    }
+    
+    @Test
+    public void testCONTEXT_ENTRY_NOTYPEREF() {
+        Definitions definitions = utilDefinitions( "CONTEXT_ENTRY_NOTYPEREF.dmn", "CONTEXT_ENTRY_NOTYPEREF" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.CONTEXT_ENTRY_NOTYPEREF ) ) );
+    }
+    
+    @Test
+    public void testRELATION_DUP_COLUMN() {
+        Definitions definitions = utilDefinitions( "RELATION_DUP_COLUMN.dmn", "RELATION_DUP_COLUMN" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.RELATION_DUP_COLUMN ) ) );
+    }
+    
+    @Test
+    public void testRELATION_ROW_CELL_NOTLITERAL() {
+        Definitions definitions = utilDefinitions( "RELATION_ROW_CELL_NOTLITERAL.dmn", "RELATION_ROW_CELL_NOTLITERAL" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.RELATION_ROW_CELL_NOTLITERAL ) ) );
+    }
+    
+    @Test
+    public void testRELATION_ROW_CELLCOUNTMISMATCH() {
+        Definitions definitions = utilDefinitions( "RELATION_ROW_CELLCOUNTMISMATCH.dmn", "RELATION_ROW_CELLCOUNTMISMATCH" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+        
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.RELATION_ROW_CELLCOUNTMISMATCH ) ) );
+    }
 }
