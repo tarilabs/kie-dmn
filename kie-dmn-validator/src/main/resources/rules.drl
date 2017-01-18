@@ -207,7 +207,7 @@ end
 
 rule ELEMREF_MISSING_TARGET
 when
-  $oc : DMNElementReference( href.startsWith("#"), $targetId : href.substring(href.indexOf("#")+1) )
+  $oc : DMNElementReference( $targetId : href.substring(href.indexOf("#")+1) )
   not ( DMNElement( id == $targetId ) ) 
 then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.ELEMREF_MISSING_TARGET ) );
@@ -215,8 +215,8 @@ end
 
 rule REQAUTH_NOT_KNOWLEDGESOURCE
 when
-  $oc : DMNElementReference( parent instanceof AuthorityRequirement, this == parent.requiredAuthority, href.startsWith("#"), $targetId : href.substring(href.indexOf("#")+1) )
-  DMNElement( id == $targetId, !(this instanceof KnowledgeSource) ) 
+  AuthorityRequirement( $oc: requiredAuthority )
+  DMNElement( id == $oc.href.substring($oc.href.indexOf("#")+1) , !(this instanceof KnowledgeSource) ) 
 then
   entryPoints["PROBLEMS"].insert( new Problem( $oc, P.REQAUTH_NOT_KNOWLEDGESOURCE ) );
 end
