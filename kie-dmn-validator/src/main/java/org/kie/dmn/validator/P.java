@@ -28,7 +28,8 @@ public enum P {
     ELEMREF_NOHASH("Element reference should point to an anchor (using hash sign) for an element to be referenced"),
     ELEMREF_MISSING_TARGET("Element reference is pointing to a unknown target"),
     REQAUTH_NOT_KNOWLEDGESOURCE("RequiredAuthority is not pointing to a KnowledgeSource"),
-    TYPEREF_NO_FEEL_TYPE("typeRef is not a valid built-in FEEL type")
+    TYPEREF_NO_FEEL_TYPE("typeRef is not a valid built-in FEEL type"),
+    TYPEREF_NOT_FEEL_NOT_DEF("typeRef is not in FEEL namespace and not defined with itemDefinition")
     ;
 
     private String shortname;

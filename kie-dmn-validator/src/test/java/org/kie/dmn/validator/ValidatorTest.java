@@ -299,4 +299,12 @@ public class ValidatorTest {
 
         assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.TYPEREF_NO_FEEL_TYPE ) ) );
     }
+    
+    @Test
+    public void testTYPEREF_NOT_FEEL_NOT_DEF() {
+        Definitions definitions = utilDefinitions( "TYPEREF_NOT_FEEL_NOT_DEF.dmn", "TYPEREF_NOT_FEEL_NOT_DEF" );
+        List<Problem> validate = Validator.newInstance().validate(definitions);
+
+        assertTrue( validate.stream().anyMatch( p -> p.getP().equals( P.TYPEREF_NOT_FEEL_NOT_DEF ) ) );
+    }
 }

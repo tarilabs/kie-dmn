@@ -254,8 +254,37 @@ then
   entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
 end
 
+rule TYPEREF_NOT_FEEL_NOT_DEF_p1
+when
+  Expression( getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  not( ItemDefinition( name == $typeRef ) )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+end
 
+rule TYPEREF_NOT_FEEL_NOT_DEF_p2
+when
+  InformationItem( getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  not( ItemDefinition( name == $typeRef ) )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+end
 
+rule TYPEREF_NOT_FEEL_NOT_DEF_p3
+when
+  ItemDefinition( getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  not( ItemDefinition( name == $typeRef ) )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+end
+
+rule TYPEREF_NOT_FEEL_NOT_DEF_p4
+when
+  OutputClause( getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  not( ItemDefinition( name == $typeRef ) )
+then
+  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+end
 
 
 rule problems
