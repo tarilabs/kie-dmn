@@ -22,7 +22,7 @@ rule BKM_MISSING_EXPR
 when
     $d : BusinessKnowledgeModel( encapsulatedLogic == null || encapsulatedLogic.expression == null )
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $d, P.BKM_MISSING_EXPR ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.BKM_MISSING_EXPR, $d ) );
 end
 
 rule BKM_MISSING_VAR
@@ -30,7 +30,7 @@ when
     $d : BusinessKnowledgeModel()
     not( BusinessKnowledgeModel( /variable{name == $d.name}, this == $d ) )
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $d, P.BKM_MISSING_VAR ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.BKM_MISSING_VAR, $d ) );
 end
 
 rule CONTEXT_DUP_ENTRY
@@ -38,14 +38,14 @@ when
   $ce1 : ContextEntry( parent instanceof Context )
   $ce2 : ContextEntry( variable!.name == $ce1.variable!.name, parent == $ce1.parent, this != $ce1 )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $ce1, P.CONTEXT_DUP_ENTRY ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.CONTEXT_DUP_ENTRY, $ce1 ) );
 end
 
 rule CONTEXT_ENTRY_NOTYPEREF
 when
   $ce1 : ContextEntry( variable != null, variable.typeRef == null )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $ce1, P.CONTEXT_ENTRY_NOTYPEREF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.CONTEXT_ENTRY_NOTYPEREF, $ce1 ) );
 end
 
 rule DRGELEM_NOT_UNIQUE
@@ -53,14 +53,14 @@ when
   $x : DRGElement()
   $y : DRGElement( name == $x.name, this != $x )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $x, P.DRGELEM_NOT_UNIQUE ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.DRGELEM_NOT_UNIQUE, $x ) );
 end
 
 rule DECISION_MISSING_EXPR
 when
     $d : Decision( expression == null )
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $d, P.DECISION_MISSING_EXPR ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.DECISION_MISSING_EXPR, $d ) );
 end
 
 rule DECISION_MISSING_VAR
@@ -68,42 +68,42 @@ when
     $d : Decision()
     not( Decision( /variable{name == $d.name}, this == $d ) )
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $d, P.DECISION_MISSING_VAR ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.DECISION_MISSING_VAR, $d ) );
 end
 
 rule DTABLE_MULTIPLEOUT_NAME
 when
   $oc : OutputClause( parent instanceof DecisionTable, parent.output.size > 1, this.name == null )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_MULTIPLEOUT_NAME ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.DTABLE_MULTIPLEOUT_NAME, $oc ) );
 end
 
 rule DTABLE_MULTIPLEOUT_TYPEREF
 when
   $oc : OutputClause( parent instanceof DecisionTable, parent.output.size > 1, this.typeRef == null )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_MULTIPLEOUT_TYPEREF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.DTABLE_MULTIPLEOUT_TYPEREF, $oc ) );
 end
 
 rule DTABLE_PRIORITY_MISSING_OUTVALS
 when
   $oc : OutputClause( parent instanceof DecisionTable, parent#DecisionTable.hitPolicy == HitPolicy.PRIORITY, outputValues == null )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_PRIORITY_MISSING_OUTVALS ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.DTABLE_PRIORITY_MISSING_OUTVALS, $oc ) );
 end
 
 rule DTABLE_SINGLEOUT_NONAME
 when
   $oc : OutputClause( parent instanceof DecisionTable, parent.output.size == 1, this.name != null )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_SINGLEOUT_NONAME ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.DTABLE_SINGLEOUT_NONAME, $oc ) );
 end
 
 rule DTABLE_SINGLEOUT_TYPEREF
 when
   $oc : OutputClause( parent instanceof DecisionTable, parent.output.size == 1, this.typeRef != null )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.DTABLE_SINGLEOUT_NOTYPEREF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.DTABLE_SINGLEOUT_NOTYPEREF, $oc ) );
 end
 
 rule ELEMREF_NOHASH_p1
@@ -111,14 +111,14 @@ when
   $oc : DMNElementReference( !href.startsWith("#"), !( href contains ":" ) ) 
 then
 System.out.println("x");
-  entryPoints["PROBLEMS"].insert( new Problem( $oc.getHref(), P.ELEMREF_NOHASH ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.ELEMREF_NOHASH, $oc.getHref()) );
 end
 
 rule ELEMREF_NOHASH_p2
 when
   $oc : DMNElementReference( href contains ":", !href.substring(href.indexOf(":")+1).startsWith('#') )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc.getHref(), P.ELEMREF_NOHASH ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.ELEMREF_NOHASH, $oc.getHref() ) );
 end
 
 function String rightOfHash(String input) {
@@ -130,7 +130,7 @@ when
   $oc : DMNElementReference( $targetId : rightOfHash( href ) )
   not ( DMNElement( id == $targetId ) ) 
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.ELEMREF_MISSING_TARGET ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.ELEMREF_MISSING_TARGET, $oc ) );
 end
 
 rule FORMAL_PARAM_DUPLICATED
@@ -138,7 +138,7 @@ when
     $fp1 : InformationItem( parent instanceof FunctionDefinition )
     $fp2 : InformationItem( name == $fp1.name, parent == $fp1.parent, this != $fp1 )
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $fp1, P.FORMAL_PARAM_DUPLICATED ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.FORMAL_PARAM_DUPLICATED, $fp1 ) );
 end
 
 rule INPUTDATA_MISSING_VAR
@@ -146,7 +146,7 @@ when
     $id : InputData()
     not( InputData( /variable{name == $id.name}, this == $id ) )
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $id, P.INPUTDATA_MISSING_VAR ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.INPUTDATA_MISSING_VAR, $id) );
 end
 
 // The parameter names in the Binding elements SHALL be a subset of the formalParameters of the calledFunction.
@@ -160,7 +160,7 @@ when
                  $targetNames : collectSet($ts) ;
                  ! $targetNames.containsAll($names) ) 
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_INCONSISTENT_PARAM_NAMES ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.INVOCATION_INCONSISTENT_PARAM_NAMES, $inv ) );
 end
 
 rule INVOCATION_MISSING_TARGET
@@ -168,7 +168,7 @@ when
     $inv : Invocation( $targetName : expression#LiteralExpression.text )
     not( DRGElement( name == $targetName ) )  
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_MISSING_TARGET ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.INVOCATION_MISSING_TARGET, $inv ) );
 end
 
 rule INVOCATION_WRONG_PARAM_COUNT
@@ -176,7 +176,7 @@ when
     $inv : Invocation( $targetName : expression#LiteralExpression.text )
     BusinessKnowledgeModel( name == $targetName, encapsulatedLogic.formalParameter.size != $inv.binding.size ) 
 then
-    entryPoints["PROBLEMS"].insert( new Problem( $inv, P.INVOCATION_WRONG_PARAM_COUNT ) );
+    entryPoints["PROBLEMS"].insert( new Problem( P.INVOCATION_WRONG_PARAM_COUNT, $inv) );
 end
 
 /** Not sure if this rule is really needed being a possible subset of ITEMDEF_NOT_UNIQUE */
@@ -185,7 +185,7 @@ when
   $ic1 : ItemDefinition( parent instanceof ItemDefinition )
   $ic2 : ItemDefinition( name == $ic1.name, parent == $ic1.parent, this != $ic1 )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $ic1, P.ITEMCOMP_DUPLICATED ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.ITEMCOMP_DUPLICATED, $ic1) );
 end
 
 rule ITEMDEF_NOT_UNIQUE
@@ -193,7 +193,7 @@ when
   $x : ItemDefinition()
   $y : ItemDefinition( name == $x.name, this != $x )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $x, P.ITEMDEF_NOT_UNIQUE ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.ITEMDEF_NOT_UNIQUE, $x ) );
 end
 
 rule RELATION_DUP_COLUMN
@@ -201,21 +201,21 @@ when
   $c1 : InformationItem( parent instanceof Relation )
   $c2 : InformationItem( name == $c1.name, parent == $c1.parent, this != $c1 )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $c1, P.RELATION_DUP_COLUMN ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.RELATION_DUP_COLUMN, $c1 ) );
 end
 
 rule RELATION_ROW_CELL_NOTLITERAL
 when
   $e : Expression( parent instanceof org.kie.dmn.feel.model.v1_1.List, parent.parent instanceof Relation, ! (this instanceof LiteralExpression) )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $e, P.RELATION_ROW_CELL_NOTLITERAL ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.RELATION_ROW_CELL_NOTLITERAL, $e ) );
 end
 
 rule RELATION_ROW_CELLCOUNTMISMATCH
 when
   $row : org.kie.dmn.feel.model.v1_1.List( parent instanceof Relation, expression.size != parent.column.size )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $row, P.RELATION_ROW_CELLCOUNTMISMATCH ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.RELATION_ROW_CELLCOUNTMISMATCH, $row ) );
 end
 
 rule REQAUTH_NOT_KNOWLEDGESOURCE
@@ -223,67 +223,67 @@ when
   AuthorityRequirement( $oc: requiredAuthority )
   DMNElement( id == rightOfHash( $oc.href ) , !(this instanceof KnowledgeSource) ) 
 then
-  entryPoints["PROBLEMS"].insert( new Problem( $oc, P.REQAUTH_NOT_KNOWLEDGESOURCE ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.REQAUTH_NOT_KNOWLEDGESOURCE, $oc ) );
 end
 
 rule TYPEREF_NO_FEEL_TYPE_p1
 when
-  Expression( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+  $o: Expression( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NO_FEEL_TYPE, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NO_FEEL_TYPE_p2
 when
-  InformationItem( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+  $o: InformationItem( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+  $o: entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NO_FEEL_TYPE, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NO_FEEL_TYPE_p3
 when
-  ItemDefinition( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+  $o: ItemDefinition( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NO_FEEL_TYPE, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NO_FEEL_TYPE_p4
 when
-  OutputClause( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
+  $o: OutputClause( typeRef!.prefix != null, getNamespaceURI( typeRef.prefix ) == DMNModelInstrumentedBase.URI_FEEL, BuiltInType.determineTypeFromName( typeRef.localPart ) == BuiltInType.UNKNOWN )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NO_FEEL_TYPE ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NO_FEEL_TYPE, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NOT_FEEL_NOT_DEF_p1
 when
-  Expression( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  $o: Expression( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
   not( ItemDefinition( name == $typeRef ) )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NOT_FEEL_NOT_DEF, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NOT_FEEL_NOT_DEF_p2
 when
-  InformationItem( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  $o: InformationItem( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
   not( ItemDefinition( name == $typeRef ) )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NOT_FEEL_NOT_DEF, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NOT_FEEL_NOT_DEF_p3
 when
-  ItemDefinition( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  $o: ItemDefinition( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
   not( ItemDefinition( name == $typeRef ) )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NOT_FEEL_NOT_DEF, $o.getTypeRef() ) );
 end
 
 rule TYPEREF_NOT_FEEL_NOT_DEF_p4
 when
-  OutputClause( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
+  $o: OutputClause( typeRef == null || typeRef.prefix == null || getNamespaceURI( typeRef.prefix ) != DMNModelInstrumentedBase.URI_FEEL, $typeRef : typeRef )
   not( ItemDefinition( name == $typeRef ) )
 then
-  entryPoints["PROBLEMS"].insert( new Problem( null, P.TYPEREF_NOT_FEEL_NOT_DEF ) );
+  entryPoints["PROBLEMS"].insert( new Problem( P.TYPEREF_NOT_FEEL_NOT_DEF, $o.getTypeRef() ) );
 end
 
 

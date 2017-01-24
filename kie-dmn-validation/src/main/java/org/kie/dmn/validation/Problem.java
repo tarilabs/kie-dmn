@@ -5,41 +5,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Problem {
-    private Object subject;
-    private P p;
+    private Object reference;
+    private P problem;
     
-    public Problem(Object subject, P p) {
-        super();
-        this.subject = subject;
-        this.p = p;
+    public Problem(P problem, Object reference) {
+        this.reference = reference;
+        this.problem = problem;
     }
 
-    
-    public Object getSubject() {
-        return subject;
+    public Object getReference() {
+        return reference;
     }
-
     
     public String getMessage() {
-        return p.getShortname();
+        return problem.getShortname();
     }
 
-
-    
-    public P getP() {
-        return p;
+    public P getProblem() {
+        return problem;
     }
 
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Problem [subject=").append(subject)
-        .append(", message=").append(getMessage())
-        .append(", p=").append(p)
-        .append("]");
-        return builder.toString();
-    }
-
-    
 }

@@ -47,7 +47,7 @@ public class ValidatorImpl implements Validator {
         try {
             schema.newValidator().validate(s);
         } catch (SAXException | IOException e) {
-            problems.add(new Problem(e, P.FAILED_XML_VALIDATION));
+            problems.add(new Problem(P.FAILED_XML_VALIDATION, e));
         }
         // TODO detect if the XSD is not provided through schemaLocation, and validate against embedded?
         return problems;
