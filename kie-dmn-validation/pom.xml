@@ -5,10 +5,10 @@
     <artifactId>kie-dmn</artifactId>
     <version>7.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>kie-dmn-validator</artifactId>
+  <artifactId>kie-dmn-validation</artifactId>
     <packaging>jar</packaging>
 
-  <name>KIE :: Decision Model Notation :: Validator</name>
+  <name>KIE :: Decision Model Notation :: Validation</name>
 
   <dependencyManagement>
     <dependencies>

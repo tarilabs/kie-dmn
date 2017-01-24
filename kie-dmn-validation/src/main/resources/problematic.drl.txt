@@ -18,6 +18,11 @@ then
   entryPoints["PROBLEMS"].insert( "ITEMCOMP_DUPLICATED "+$ic1 + " " +$ic2 );
 end
 
+<node
+    <subnode attr1 ="a"
+    <subnode attr1 ="b"
+    <subnode attr1 ="a"
+
 does not trigger:
 
 rule ITEMCOMP_DUPLICATED

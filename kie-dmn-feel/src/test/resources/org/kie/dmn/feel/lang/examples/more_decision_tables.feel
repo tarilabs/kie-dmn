@@ -1,0 +1,45 @@
+{
+   DT20161124 : decision table (
+                                outputs: "Collect",
+                                input expression list: ["Input"],
+                                rule list: [
+                                    [ [0..10] , 10 ],
+                                    [ [10..20], 20 ],
+                                    [ [20..30], 30 ],
+                                    [ >30     , 40 ]
+                                ],
+                                hit policy: "C+"
+                            ),
+                            
+   DT20161124in20 : DT20161124( 20 ),
+   
+   DT20161124b : decision table (
+                                outputs: "My Decision",
+                                input expression list: ["Age", "RequestedProduct"],
+                                rule list: [
+                                    [ <25      , "Fixed25" , "Fixed30" ],
+                                    [ <25      , "Fixed30" , "Fixed25" ],
+                                    [ [25..35) , "Fixed25" , "Fixed25" ],
+                                    [ [25..35) , "Fixed30" , "Fixed30" ],
+                                    [ >=35     , -         , RequestedProduct ]
+                                ],
+                                hit policy: "U"
+                            ),
+   
+   RequestedProduct: "myRequestedProduct",
+   DT20161124binRequestedProduct: DT20161124b( RequestedProduct ),
+   
+   DT20161124c : decision table (
+                                outputs: "a",
+                                input expression list: ["Occupation"],
+                                rule list: [
+                                    [ "Student"       , "\"Is Student\""     ],
+                                    [ not( "Student" ), "\"Is not a Student\""]
+                                ],
+                                hit policy: "U"
+                            ),
+                            
+   DT20161124cinStudent : DT20161124c( "Student" )
+   DT20161124cinaaaStudent : DT20161124c( "aaaStudent" )
+   
+}

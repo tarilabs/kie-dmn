@@ -1,4 +1,4 @@
-package org.kie.dmn.validator;
+package org.kie.dmn.validation;
 
 import java.util.Arrays;
 import java.util.HashSet;

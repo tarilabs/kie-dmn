@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.dmn.validator;
+package org.kie.dmn.validation;
 
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.CompiledExpression;
@@ -28,18 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * FEEL expression language engine interface
- *
- * This class is the entry point for the engine use
- */
 public interface Validator {
 
-    /**
-     * Factory method to create a new FEEL engine instance
-     *
-     * @return a newly instantiated FEEL engine instance
-     */
     static Validator newInstance() {
         return new ValidatorImpl();
     }

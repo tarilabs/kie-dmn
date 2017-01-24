@@ -1,4 +1,4 @@
-package org.kie.dmn.validator;
+package org.kie.dmn.validation;
 
 import static java.util.stream.Collectors.*;
 
@@ -29,7 +29,6 @@ import org.kie.dmn.feel.model.v1_1.DRGElement;
 import org.kie.dmn.feel.model.v1_1.Definitions;
 import org.kie.dmn.feel.model.v1_1.ItemDefinition;
 import org.xml.sax.SAXException;
-
 
 public class ValidatorImpl implements Validator {
     static Schema schema;

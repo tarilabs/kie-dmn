@@ -61,6 +61,9 @@ public abstract class DMNModelInstrumentedBase {
         this.parent = parent;
     }
 
+    /*
+     * children element references are populated during deserialization, enabling fast access for Validation.
+     */
     public java.util.List<DMNModelInstrumentedBase> getChildren() {
         return Collections.unmodifiableList(children);
     }
