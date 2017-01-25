@@ -16,17 +16,10 @@
 
 package org.kie.dmn.validation;
 
-import org.kie.dmn.feel.FEEL;
-import org.kie.dmn.feel.lang.CompiledExpression;
-import org.kie.dmn.feel.lang.CompilerContext;
-import org.kie.dmn.feel.lang.impl.FEELImpl;
 import org.kie.dmn.feel.model.v1_1.Definitions;
-import org.kie.dmn.feel.runtime.events.FEELEventListener;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface Validator {
 
@@ -34,7 +27,13 @@ public interface Validator {
         return new ValidatorImpl();
     }
 
-    List<Problem> validate(Definitions dmnInput);
+    /**
+     * Performs validation of the DMN model against DMN specifications.
+     */
+    List<Problem> validateModel(Definitions dmnModel);
 
-    List<Problem> validateOnlyXML(File xmlFile);
+    /**
+     * Performs validation of the xml file against the DMN's XSD Schema.
+     */
+    List<Problem> validateSchema(File xmlFile);
 }

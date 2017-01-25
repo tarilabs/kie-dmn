@@ -18,7 +18,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.event.rule.DefaultRuleRuntimeEventListener;
 import org.kie.api.event.rule.ObjectInsertedEvent;
@@ -41,7 +40,7 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public List<Problem> validateOnlyXML(File xmlFile) {
+    public List<Problem> validateSchema(File xmlFile) {
         List<Problem> problems = new ArrayList<>();
         Source s = new StreamSource(xmlFile);
         try {
@@ -54,7 +53,7 @@ public class ValidatorImpl implements Validator {
     }
     
     @Override
-    public List<Problem> validate(Definitions dmnModel) {
+    public List<Problem> validateModel(Definitions dmnModel) {
         
         KieContainer kieContainer = KieServices.Factory.get().getKieClasspathContainer();
         StatelessKieSession kieSession = kieContainer.newStatelessKieSession();
