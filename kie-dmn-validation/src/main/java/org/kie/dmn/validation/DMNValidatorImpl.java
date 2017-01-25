@@ -29,7 +29,7 @@ import org.kie.dmn.feel.model.v1_1.Definitions;
 import org.kie.dmn.feel.model.v1_1.ItemDefinition;
 import org.xml.sax.SAXException;
 
-public class ValidatorImpl implements Validator {
+public class DMNValidatorImpl implements DMNValidator {
     static Schema schema;
     static {
         try {
@@ -78,7 +78,7 @@ public class ValidatorImpl implements Validator {
     
     public static Stream<DMNModelInstrumentedBase> allChildren(DMNModelInstrumentedBase root) {
         return Stream.concat( Stream.of(root),
-                              root.getChildren().stream().flatMap(ValidatorImpl::allChildren) );
+                              root.getChildren().stream().flatMap(DMNValidatorImpl::allChildren) );
     }
     
     @SuppressWarnings("unchecked")

@@ -21,10 +21,10 @@ import org.kie.dmn.feel.model.v1_1.Definitions;
 import java.io.File;
 import java.util.List;
 
-public interface Validator {
+public interface DMNValidator {
 
-    static Validator newInstance() {
-        return new ValidatorImpl();
+    static DMNValidator newInstance() {
+        return new DMNValidatorImpl();
     }
 
     /**
