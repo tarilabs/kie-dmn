@@ -1,6 +1,6 @@
 package org.kie.dmn.validation;
 
-public enum P {
+public enum Msg {
     BKM_MISSING_EXPR("BKM missing a value expression"),
     BKM_MISSING_VAR("BKM is missing variable or name does not matche the variable name"),
     CONTEXT_DUP_ENTRY("Context contains duplicate context entry keys"),
@@ -15,6 +15,7 @@ public enum P {
     DTABLE_SINGLEOUT_NOTYPEREF("Decision table with single output should not have output typeRef"),
     ELEMREF_MISSING_TARGET("Element reference is pointing to a unknown target"),
     ELEMREF_NOHASH("Element reference should point to an anchor (using hash sign) for an element to be referenced"),
+    FAILED_VALIDATOR("The Validator Was unable to compile embedded DMN validation rules, validation of the DMN Model cannot be performed"),
     FAILED_XML_VALIDATION("Failed XML validation of DMN file"),
     FORMAL_PARAM_DUPLICATED("formal parameter with duplicated name"),
     INPUTDATA_MISSING_VAR("InputData is missing variable or name does not matche the variable name"),
@@ -33,7 +34,7 @@ public enum P {
 
     private String shortname;
     
-    P(String shortname) {
+    Msg(String shortname) {
         this.shortname = shortname;
     }
 

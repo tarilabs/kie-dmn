@@ -23,17 +23,18 @@ import java.util.List;
 
 public interface DMNValidator {
 
-    static DMNValidator newInstance() {
-        return new DMNValidatorImpl();
-    }
-
     /**
      * Performs validation of the DMN model against DMN specifications.
      */
-    List<Problem> validateModel(Definitions dmnModel);
+    List<ValidationMsg> validateModel(Definitions dmnModel);
 
     /**
      * Performs validation of the xml file against the DMN's XSD Schema.
      */
-    List<Problem> validateSchema(File xmlFile);
+    List<ValidationMsg> validateSchema(File xmlFile);
+
+    /**
+     * Release all resources associated with this DMNValidator.
+     */
+    void dispose();
 }

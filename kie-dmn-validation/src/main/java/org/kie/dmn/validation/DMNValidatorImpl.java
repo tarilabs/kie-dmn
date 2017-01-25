@@ -5,9 +5,9 @@ import static java.util.stream.Collectors.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -18,18 +18,27 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.drools.core.util.IoUtils;
 import org.kie.api.KieServices;
+import org.kie.api.builder.KieBuilder;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Message.Level;
+import org.kie.api.builder.ReleaseId;
+import org.kie.api.builder.Results;
 import org.kie.api.event.rule.DefaultRuleRuntimeEventListener;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.StatelessKieSession;
 import org.kie.dmn.feel.model.v1_1.DMNModelInstrumentedBase;
-import org.kie.dmn.feel.model.v1_1.DRGElement;
 import org.kie.dmn.feel.model.v1_1.Definitions;
-import org.kie.dmn.feel.model.v1_1.ItemDefinition;
+import org.kie.dmn.validation.ValidationMsg.Severity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 public class DMNValidatorImpl implements DMNValidator {
+    public static Logger LOG = LoggerFactory.getLogger(DMNValidatorImpl.class);
     static Schema schema;
     static {
         try {
@@ -38,33 +47,81 @@ public class DMNValidatorImpl implements DMNValidator {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * A KieContainer is normally available,
+     * unless at runtime some problem prevented building it correctly.
+     */
+    private Optional<KieContainer> kieContainer;
+    /**
+     * Collect at init time the runtime issues which prevented to build the `kieContainer` correctly.
+     */
+    private List<ValidationMsg> failedInitMsg;
+    
+    public DMNValidatorImpl() {
+        KieServices ks = KieServices.Factory.get();
+        KieFileSystem kfs = ks.newKieFileSystem();
+        ReleaseId rid = ks.newReleaseId("org.kie", "kie-dmn-validation", "1");
+        kfs.generateAndWritePomXML(rid);
+        try {
+            kfs.write("src/main/resources/rules.drl", IoUtils.readBytesFromInputStream( DMNValidatorImpl.class.getResourceAsStream("/rules.drl") ));
+        } catch (IOException e) {
+            LOG.error("Unable to read embedded DMN validation rule file.", e);
+            failedInitMsg.add(new ValidationMsg(Severity.ERROR, Msg.FAILED_VALIDATOR, e.getMessage()));
+        }
+        KieBuilder kieBuilder = ks.newKieBuilder(kfs).buildAll();
+        Results results = kieBuilder.getResults();
+        for ( Message m : results.getMessages(new Message.Level[]{Message.Level.ERROR, Message.Level.WARNING}) ) {
+            if (m.getLevel() == Level.ERROR) {
+                LOG.error("{}", m);
+            } else if (m.getLevel() == Level.WARNING) {
+                LOG.warn("{}", m);
+            }
+        }
+        
+        if (results.hasMessages(new Message.Level[]{Message.Level.ERROR})) {
+            LOG.error("Errors while compiling embedded DMN validation rules.");
+            results.getMessages().stream()
+                .map(m -> new ValidationMsg( Severity.ERROR, Msg.FAILED_VALIDATOR, m ))
+                .forEach(vm -> failedInitMsg.add(vm));
+            this.kieContainer = Optional.empty();
+        } else {
+            this.kieContainer = Optional.of( ks.newKieContainer(rid) );
+        }
+    }
+    
+    public void dispose() {
+        kieContainer.ifPresent( KieContainer::dispose );
+    }
 
     @Override
-    public List<Problem> validateSchema(File xmlFile) {
-        List<Problem> problems = new ArrayList<>();
+    public List<ValidationMsg> validateSchema(File xmlFile) {
+        List<ValidationMsg> problems = new ArrayList<>();
         Source s = new StreamSource(xmlFile);
         try {
             schema.newValidator().validate(s);
         } catch (SAXException | IOException e) {
-            problems.add(new Problem(P.FAILED_XML_VALIDATION, e));
+            problems.add(new ValidationMsg(ValidationMsg.Severity.ERROR, Msg.FAILED_XML_VALIDATION, e));
         }
-        // TODO detect if the XSD is not provided through schemaLocation, and validate against embedded?
+        // TODO detect if the XSD is not provided through schemaLocation, and validate against embedded
         return problems;
     }
     
     @Override
-    public List<Problem> validateModel(Definitions dmnModel) {
+    public List<ValidationMsg> validateModel(Definitions dmnModel) {
+        if (!kieContainer.isPresent()) {
+            return failedInitMsg;
+        }
         
-        KieContainer kieContainer = KieServices.Factory.get().getKieClasspathContainer();
-        StatelessKieSession kieSession = kieContainer.newStatelessKieSession();
+        StatelessKieSession kieSession = kieContainer.get().newStatelessKieSession();
         
-        List<Problem> problems = new ArrayList<>();
+        List<ValidationMsg> problems = new ArrayList<>();
         
         kieSession.addEventListener(new DefaultRuleRuntimeEventListener() {
             @Override
             public void objectInserted(ObjectInsertedEvent event) {
-                if ( event.getObject() instanceof Problem ) {
-                    problems.add((Problem) event.getObject());
+                if ( event.getObject() instanceof ValidationMsg ) {
+                    problems.add((ValidationMsg) event.getObject());
                 }
             }
         });
@@ -76,16 +133,18 @@ public class DMNValidatorImpl implements DMNValidator {
 
 
     
-    public static Stream<DMNModelInstrumentedBase> allChildren(DMNModelInstrumentedBase root) {
-        return Stream.concat( Stream.of(root),
-                              root.getChildren().stream().flatMap(DMNValidatorImpl::allChildren) );
-    }
+    
     
     @SuppressWarnings("unchecked")
     public static <T> Stream<T> allChildren(DMNModelInstrumentedBase root, Class<T> clazz) {
         return (Stream<T>) allChildren(root)
                 .filter(dmn -> clazz.isInstance(dmn) )
                 ;
+    }
+    
+    public static Stream<DMNModelInstrumentedBase> allChildren(DMNModelInstrumentedBase root) {
+        return Stream.concat( Stream.of(root),
+                              root.getChildren().stream().flatMap(DMNValidatorImpl::allChildren) );
     }
     
     @Deprecated
