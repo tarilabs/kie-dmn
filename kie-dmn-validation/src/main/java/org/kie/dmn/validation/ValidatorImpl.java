@@ -57,7 +57,7 @@ public class ValidatorImpl implements Validator {
     public List<Problem> validate(Definitions dmnModel) {
         
         KieContainer kieContainer = KieServices.Factory.get().getKieClasspathContainer();
-        StatelessKieSession kieSession = kieContainer.getKieBase().newStatelessKieSession();
+        StatelessKieSession kieSession = kieContainer.newStatelessKieSession();
         
         List<Problem> problems = new ArrayList<>();
         
