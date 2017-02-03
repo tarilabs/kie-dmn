@@ -70,16 +70,14 @@ public class DMNAssemblerService implements KieAssemblerService {
                 dmnpkg = new DMNPackageImpl( namespace );
                 rpkg.put(ResourceType.DMN, dmnpkg);
             } else {
-                if ( dmnpkg.getModel( model.getName() ) != null) {
-                    ((KnowledgeBuilderImpl) kbuilder).updateResults(Arrays.asList(new KnowledgeBuilderResult[]{
-                            new DMNKnowledgeBuilderError(resource, namespace, "Duplicate model name " + model.getName() + " in namespace " + namespace)}));
+                if ( dmnpkg.getModel( model.getName() ) != null ) {
+                    ((KnowledgeBuilderImpl) kbuilder).addBuilderResult(new DMNKnowledgeBuilderError(resource, namespace, "Duplicate model name " + model.getName() + " in namespace " + namespace));
                     logger.error( "Duplicate model name {} in namespace {}", model.getName(), namespace );
                 }
             }
             dmnpkg.addModel( model.getName(), model );
         } else {
-            ((KnowledgeBuilderImpl) kbuilder).updateResults(Arrays.asList(new KnowledgeBuilderResult[]{
-                    new DMNKnowledgeBuilderError(resource, "Unable to compile DMN model for the resource")}));
+            ((KnowledgeBuilderImpl) kbuilder).addBuilderResult(new DMNKnowledgeBuilderError(resource, "Unable to compile DMN model for the resource"));
             logger.error( "Unable to compile DMN model for resource {}", resource.getSourcePath() );
         }
     }
