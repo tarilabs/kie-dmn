@@ -16,10 +16,14 @@
 
 package org.kie.dmn.core.ast;
 
-import org.kie.dmn.core.api.DMNContext;
-import org.kie.dmn.core.api.DMNMessage;
-import org.kie.dmn.core.api.DMNType;
-import org.kie.dmn.core.api.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.DMNContext;
+import org.kie.dmn.api.core.DMNMessage;
+import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.core.InternalDMNResult;
+import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
+import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.feel.runtime.events.FEELEvent;
+import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
 import org.kie.dmn.feel.FEEL;
@@ -28,8 +32,6 @@ import org.kie.dmn.feel.lang.impl.FEELImpl;
 import org.kie.dmn.feel.lang.impl.NamedParameter;
 import org.kie.dmn.feel.model.v1_1.Invocation;
 import org.kie.dmn.feel.runtime.FEELFunction;
-import org.kie.dmn.feel.runtime.events.FEELEvent;
-import org.kie.dmn.feel.runtime.events.FEELEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +68,7 @@ public class DMNInvocationEvaluator
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, DMNResultImpl result) {
+    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
         DMNContext previousContext = result.getContext();
         DMNContextImpl dmnContext = (DMNContextImpl) previousContext.clone();
         result.setContext( dmnContext );
@@ -147,7 +149,7 @@ public class DMNInvocationEvaluator
         this.events.add( event );
     }
 
-    private boolean hasErrors(List<FEELEvent> events, InternalDMNRuntimeEventManager eventManager, DMNResultImpl result) {
+    private boolean hasErrors(List<FEELEvent> events, InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
         boolean hasErrors = false;
         for ( FEELEvent e : events ) {
             if ( e.getSeverity() == FEELEvent.Severity.ERROR ) {

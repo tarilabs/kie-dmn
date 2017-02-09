@@ -16,9 +16,11 @@
 
 package org.kie.dmn.core.ast;
 
-import org.kie.dmn.core.api.DMNContext;
-import org.kie.dmn.core.api.DMNType;
-import org.kie.dmn.core.api.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.DMNContext;
+import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.core.InternalDMNResult;
+import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
+import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
 import org.kie.dmn.feel.lang.EvaluationContext;
@@ -65,7 +67,7 @@ public class DMNExpressionEvaluatorInvokerFunction implements DMNExpressionEvalu
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, DMNResultImpl result) {
+    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
         // when this evaluator is executed, it should return a "FEEL function" to register in the context
         DMNExpressionEvaluatorFunction function = new DMNExpressionEvaluatorFunction( name, parameters, evaluator, eventManager, result );
         return new EvaluatorResult( function, ResultType.SUCCESS );
@@ -85,9 +87,9 @@ public class DMNExpressionEvaluatorInvokerFunction implements DMNExpressionEvalu
         private final List<FormalParameter> parameters;
         private final DMNExpressionEvaluator evaluator;
         private final InternalDMNRuntimeEventManager eventManager;
-        private final DMNResultImpl resultContext;
+        private final InternalDMNResult resultContext;
 
-        public DMNExpressionEvaluatorFunction(String name, List<FormalParameter> parameters, DMNExpressionEvaluator evaluator, InternalDMNRuntimeEventManager eventManager, DMNResultImpl result) {
+        public DMNExpressionEvaluatorFunction(String name, List<FormalParameter> parameters, DMNExpressionEvaluator evaluator, InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
             super( name );
             this.parameters = parameters;
             this.evaluator = evaluator;
