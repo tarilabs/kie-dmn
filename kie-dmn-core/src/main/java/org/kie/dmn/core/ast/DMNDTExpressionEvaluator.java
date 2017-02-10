@@ -20,6 +20,7 @@ import org.kie.dmn.api.core.DMNMessage;
 import org.kie.dmn.api.core.InternalDMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
 import org.kie.dmn.api.core.ast.DMNNode;
+import org.kie.dmn.api.core.ast.EvaluatorResult;
 import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
@@ -79,7 +80,7 @@ public class DMNDTExpressionEvaluator
             ctx.exitFrame();
 
             r = processEvents( events, eventManager, result );
-            return new EvaluatorResult( dtr, r.hasErrors ? ResultType.FAILURE : ResultType.SUCCESS );
+            return new EvaluatorResultImpl( dtr, r.hasErrors ? ResultType.FAILURE : ResultType.SUCCESS );
         } finally {
             eventManager.fireAfterEvaluateDecisionTable( node.getName(), dt.getName(), result, (r != null ? r.matchedRules : null), (r != null ? r.fired : null) );
         }

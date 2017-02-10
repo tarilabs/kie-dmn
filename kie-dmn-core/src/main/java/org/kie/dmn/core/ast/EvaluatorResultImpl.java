@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package org.kie.dmn.api.core;
+package org.kie.dmn.core.ast;
 
-import org.kie.dmn.api.core.DMNMessage.Severity;
-import org.kie.dmn.api.feel.runtime.events.FEELEvent;
+import org.kie.dmn.api.core.ast.EvaluatorResult;
+import org.kie.dmn.api.core.ast.DMNExpressionEvaluator.ResultType;
 
-public interface InternalDMNResult extends DMNResult {
+public class EvaluatorResultImpl implements EvaluatorResult {
+    private final Object     result;
+    private final ResultType code;
 
-    void setContext(DMNContext context);
+    public EvaluatorResultImpl(Object result, ResultType code) {
+        this.result = result;
+        this.code = code;
+    }
 
-    void addMessage(DMNMessage msg);
+    @Override
+    public Object getResult() {
+        return result;
+    }
 
-    DMNMessage addMessage(Severity severity, String message, String sourceId);
-
-    DMNMessage addMessage(Severity severity, String message, String sourceId, Throwable exception);
-
-    void addMessage(Severity severity, String message, String sourceId, FEELEvent feelEvent);
-
+    @Override
+    public ResultType getResultType() {
+        return code;
+    }
 }

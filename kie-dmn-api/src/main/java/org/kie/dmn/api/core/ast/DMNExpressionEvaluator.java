@@ -37,22 +37,5 @@ public interface DMNExpressionEvaluator {
     enum ResultType {
         SUCCESS, FAILURE;
     }
-
-    class EvaluatorResult {
-        private final Object     result;
-        private final ResultType code;
-
-        public EvaluatorResult(Object result, ResultType code) {
-            this.result = result;
-            this.code = code;
-        }
-
-        public Object getResult() {
-            return result;
-        }
-
-        public ResultType getResultType() {
-            return code;
-        }
-    }
+    
 }

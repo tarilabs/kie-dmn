@@ -20,6 +20,7 @@ import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNMessage;
 import org.kie.dmn.api.core.InternalDMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
+import org.kie.dmn.api.core.ast.EvaluatorResult;
 import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
@@ -73,7 +74,7 @@ public class DMNListEvaluator
                                 DMNMessage.Severity.ERROR,
                                 message,
                                 nodeId );
-                        return new EvaluatorResult( results, ResultType.FAILURE );
+                        return new EvaluatorResultImpl( results, ResultType.FAILURE );
                     }
                 } catch ( Exception e ) {
                     String message = "Error evaluating list element on position '" + (index + 1) + "' on list '" + name + "'";
@@ -83,7 +84,7 @@ public class DMNListEvaluator
                             message,
                             nodeId,
                             e );
-                    return new EvaluatorResult( results, ResultType.FAILURE );
+                    return new EvaluatorResultImpl( results, ResultType.FAILURE );
                 } finally {
                     index++;
                 }
@@ -91,7 +92,7 @@ public class DMNListEvaluator
         } finally {
             result.setContext( previousContext );
         }
-        return new EvaluatorResult( results, ResultType.SUCCESS );
+        return new EvaluatorResultImpl( results, ResultType.SUCCESS );
     }
 
 }

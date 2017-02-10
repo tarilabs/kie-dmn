@@ -20,6 +20,7 @@ import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.InternalDMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
+import org.kie.dmn.api.core.ast.EvaluatorResult;
 import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
@@ -70,7 +71,7 @@ public class DMNExpressionEvaluatorInvokerFunction implements DMNExpressionEvalu
     public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
         // when this evaluator is executed, it should return a "FEEL function" to register in the context
         DMNExpressionEvaluatorFunction function = new DMNExpressionEvaluatorFunction( name, parameters, evaluator, eventManager, result );
-        return new EvaluatorResult( function, ResultType.SUCCESS );
+        return new EvaluatorResultImpl( function, ResultType.SUCCESS );
     }
 
     private static class FormalParameter {
