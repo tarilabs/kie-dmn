@@ -21,12 +21,8 @@ import org.kie.dmn.feel.model.v1_1.Decision;
 
 public interface DecisionNode extends DMNNode {
 
-    DMNExpressionEvaluator getEvaluator();
-
     DMNType getResultType();
 
     Decision getDecision();
-
-    void setEvaluator(DMNExpressionEvaluator evaluator);
 
 }

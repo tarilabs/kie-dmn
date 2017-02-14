@@ -20,13 +20,9 @@ import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.feel.model.v1_1.BusinessKnowledgeModel;
 
 public interface BusinessKnowledgeModelNode extends DMNNode {
-
-    DMNExpressionEvaluator getEvaluator();
-
-    BusinessKnowledgeModel getBusinessKnowledModel();
-
+    
     DMNType getResultType();
-
-    void setEvaluator(DMNExpressionEvaluator evaluator);
+    
+    BusinessKnowledgeModel getBusinessKnowledModel();
 
 }

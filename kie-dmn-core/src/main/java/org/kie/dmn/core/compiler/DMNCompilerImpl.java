@@ -148,12 +148,12 @@ public class DMNCompilerImpl implements DMNCompiler {
             linkRequirements( model, bkm );
             FunctionDefinition funcDef = bkm.getBusinessKnowledModel().getEncapsulatedLogic();
             DMNExpressionEvaluator exprEvaluator = compileExpression( model, bkm, bkm.getName(), funcDef );
-            bkm.setEvaluator( exprEvaluator );
+            ((BusinessKnowledgeModelNodeImpl) bkm).setEvaluator( exprEvaluator );
         }
         for ( DecisionNode d : model.getDecisions() ) {
             linkRequirements( model, d );
             DMNExpressionEvaluator evaluator = compileExpression( model, d, d.getName(), d.getDecision().getExpression() );
-            d.setEvaluator( evaluator );
+            ((DecisionNodeImpl) d).setEvaluator( evaluator );
         }
     }
 
@@ -161,7 +161,8 @@ public class DMNCompilerImpl implements DMNCompiler {
         return FEELParser.isVariableNameValid( variableName );
     }
 
-    private void linkRequirements(DMNModelImpl model, DMNNode node ) {
+    private void linkRequirements(DMNModelImpl model, DMNNode n ) {
+        DMNBaseNode node = (DMNBaseNode) n;
         for ( InformationRequirement ir : node.getInformationRequirement() ) {
             if ( ir.getRequiredInput() != null ) {
                 String id = getId( ir.getRequiredInput() );
@@ -432,7 +433,7 @@ public class DMNCompilerImpl implements DMNCompiler {
             // need to break this statement down and check for nulls
             parameterNames.addAll( ((BusinessKnowledgeModelNode) node).getBusinessKnowledModel().getEncapsulatedLogic().getFormalParameter().stream().map( f -> f.getName() ).collect(toList()) );
         } else {
-            parameterNames.addAll( node.getDependencies().keySet() );
+            parameterNames.addAll( ((DMNBaseNode) node).getDependencies().keySet() );
         }
 
         DecisionTableImpl dti = new DecisionTableImpl( dtName, parameterNames, inputs, outputs, rules, hp );
@@ -443,7 +444,7 @@ public class DMNCompilerImpl implements DMNCompiler {
 
     private DMNExpressionEvaluator compileLiteralExpression(DMNNode node, LiteralExpression expression, FEEL feel) {
         CompilerContext ctx = feel.newCompilerContext();
-        node.getDependencies().forEach( (name, depNode) -> {
+        ((DMNBaseNode) node).getDependencies().forEach( (name, depNode) -> {
             // TODO: need to properly resolve types here
             ctx.addInputVariableType( name, BuiltInType.UNKNOWN );
         } );

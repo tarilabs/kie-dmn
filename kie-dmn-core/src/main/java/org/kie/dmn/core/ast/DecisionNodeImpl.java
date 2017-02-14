@@ -50,12 +50,10 @@ public class DecisionNodeImpl
         this.decision = decision;
     }
 
-    @Override
     public DMNExpressionEvaluator getEvaluator() {
         return evaluator;
     }
 
-    @Override
     public void setEvaluator(DMNExpressionEvaluator evaluator) {
         this.evaluator = evaluator;
     }

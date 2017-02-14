@@ -127,7 +127,7 @@ public class DMNModelImpl
 
     @Override
     public Set<InputDataNode> getRequiredInputsForDecisionName(String decisionName) {
-        DecisionNode decision = getDecisionByName( decisionName );
+        DecisionNodeImpl decision = (DecisionNodeImpl) getDecisionByName( decisionName );
         Set<InputDataNode> inputs = new HashSet<>();
         if ( decision != null ) {
             collectRequiredInputs( decision.getDependencies().values(), inputs );
@@ -137,7 +137,7 @@ public class DMNModelImpl
 
     @Override
     public Set<InputDataNode> getRequiredInputsForDecisionId(String decisionId) {
-        DecisionNode decision = getDecisionById( decisionId );
+        DecisionNodeImpl decision = (DecisionNodeImpl) getDecisionById( decisionId );
         Set<InputDataNode> inputs = new HashSet<>();
         if ( decision != null ) {
             collectRequiredInputs( decision.getDependencies().values(), inputs );
@@ -174,7 +174,7 @@ public class DMNModelImpl
 
     @Override
     public Set<InputDataNode> getRequiredInputsForBusinessKnowledgeModelName(String bkmName) {
-        BusinessKnowledgeModelNode bkm = getBusinessKnowledgeModelByName( bkmName );
+        BusinessKnowledgeModelNodeImpl bkm = (BusinessKnowledgeModelNodeImpl) getBusinessKnowledgeModelByName( bkmName );
         Set<InputDataNode> inputs = new HashSet<>();
         if ( bkm != null ) {
             collectRequiredInputs( bkm.getDependencies().values(), inputs );
@@ -184,7 +184,7 @@ public class DMNModelImpl
 
     @Override
     public Set<InputDataNode> getRequiredInputsForBusinessKnowledgeModelId(String bkmId) {
-        BusinessKnowledgeModelNode bkm = getBusinessKnowledgeModelById( bkmId );
+        BusinessKnowledgeModelNodeImpl bkm = (BusinessKnowledgeModelNodeImpl) getBusinessKnowledgeModelById( bkmId );
         Set<InputDataNode> inputs = new HashSet<>();
         if ( bkm != null ) {
             collectRequiredInputs( bkm.getDependencies().values(), inputs );
@@ -197,9 +197,9 @@ public class DMNModelImpl
             if ( dep instanceof InputDataNode ) {
                 inputs.add( (InputDataNode) dep );
             } else if ( dep instanceof DecisionNode ) {
-                collectRequiredInputs( ((DecisionNode) dep).getDependencies().values(), inputs );
+                collectRequiredInputs( ((DecisionNodeImpl) dep).getDependencies().values(), inputs );
             } else if ( dep instanceof BusinessKnowledgeModelNode ) {
-                collectRequiredInputs( ((BusinessKnowledgeModelNode) dep).getDependencies().values(), inputs );
+                collectRequiredInputs( ((BusinessKnowledgeModelNodeImpl) dep).getDependencies().values(), inputs );
             }
         } );
     }

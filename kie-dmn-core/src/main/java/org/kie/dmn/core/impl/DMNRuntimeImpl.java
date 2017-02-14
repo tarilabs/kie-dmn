@@ -32,6 +32,8 @@ import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
 import org.kie.dmn.api.core.event.DMNRuntimeEventListener;
+import org.kie.dmn.core.ast.BusinessKnowledgeModelNodeImpl;
+import org.kie.dmn.core.ast.DecisionNodeImpl;
 import org.kie.internal.io.ResourceTypePackage;
 
 import java.util.*;
@@ -132,7 +134,8 @@ public class DMNRuntimeImpl
         }
     }
 
-    private void evaluateBKM(DMNContext context, DMNResultImpl result, BusinessKnowledgeModelNode bkm) {
+    private void evaluateBKM(DMNContext context, DMNResultImpl result, BusinessKnowledgeModelNode b) {
+        BusinessKnowledgeModelNodeImpl bkm = (BusinessKnowledgeModelNodeImpl) b;
         if( result.getContext().isDefined( bkm.getName() ) ) {
             // already resolved
             // TODO: do we need to check if the defined variable is a function as it should?
@@ -170,7 +173,8 @@ public class DMNRuntimeImpl
         }
     }
 
-    private boolean evaluateDecision(DMNContext context, DMNResultImpl result, DecisionNode decision) {
+    private boolean evaluateDecision(DMNContext context, DMNResultImpl result, DecisionNode d) {
+        DecisionNodeImpl decision = (DecisionNodeImpl) d;
         if( result.getContext().isDefined( decision.getName() ) ) {
             // already resolved
             return true;

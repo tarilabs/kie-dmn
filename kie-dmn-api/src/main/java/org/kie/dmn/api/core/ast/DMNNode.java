@@ -16,24 +16,10 @@
 
 package org.kie.dmn.api.core.ast;
 
-import java.util.List;
-import java.util.Map;
-
-import org.kie.dmn.feel.model.v1_1.InformationRequirement;
-import org.kie.dmn.feel.model.v1_1.KnowledgeRequirement;
-
 public interface DMNNode {
 
     String getId();
 
     String getName();
-
-    Map<String, DMNNode> getDependencies();
-
-    void addDependency(String name, DMNNode dependency);
-
-    List<InformationRequirement> getInformationRequirement();
-
-    List<KnowledgeRequirement> getKnowledgeRequirement();
 
 }

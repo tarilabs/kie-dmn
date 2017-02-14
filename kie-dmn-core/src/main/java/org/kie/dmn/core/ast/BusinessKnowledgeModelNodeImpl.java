@@ -52,12 +52,10 @@ public class BusinessKnowledgeModelNodeImpl
         this.bkm = bkm;
     }
 
-    @Override
     public DMNExpressionEvaluator getEvaluator() {
         return evaluator;
     }
 
-    @Override
     public void setEvaluator(DMNExpressionEvaluator evaluator) {
         this.evaluator = evaluator;
     }

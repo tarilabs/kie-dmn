@@ -46,7 +46,6 @@ public abstract class DMNBaseNode
         return source != null ? source.getName() : null;
     }
 
-    @Override
     public Map<String, DMNNode> getDependencies() {
         return dependencies;
     }
@@ -55,12 +54,10 @@ public abstract class DMNBaseNode
         this.dependencies = dependencies;
     }
 
-    @Override
     public void addDependency(String name, DMNNode dependency) {
         this.dependencies.put( name, dependency );
     }
 
-    @Override
     public List<InformationRequirement> getInformationRequirement() {
         if ( source instanceof Decision ) {
             return ((Decision) source).getInformationRequirement();
@@ -69,7 +66,6 @@ public abstract class DMNBaseNode
         }
     }
 
-    @Override
     public List<KnowledgeRequirement> getKnowledgeRequirement() {
         if ( source instanceof Decision ) {
             return ((Decision) source).getKnowledgeRequirement();
