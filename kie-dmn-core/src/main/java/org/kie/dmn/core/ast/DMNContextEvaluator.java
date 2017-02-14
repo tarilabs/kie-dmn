@@ -18,12 +18,14 @@ package org.kie.dmn.core.ast;
 
 import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNMessage;
+import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.DMNType;
-import org.kie.dmn.api.core.InternalDMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.ast.EvaluatorResult.ResultType;
+import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 import org.kie.dmn.core.impl.DMNContextImpl;
+import org.kie.dmn.core.impl.DMNResultImpl;
 import org.kie.dmn.feel.model.v1_1.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,8 @@ public class DMNContextEvaluator
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    public EvaluatorResult evaluate(DMNRuntimeEventManager eventManager, DMNResult dmnr) {
+        DMNResultImpl result = (DMNResultImpl) dmnr;
         // when this evaluator is executed, it should either return a Map of key/value pairs
         // where keys are the name of the entries and values are the result of the evaluations
         // OR if a default result is implemented, it should return the result instead

@@ -17,14 +17,16 @@
 package org.kie.dmn.core.ast;
 
 import org.kie.dmn.api.core.DMNMessage;
-import org.kie.dmn.api.core.InternalDMNResult;
+import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
 import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.ast.EvaluatorResult.ResultType;
+import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.core.impl.DMNResultImpl;
+import org.kie.dmn.core.impl.DMNRuntimeEventManagerImpl;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.impl.EvaluationContextImpl;
 import org.kie.dmn.feel.lang.impl.FEELImpl;
@@ -56,7 +58,9 @@ public class DMNDTExpressionEvaluator
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    public EvaluatorResult evaluate(DMNRuntimeEventManager dmrem, DMNResult dmnr) {
+        DMNRuntimeEventManagerImpl eventManager = (DMNRuntimeEventManagerImpl) dmrem;
+        DMNResultImpl result = (DMNResultImpl) dmnr;
         EventResults r = null;
         try {
             eventManager.fireBeforeEvaluateDecisionTable( node.getName(), dt.getName(), result );
@@ -86,7 +90,7 @@ public class DMNDTExpressionEvaluator
         }
     }
 
-    private EventResults processEvents(List<FEELEvent> events, InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    private EventResults processEvents(List<FEELEvent> events, DMNRuntimeEventManager eventManager, DMNResultImpl result) {
         EventResults r = new EventResults();
         for ( FEELEvent e : events ) {
             if ( e instanceof DecisionTableRulesMatchedEvent ) {

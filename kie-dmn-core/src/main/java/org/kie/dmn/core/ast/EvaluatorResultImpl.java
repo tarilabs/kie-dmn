@@ -17,7 +17,6 @@
 package org.kie.dmn.core.ast;
 
 import org.kie.dmn.api.core.ast.EvaluatorResult;
-import org.kie.dmn.api.core.ast.DMNExpressionEvaluator.ResultType;
 
 public class EvaluatorResultImpl implements EvaluatorResult {
     private final Object     result;

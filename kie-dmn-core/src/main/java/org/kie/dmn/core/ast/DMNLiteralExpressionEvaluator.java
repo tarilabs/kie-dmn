@@ -16,11 +16,11 @@
 
 package org.kie.dmn.core.ast;
 
-import org.kie.dmn.api.core.InternalDMNResult;
+import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
-import org.kie.dmn.core.impl.DMNResultImpl;
+import org.kie.dmn.api.core.ast.EvaluatorResult.ResultType;
+import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.CompiledExpression;
 
@@ -36,7 +36,7 @@ public class DMNLiteralExpressionEvaluator
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    public EvaluatorResult evaluate(DMNRuntimeEventManager dmrem, DMNResult result) {
         Object val = FEEL.newInstance().evaluate( expression, result.getContext().getAll() );
         return new EvaluatorResultImpl( val, ResultType.SUCCESS );
     }

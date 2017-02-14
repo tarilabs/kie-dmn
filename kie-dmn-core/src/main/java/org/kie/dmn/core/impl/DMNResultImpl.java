@@ -20,13 +20,12 @@ import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNDecisionResult;
 import org.kie.dmn.api.core.DMNMessage;
 import org.kie.dmn.api.core.DMNResult;
-import org.kie.dmn.api.core.InternalDMNResult;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DMNResultImpl implements InternalDMNResult {
+public class DMNResultImpl implements DMNResult {
     private DMNContext context;
     private List<DMNMessage> messages;
     private Map<String, DMNDecisionResult> decisionResults;
@@ -36,7 +35,6 @@ public class DMNResultImpl implements InternalDMNResult {
         decisionResults = new HashMap<>(  );
     }
 
-    @Override
     public void setContext(DMNContext context) {
         this.context = context;
     }
@@ -62,19 +60,16 @@ public class DMNResultImpl implements InternalDMNResult {
         return messages.stream().anyMatch( m -> DMNMessage.Severity.ERROR.equals( m.getSeverity() ) );
     }
 
-    @Override
     public void addMessage( DMNMessage msg ) {
         this.messages.add( msg );
     }
 
-    @Override
     public DMNMessage addMessage( DMNMessage.Severity severity, String message, String sourceId ) {
         DMNMessageImpl msg = new DMNMessageImpl( severity, message, sourceId );
         this.messages.add( msg );
         return msg;
     }
 
-    @Override
     public DMNMessage addMessage( DMNMessage.Severity severity, String message, String sourceId, Throwable exception ) {
         DMNMessageImpl msg = new DMNMessageImpl( severity, message, sourceId, exception );
         if( this.messages.contains( msg ) ) {
@@ -84,7 +79,6 @@ public class DMNResultImpl implements InternalDMNResult {
         return msg;
     }
 
-    @Override
     public void addMessage( DMNMessage.Severity severity, String message, String sourceId, FEELEvent feelEvent ) {
         this.messages.add( new DMNMessageImpl( severity, message, sourceId, feelEvent ) );
     }

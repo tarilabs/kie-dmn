@@ -32,9 +32,6 @@ import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
 import org.kie.dmn.api.core.event.DMNRuntimeEventListener;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
-import org.kie.dmn.core.api.*;
-import org.kie.dmn.feel.model.v1_1.BusinessKnowledgeModel;
 import org.kie.internal.io.ResourceTypePackage;
 
 import java.util.*;
@@ -43,8 +40,8 @@ import java.util.List;
 public class DMNRuntimeImpl
         implements DMNRuntime {
 
-    private KieRuntime                     runtime;
-    private InternalDMNRuntimeEventManager eventManager;
+    private KieRuntime                         runtime;
+    private DMNRuntimeEventManagerImpl         eventManager;
 
     public DMNRuntimeImpl(KieRuntime runtime) {
         this.runtime = runtime;
@@ -163,7 +160,7 @@ public class DMNRuntimeImpl
             }
 
             EvaluatorResult er = bkm.getEvaluator().evaluate( eventManager, result );
-            if( er.getResultType() == DMNExpressionEvaluator.ResultType.SUCCESS ) {
+            if( er.getResultType() == EvaluatorResult.ResultType.SUCCESS ) {
                 result.getContext().set( bkm.getBusinessKnowledModel().getVariable().getName(), er.getResult() );
             }
         } catch( Throwable t ) {
@@ -219,7 +216,7 @@ public class DMNRuntimeImpl
             }
             try {
                 EvaluatorResult er = decision.getEvaluator().evaluate( eventManager, result );
-                if( er.getResultType() == DMNExpressionEvaluator.ResultType.SUCCESS ) {
+                if( er.getResultType() == EvaluatorResult.ResultType.SUCCESS ) {
                     Object value = er.getResult();
                     if( ! decision.getResultType().isCollection() && value instanceof Collection &&
                         ((Collection)value).size()==1 ) {

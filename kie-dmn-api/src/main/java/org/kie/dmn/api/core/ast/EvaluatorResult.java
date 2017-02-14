@@ -16,10 +16,12 @@
 
 package org.kie.dmn.api.core.ast;
 
-import org.kie.dmn.api.core.ast.DMNExpressionEvaluator.ResultType;
-
 public interface EvaluatorResult {
-
+    
+    enum ResultType {
+        SUCCESS, FAILURE;
+    }
+    
     ResultType getResultType();
 
     Object getResult();

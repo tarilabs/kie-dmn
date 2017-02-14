@@ -18,12 +18,14 @@ package org.kie.dmn.core.ast;
 
 import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNMessage;
-import org.kie.dmn.api.core.InternalDMNResult;
+import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.ast.EvaluatorResult.ResultType;
+import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
+import org.kie.dmn.core.impl.DMNRuntimeEventManagerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +56,8 @@ public class DMNListEvaluator
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    public EvaluatorResult evaluate(DMNRuntimeEventManager eventManager, DMNResult dmnr) {
+        DMNResultImpl result = (DMNResultImpl) dmnr;
         List<Object> results = new ArrayList<>();
         DMNContext previousContext = result.getContext();
         DMNContextImpl dmnContext = (DMNContextImpl) previousContext.clone();

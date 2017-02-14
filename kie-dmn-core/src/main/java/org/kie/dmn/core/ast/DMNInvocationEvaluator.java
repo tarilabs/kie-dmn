@@ -18,11 +18,12 @@ package org.kie.dmn.core.ast;
 
 import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNMessage;
+import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.DMNType;
-import org.kie.dmn.api.core.InternalDMNResult;
 import org.kie.dmn.api.core.ast.DMNExpressionEvaluator;
 import org.kie.dmn.api.core.ast.EvaluatorResult;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.ast.EvaluatorResult.ResultType;
+import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.core.impl.DMNContextImpl;
@@ -69,7 +70,8 @@ public class DMNInvocationEvaluator
     }
 
     @Override
-    public EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    public EvaluatorResult evaluate(DMNRuntimeEventManager eventManager, DMNResult dmnr) {
+        DMNResultImpl result = (DMNResultImpl) dmnr;
         DMNContext previousContext = result.getContext();
         DMNContextImpl dmnContext = (DMNContextImpl) previousContext.clone();
         result.setContext( dmnContext );
@@ -150,7 +152,7 @@ public class DMNInvocationEvaluator
         this.events.add( event );
     }
 
-    private boolean hasErrors(List<FEELEvent> events, InternalDMNRuntimeEventManager eventManager, InternalDMNResult result) {
+    private boolean hasErrors(List<FEELEvent> events, DMNRuntimeEventManager eventManager, DMNResultImpl result) {
         boolean hasErrors = false;
         for ( FEELEvent e : events ) {
             if ( e.getSeverity() == FEELEvent.Severity.ERROR ) {

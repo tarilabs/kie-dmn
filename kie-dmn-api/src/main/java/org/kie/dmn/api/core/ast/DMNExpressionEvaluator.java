@@ -16,8 +16,8 @@
 
 package org.kie.dmn.api.core.ast;
 
-import org.kie.dmn.api.core.InternalDMNResult;
-import org.kie.dmn.api.core.event.InternalDMNRuntimeEventManager;
+import org.kie.dmn.api.core.DMNResult;
+import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 
 /**
  * An Expression Evaluator interface for DMN defined expressions
@@ -32,10 +32,6 @@ public interface DMNExpressionEvaluator {
      *
      * @return the result of the evaluation of the expression
      */
-    EvaluatorResult evaluate(InternalDMNRuntimeEventManager eventManager, InternalDMNResult result);
+    EvaluatorResult evaluate(DMNRuntimeEventManager eventManager, DMNResult result);
 
-    enum ResultType {
-        SUCCESS, FAILURE;
-    }
-    
 }
