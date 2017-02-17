@@ -78,4 +78,11 @@ public interface DMNRuntime extends DMNRuntimeEventManager {
      */
     DMNResult evaluateDecisionById(DMNModel model, String decisionId, DMNContext context );
 
+    /**
+     * Creates a new empty DMNContext
+     *
+     * @return a new empty DMNContext
+     */
+    DMNContext newContext();
+
 }

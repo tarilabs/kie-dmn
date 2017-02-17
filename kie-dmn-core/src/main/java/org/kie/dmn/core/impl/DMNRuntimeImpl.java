@@ -29,6 +29,7 @@ import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.ast.BusinessKnowledgeModelNode;
 import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.DecisionNode;
+import org.kie.dmn.core.api.DMNFactory;
 import org.kie.dmn.core.api.EvaluatorResult;
 import org.kie.dmn.api.core.event.DMNRuntimeEventListener;
 import org.kie.dmn.core.ast.BusinessKnowledgeModelNodeImpl;
@@ -255,6 +256,11 @@ public class DMNRuntimeImpl
                                             t );
         dr.getMessages().add( msg );
         dr.setEvaluationStatus( status );
+    }
+
+    @Override
+    public DMNContext newContext() {
+        return DMNFactory.newContext();
     }
 
 }
