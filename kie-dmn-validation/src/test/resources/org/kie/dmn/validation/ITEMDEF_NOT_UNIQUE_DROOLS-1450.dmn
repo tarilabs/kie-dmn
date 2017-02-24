@@ -27,8 +27,11 @@
     </itemComponent>
   </itemDefinition>
   <itemDefinition id="tPerson" name="tPerson" isCollection="true">
-  <!-- Two structure with the same attribute names, ALLOWED -->
+  <!-- Two structure with the same attribute names `id`, ALLOWED -->
     <itemComponent id="_c22147cb-9481-404e-8f48-f8eee8d25565_2" name="id" isCollection="false">
+      <typeRef>feel:number</typeRef>
+    </itemComponent>
+    <itemComponent id="_c22147cb-9481-404e-8f48-f8eee8d25565_3" name="age" isCollection="false">
       <typeRef>feel:number</typeRef>
     </itemComponent>
   </itemDefinition>
