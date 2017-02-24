@@ -191,8 +191,8 @@ end
 
 rule ITEMDEF_NOT_UNIQUE
 when
-  $x : ItemDefinition()
-  $y : ItemDefinition( name == $x.name, this != $x )
+  $x : ItemDefinition( !(parent instanceof ItemDefinition) )
+  $y : ItemDefinition( !(parent instanceof ItemDefinition), name == $x.name, this != $x )
 then
   entryPoints["PROBLEMS"].insert( new ValidationMsg( Severity.ERROR, Msg.ITEMDEF_NOT_UNIQUE, $x ) );
 end
