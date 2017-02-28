@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>kie-dmn-api</artifactId>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging><!-- bundle = jar + OSGi metadata -->
 
   <name>KIE :: Decision Model Notation :: API</name>
 
@@ -30,4 +30,23 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Export-Package>
+              org.kie.dmn.api.*
+            </Export-Package>
+            <Import-Package>
+              *
+            </Import-Package>
+            <_removeheaders>Private-Package</_removeheaders>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>kie-dmn-feel</artifactId>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging><!-- bundle = jar + OSGi metadata -->
 
   <name>KIE :: Decision Model Notation :: FEEL</name>
 
