@@ -15,6 +15,10 @@
 
   <name>KIE :: Decision Model Notation :: API</name>
 
+  <properties>
+    <osgi.Bundle-SymbolicName>org.kie.dmn.api</osgi.Bundle-SymbolicName>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>org.kie</groupId>

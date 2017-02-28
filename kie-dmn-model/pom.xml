@@ -15,6 +15,10 @@
 
   <name>KIE :: Decision Model Notation :: Model</name>
   
+  <properties>
+    <osgi.Bundle-SymbolicName>org.kie.dmn.model</osgi.Bundle-SymbolicName>
+  </properties>
+  
   <build>
     <plugins>
       <plugin>
