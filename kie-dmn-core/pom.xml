@@ -68,6 +68,17 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+    
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -100,6 +111,7 @@
             <Import-Package>
               *
             </Import-Package>
+            <Bundle-Activator>org.kie.dmn.core.osgi.Activator</Bundle-Activator>
             <_removeheaders>Private-Package</_removeheaders>
           </instructions>
         </configuration>
