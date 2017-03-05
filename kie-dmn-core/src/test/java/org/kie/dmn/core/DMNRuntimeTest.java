@@ -778,6 +778,18 @@ public class DMNRuntimeTest {
         assertThat( dmnResult.getMessages().get( 1 ).getSourceId(), is("_5bac3e4c-b59a-4f14-b5cf-d4d88c60877f" )  );
     }
 
+    @Test
+    public void testInvalidModel() {
+        DMNRuntime runtime = DMNRuntimeUtil.createRuntime( "Loan_Prequalification_Condensed_Invalid.dmn", this.getClass() );
+        DMNModel dmnModel = runtime.getModel( "http://www.trisotech.com/definitions/_ba68fb9d-7421-4f3a-a7ab-f785ea0bae6b",
+                                              "Loan Prequalification Condensed" );
+        assertThat( dmnModel, notNullValue() );
+        assertThat( formatMessages( dmnModel.getMessages() ), dmnModel.hasErrors(), is( true ) );
+        assertThat( dmnModel.getMessages().size(), is( 2 ) );
+        assertThat( dmnModel.getMessages().get( 0 ).getSourceId(), is("_8b5cac9e-c8ca-4817-b05a-c70fa79a8d48" )  );
+        assertThat( dmnModel.getMessages().get( 1 ).getSourceId(), is("_ef09d90e-e1a4-4ec9-885b-482d1f4a1cee" )  );
+    }
+
     private String formatMessages(List<DMNMessage> messages) {
         return messages.stream().map( m -> m.toString() ).collect( Collectors.joining( "\n" ) );
     }
