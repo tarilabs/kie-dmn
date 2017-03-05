@@ -761,6 +761,23 @@ public class DMNRuntimeTest {
 
     }
 
+    @Test
+    public void testInvalidUHitPolicy() {
+        DMNRuntime runtime = DMNRuntimeUtil.createRuntime( "Invalid_U_hit_policy.dmn", this.getClass() );
+        DMNModel dmnModel = runtime.getModel( "http://www.trisotech.com/definitions/_7cf49108-9b55-4f35-b5ef-f83448061757", "Greater than 5 - Invalid U hit policy" );
+        assertThat( dmnModel, notNullValue() );
+        assertThat( formatMessages( dmnModel.getMessages() ), dmnModel.hasErrors(), is( false ) );
+
+        DMNContext context = runtime.newContext();
+        context.set( "Number", 5 );
+
+        DMNResult dmnResult = runtime.evaluateAll( dmnModel, context );
+        assertThat( formatMessages( dmnResult.getMessages() ), dmnResult.hasErrors(), is( true ) );
+        assertThat( dmnResult.getMessages().size(), is( 2 ) );
+        assertThat( dmnResult.getMessages().get( 0 ).getSourceId(), is("_c5eda7c3-7f22-43c2-8c1e-a3cc79bb7a74" )  );
+        assertThat( dmnResult.getMessages().get( 1 ).getSourceId(), is("_5bac3e4c-b59a-4f14-b5cf-d4d88c60877f" )  );
+    }
+
     private String formatMessages(List<DMNMessage> messages) {
         return messages.stream().map( m -> m.toString() ).collect( Collectors.joining( "\n" ) );
     }
