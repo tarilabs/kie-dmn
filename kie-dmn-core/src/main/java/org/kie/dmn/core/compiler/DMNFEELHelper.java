@@ -7,6 +7,7 @@ import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.core.impl.DMNModelImpl;
+import org.kie.dmn.core.util.Msg;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.CompiledExpression;
 import org.kie.dmn.feel.lang.CompilerContext;
@@ -67,7 +68,7 @@ public class DMNFEELHelper
             FEELEvent event = feelEvents.remove();
             if ( !isDuplicateEvent( model, event, msg ) ) {
                 if ( event instanceof SyntaxErrorEvent ) {
-                    String errorMsg = msg + ": invalid syntax";
+                    String errorMsg = Msg.createMessage(Msg.INVALID_SYNTAX, msg ); 
                     model.addMessage( DMNMessage.Severity.ERROR, errorMsg, element, event );
                 } else if ( event.getSeverity() == FEELEvent.Severity.ERROR ) {
                     model.addMessage( DMNMessage.Severity.ERROR, msg + ": " + event.getMessage(), element );
