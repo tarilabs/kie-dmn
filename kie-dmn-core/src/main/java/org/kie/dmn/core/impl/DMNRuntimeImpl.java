@@ -156,7 +156,7 @@ public class DMNRuntimeImpl
                     if( dep instanceof BusinessKnowledgeModelNode ) {
                         evaluateBKM( context, result, (BusinessKnowledgeModelNode) dep );
                     } else {
-                        String message = Msg.createMessage(Msg.MISSING_DEP_FOR_BKM, getIdentifier( bkm ), getIdentifier( dep ) );
+                        DMNMessageTypeImpl message = Msg.createMessage(Msg.MISSING_DEP_FOR_BKM, getIdentifier( bkm ), getIdentifier( dep ) );
                         result.addMessage( DMNMessage.Severity.ERROR, message, bkm.getSource() );
                         return;
                     }
@@ -196,14 +196,14 @@ public class DMNRuntimeImpl
                     if( dep instanceof DecisionNode ) {
                         if( ! evaluateDecision( context, result, (DecisionNode) dep ) ) {
                             missingInput = true;
-                            String message = Msg.createMessage(Msg.UNABLE_TO_EVALUATE_DECISION_AS_IT_DEPS , getIdentifier( decision ), getIdentifier( dep ) );
+                            DMNMessageTypeImpl message = Msg.createMessage(Msg.UNABLE_TO_EVALUATE_DECISION_AS_IT_DEPS , getIdentifier( decision ), getIdentifier( dep ) );
                             reportFailure( result, decision, dr, null, message, DMNDecisionResult.DecisionEvaluationStatus.SKIPPED );
                         }
                     } else if( dep instanceof BusinessKnowledgeModelNode ) {
                         evaluateBKM( context, result, (BusinessKnowledgeModelNode) dep );
                     } else {
                         missingInput = true;
-                        String message = Msg.createMessage(Msg.MISSING_DEP_FOR_DECISION,  getIdentifier( decision ), getIdentifier( dep ) );
+                        DMNMessageTypeImpl message = Msg.createMessage(Msg.MISSING_DEP_FOR_DECISION,  getIdentifier( decision ), getIdentifier( dep ) );
                         reportFailure( result, decision, dr, null, message, DMNDecisionResult.DecisionEvaluationStatus.SKIPPED );
                     }
                 }
@@ -236,7 +236,7 @@ public class DMNRuntimeImpl
                     dr.setEvaluationStatus( DMNDecisionResult.DecisionEvaluationStatus.FAILED );
                 }
             } catch( Throwable t ) {
-                String message = Msg.createMessage(Msg.ERROR_EVAL_DECISION_NODE, decision.getName(), t.getMessage() );
+                DMNMessageTypeImpl message = Msg.createMessage(Msg.ERROR_EVAL_DECISION_NODE, decision.getName(), t.getMessage() );
                 reportFailure( result, decision, dr, t, message, DMNDecisionResult.DecisionEvaluationStatus.FAILED );
             }
             return true;
@@ -249,7 +249,7 @@ public class DMNRuntimeImpl
         return node.getName() != null ? node.getName() : node.getId();
     }
 
-    private void reportFailure(DMNResultImpl result, DecisionNode decision, DMNDecisionResultImpl dr, Throwable t, String message, DMNDecisionResult.DecisionEvaluationStatus status) {
+    private void reportFailure(DMNResultImpl result, DecisionNode decision, DMNDecisionResultImpl dr, Throwable t, DMNMessageTypeImpl message, DMNDecisionResult.DecisionEvaluationStatus status) {
         result.addMessage( DMNMessage.Severity.ERROR, message, decision.getDecision(), t );
         DMNMessage msg = result.addMessage( DMNMessage.Severity.ERROR,
                                             message,

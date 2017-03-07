@@ -17,6 +17,7 @@ package org.kie.dmn.core.compiler;
 
 import org.kie.dmn.api.core.DMNMessage;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
+import org.kie.dmn.core.impl.DMNMessageTypeImpl;
 import org.kie.dmn.core.impl.DMNModelImpl;
 import org.kie.dmn.core.util.Msg;
 import org.kie.dmn.feel.parser.feel11.FEELParser;
@@ -32,8 +33,8 @@ public class DMNCompilerHelper {
     public static boolean checkVariableName(DMNModelImpl model, NamedElement element, String variableName) {
         List<FEELEvent> errors = FEELParser.checkVariableName( variableName );
         if ( ! errors.isEmpty() ) {
-            String errorMsg = Msg.createMessage(Msg.INVALID_NAME_VARIABLENAME, variableName, errors.get( 0 ).getMessage() );
-            logger.error( errorMsg );
+            DMNMessageTypeImpl errorMsg = Msg.createMessage(Msg.INVALID_NAME_VARIABLENAME, variableName, errors.get( 0 ).getMessage() );
+            logger.error( errorMsg.getMessage() );
             model.addMessage( DMNMessage.Severity.ERROR, errorMsg, element, errors.get( 0 ) );
             return false;
         }

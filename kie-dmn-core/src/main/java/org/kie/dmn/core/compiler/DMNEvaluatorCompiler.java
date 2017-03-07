@@ -7,6 +7,7 @@ import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.core.api.DMNExpressionEvaluator;
 import org.kie.dmn.core.ast.*;
+import org.kie.dmn.core.impl.DMNMessageTypeImpl;
 import org.kie.dmn.core.impl.DMNModelImpl;
 import org.kie.dmn.core.util.Msg;
 import org.kie.dmn.feel.lang.CompiledExpression;
@@ -234,15 +235,15 @@ public class DMNEvaluatorCompiler {
         return evaluator;
     }
 
-    private List<UnaryTest> textToUnaryTestList(DMNCompilerContext ctx, String text, DMNModelImpl model, DMNElement element, String errorMsg ) {
+    private List<UnaryTest> textToUnaryTestList(DMNCompilerContext ctx, String text, DMNModelImpl model, DMNElement element, DMNMessageTypeImpl errorMsg ) {
         if (text == null || text.isEmpty()) {
             return Collections.emptyList();
         }
         return feel.evaluateUnaryTests( ctx, text, model, element, errorMsg );
     }
 
-    public String createErrorMsg(DMNNode node, String elementName, DMNElement element, int index, String expression) {
-        String errorMsg;
+    public DMNMessageTypeImpl createErrorMsg(DMNNode node, String elementName, DMNElement element, int index, String expression) {
+        DMNMessageTypeImpl errorMsg;
         if ( element instanceof InputClause ) {
             errorMsg = Msg.createMessage(Msg.ERR_COMPILING_FEEL_EXPR_ON_DT_INPUT_CLAUSE_IDX, expression, elementName, index); 
         } else if ( element instanceof OutputClause ) {

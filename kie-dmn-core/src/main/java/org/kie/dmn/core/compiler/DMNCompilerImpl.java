@@ -31,6 +31,7 @@ import org.kie.dmn.backend.marshalling.v1_1.DMNMarshallerFactory;
 import org.kie.dmn.core.ast.*;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
+import org.kie.dmn.core.impl.DMNMessageTypeImpl;
 import org.kie.dmn.core.impl.DMNModelImpl;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.kie.dmn.feel.parser.feel11.FEELParser;
@@ -192,8 +193,8 @@ public class DMNCompilerImpl
                 if ( input != null ) {
                     node.addDependency( input.getName(), input );
                 } else {
-                    String message = Msg.createMessage(Msg.REQ_INPUT_NOT_FOUND_FOR_NODE, id, node.getName());
-                    logger.error( message );
+                    DMNMessageTypeImpl message = Msg.createMessage(Msg.REQ_INPUT_NOT_FOUND_FOR_NODE, id, node.getName());
+                    logger.error( message.getMessage() );
                     model.addMessage( DMNMessage.Severity.ERROR, message, node.getSource() );
                 }
             } else if ( ir.getRequiredDecision() != null ) {
@@ -202,8 +203,8 @@ public class DMNCompilerImpl
                 if ( dn != null ) {
                     node.addDependency( dn.getName(), dn );
                 } else {
-                    String message = Msg.createMessage(Msg.REQ_DECISION_NOT_FOUND_FOR_NODE, id, node.getName());
-                    logger.error( message );
+                    DMNMessageTypeImpl message = Msg.createMessage(Msg.REQ_DECISION_NOT_FOUND_FOR_NODE, id, node.getName());
+                    logger.error( message.getMessage() );
                     model.addMessage( DMNMessage.Severity.ERROR, message, node.getSource() );
                 }
             }
@@ -215,8 +216,8 @@ public class DMNCompilerImpl
                 if ( bkmn != null ) {
                     node.addDependency( bkmn.getName(), bkmn );
                 } else {
-                    String message = Msg.createMessage(Msg.REQ_BKM_NOT_FOUND_FOR_NODE, id, node.getName());
-                    logger.error( message );
+                    DMNMessageTypeImpl message = Msg.createMessage(Msg.REQ_BKM_NOT_FOUND_FOR_NODE, id, node.getName());
+                    logger.error( message.getMessage() );
                     model.addMessage( DMNMessage.Severity.ERROR, message, node.getSource() );
                 }
             }
@@ -259,8 +260,8 @@ public class DMNCompilerImpl
                     }
                 }
             } else {
-                String message = Msg.createMessage(Msg.UNKNOWN_TYPE_REF_ON_NODE, itemDef.getTypeRef(),node.getName());
-                logger.error( message );
+                DMNMessageTypeImpl message = Msg.createMessage(Msg.UNKNOWN_TYPE_REF_ON_NODE, itemDef.getTypeRef(),node.getName());
+                logger.error( message.getMessage() );
                 dmnModel.addMessage( DMNMessage.Severity.ERROR, message, ((DMNBaseNode)node).getSource() );
             }
         } else {
@@ -302,13 +303,13 @@ public class DMNCompilerImpl
                     }
                 }
             } else if( type == null ) {
-                String errorMsg = null;
+                DMNMessageTypeImpl errorMsg = null;
                 if ( model.getName() != null && node.getName() != null && model.getName().equals( node.getName() ) ) {
                     errorMsg = Msg.createMessage(Msg.NO_TYPE_DEF_FOUND_FOR_NODE, typeRef.toString(), node.getName());
                 } else {
                     errorMsg = Msg.createMessage(Msg.NO_TYPE_DEF_FOUND_FOR_ELEMENT_ON_NODE, typeRef.toString(), model.getName(), node.getName() );
                 }
-                logger.error( errorMsg );
+                logger.error( errorMsg.getMessage() );
                 dmnModel.addMessage( DMNMessage.Severity.ERROR, errorMsg, ((DMNBaseNode)node).getSource() );
             }
             return type;
