@@ -201,7 +201,7 @@ end
 
 rule NAME_INVALID
 when
-    $ne : NamedElement( parent != null, !(parent instanceof Decision),                       // << functional optimization to avoid double reporting as Decision name == variable name 
+    $ne : NamedElement( parent != null, !(parent instanceof DRGElement),                       // << functional optimization to avoid double reporting as Decision name == variable name 
                         FEELParser.isVariableNameValid( name ) == false )
 then
 //    java.util.List<FEELEvent> see = FEELParser.checkVariableName( $ne.getName() );
