@@ -1,10 +1,13 @@
 package org.kie.dmn.core.util;
 
-import org.kie.dmn.core.ast.DMNBaseNode;
+import org.kie.dmn.feel.util.Msg.Message;
+import org.kie.dmn.feel.util.Msg.Message0;
+import org.kie.dmn.feel.util.Msg.Message1;
 import org.kie.dmn.feel.util.Msg.Message2;
 import org.kie.dmn.feel.util.Msg.Message3;
+import org.kie.dmn.feel.util.Msg.Message4;
 
-public class Msg extends org.kie.dmn.feel.util.Msg {
+public class Msg {
     public static final Message2 ELEMENT_WITH_ID_NOT_SUPPORTED = new Message2("Element %s with id='%s' not supported.");
     public static final Message2 REQ_INPUT_NOT_FOUND_FOR_NODE = new Message2("Required input '%s' not found for node '%s'");
     public static final Message2 REQ_DECISION_NOT_FOUND_FOR_NODE = new Message2("Required Decision '%s' not found for node '%s'");
@@ -32,4 +35,23 @@ public class Msg extends org.kie.dmn.feel.util.Msg {
     public static final Message2 ERR_COMPILING_ALLOWED_VALUES_LIST_ON_ITEM_DEF = new Message2("Error compiling allowed values list '$s' on item definition '$s'");
     public static final Message3 ERR_COMPILING_FEEL_EXPR_FOR_NAME_ON_NODE = new Message3("Error compiling FEEL expression '$s' for name '$s' on node '$s'");
     
+    public static String createMessage( Message0 message) {
+        return Msg.buildMessage(message);
+    }
+    public static String createMessage( Message1 message, Object p1) {
+        return Msg.buildMessage(message, p1);
+    }
+    public static String createMessage( Message2 message, Object p1, Object p2) {
+        return Msg.buildMessage(message, p1, p2);
+    }
+    public static String createMessage( Message3 message, Object p1, Object p2, Object p3) {
+        return Msg.buildMessage(message, p1, p2, p3);
+    }
+    public static String createMessage( Message4 message, Object p1, Object p2, Object p3, Object p4) {
+        return Msg.buildMessage(message, p1, p2, p3, p4);
+    }
+    
+    private static String buildMessage( Message message, Object... params ) {
+        return String.format( message.getMask(), params );
+    }
 }
