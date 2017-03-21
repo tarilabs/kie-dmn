@@ -196,6 +196,10 @@ public class FlightRebookingTest {
                 {"UA1111", "SFO", "LAX", date("2017-01-01T23:00:00"), date("2017-01-02T05:00:00"), 2, "scheduled"}
         };
 
+        return flightDataToFlightList(flightData);
+    }
+
+    private List flightDataToFlightList(Object[][] flightData) {
         List<Map<String,Object>> flightList = new ArrayList<>(  );
         for( Object[] pd : flightData ) {
             Map<String, Object> p = new HashMap<>(  );
@@ -223,19 +227,7 @@ public class FlightRebookingTest {
                 {"UA1111", "SFO", "LAX", "date and time(\"2017-01-01T23:00:00\")", "date and time(\"2017-01-02T05:00:00\")", 2, "scheduled"}
         };
 
-        List<Map<String,Object>> flightList = new ArrayList<>(  );
-        for( Object[] pd : flightData ) {
-            Map<String, Object> p = new HashMap<>(  );
-            p.put( "Flight Number", pd[0] );
-            p.put( "From", pd[1] );
-            p.put( "To", pd[2] );
-            p.put( "Departure", pd[3] );
-            p.put( "Arrival", pd[4] );
-            p.put( "Capacity", pd[5] );
-            p.put( "Status", pd[6] );
-            flightList.add( p );
-        }
-        return flightList;
+        return flightDataToFlightList(flightData);
     }
 
     private List loadExpectedResult() {
