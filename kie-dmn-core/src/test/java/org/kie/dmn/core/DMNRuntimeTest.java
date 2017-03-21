@@ -867,6 +867,22 @@ public class DMNRuntimeTest {
         DMNContext result = dmnResult.getContext();
         assertThat( result.get( "Loan Recommendation" ), is( "Decline" ) );
     }
+    
+    @Test
+    public void testMatteo() {
+        DMNRuntime runtime = DMNRuntimeUtil.createRuntime( "actualInputMatchInputValues-forTypeRef.dmn", this.getClass() );
+        DMNModel dmnModel = runtime.getModel(
+                "https://www.drools.org/kie-dmn/definitions",
+                "definitions" );
+        assertThat( dmnModel, notNullValue() );
+        System.out.println(formatMessages( dmnModel.getMessages() ));
+        
+        DMNContext context = runtime.newContext();
+        context.set("MyInput", "a");
+        DMNResult result = runtime.evaluateAll(dmnModel, context); 
+        
+        System.out.println(result);
+    }
 
     private String formatMessages(List<DMNMessage> messages) {
         return messages.stream().map( m -> m.toString() ).collect( Collectors.joining( "\n" ) );

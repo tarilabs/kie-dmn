@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import static java.util.stream.Collectors.toList;
 
 public class DMNEvaluatorCompiler {
@@ -223,9 +225,15 @@ public class DMNEvaluatorCompiler {
         java.util.List<DTInputClause> inputs = new ArrayList<>();
         int index = 0;
         for ( InputClause ic : dt.getInput() ) {
+            QName  inputExpressionTypeRef = ic.getInputExpression().getTypeRef();
+            if ( inputExpressionTypeRef.getNamespaceURI() == null || inputExpressionTypeRef.getNamespaceURI().isEmpty() ) {
+                // TODO this could have actually been populated during unmarshalling, but requires throughout customization of the Stax reader.
+                String namespaceURI = ic.getNamespaceURI(inputExpressionTypeRef.getPrefix());
+                inputExpressionTypeRef = new QName(namespaceURI, inputExpressionTypeRef.getLocalPart(), inputExpressionTypeRef.getPrefix());
+            }
             String inputExpressionText = ic.getInputExpression().getText();
             String inputValuesText =  Optional.ofNullable( ic.getInputValues() ).map( UnaryTests::getText).orElse( null);
-            inputs.add( new DTInputClause(inputExpressionText, inputValuesText,
+            inputs.add( new DTInputClause(inputExpressionTypeRef, inputExpressionText, inputValuesText,
                                           textToUnaryTestList( ctx,
                                                                inputValuesText,
                                                                model,
@@ -291,7 +299,7 @@ public class DMNEvaluatorCompiler {
             parameterNames.addAll( node.getDependencies().keySet() );
         }
 
-        DecisionTableImpl dti = new DecisionTableImpl( dtName, parameterNames, inputs, outputs, rules, hp );
+        DecisionTableImpl dti = new DecisionTableImpl( dtName, parameterNames, inputs, outputs, rules, hp, model );
         DTInvokerFunction dtf = new DTInvokerFunction( dti );
         DMNDTExpressionEvaluator dtee = new DMNDTExpressionEvaluator( node, dtf );
         return dtee;
