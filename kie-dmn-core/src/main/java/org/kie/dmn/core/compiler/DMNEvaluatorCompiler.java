@@ -250,7 +250,7 @@ public class DMNEvaluatorCompiler {
                                                    ++index );
             } else if ( ic.getInputExpression().getTypeRef() != null ) {
                 QName inputExpressionTypeRef = ic.getInputExpression().getTypeRef();
-                BaseDMNTypeImpl typeRef = (BaseDMNTypeImpl) model.resolveType(resolveNamespaceForTypeRef(inputExpressionTypeRef, ic), inputExpressionTypeRef.getLocalPart());
+                BaseDMNTypeImpl typeRef = (BaseDMNTypeImpl) model.getTypeRegistry().resolveType(resolveNamespaceForTypeRef(inputExpressionTypeRef, ic), inputExpressionTypeRef.getLocalPart());
                 inputValues = typeRef.getAllowedValues();
             }
             inputs.add( new DTInputClause(inputExpressionText, inputValuesText, inputValues) );
@@ -277,7 +277,7 @@ public class DMNEvaluatorCompiler {
                                                     ++index );
             } else if ( oc.getTypeRef() != null ) {
                 QName outputExpressionTypeRef = oc.getTypeRef();
-                BaseDMNTypeImpl typeRef = (BaseDMNTypeImpl) model.resolveType(resolveNamespaceForTypeRef(outputExpressionTypeRef, oc), outputExpressionTypeRef.getLocalPart());
+                BaseDMNTypeImpl typeRef = (BaseDMNTypeImpl) model.getTypeRegistry().resolveType(resolveNamespaceForTypeRef(outputExpressionTypeRef, oc), outputExpressionTypeRef.getLocalPart());
                 outputValues = typeRef.getAllowedValues();
             }
             outputs.add( new DTOutputClause( outputName, id, outputValues, defaultValue ) );

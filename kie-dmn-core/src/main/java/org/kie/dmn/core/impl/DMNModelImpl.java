@@ -49,18 +49,17 @@ public class DMNModelImpl
     // these are messages created at loading/compilation time
     private DMNMessageManager messages = new DefaultDMNMessagesManager();
 
-    private DMNTypeRegistry types;
+    private DMNTypeRegistry types = new DMNTypeRegistry();
 
     public DMNModelImpl() {
     }
 
-    public DMNModelImpl(Definitions definitions, DMNTypeRegistry types) {
+    public DMNModelImpl(Definitions definitions) {
         this.definitions = definitions;
-        this.types = types;
     }
     
-    public DMNType resolveType(String namespace, String name) {
-        return types.resolveType(namespace, name);
+    public DMNTypeRegistry getTypeRegistry() {
+        return this.types;
     }
 
     @Override
