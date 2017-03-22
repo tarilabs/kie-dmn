@@ -876,12 +876,16 @@ public class DMNRuntimeTest {
                 "definitions" );
         assertThat( dmnModel, notNullValue() );
         System.out.println(formatMessages( dmnModel.getMessages() ));
+        assertThat( formatMessages( dmnModel.getMessages() ), dmnModel.hasErrors(), is( false ) );
         
         DMNContext context = runtime.newContext();
         context.set("MyInput", "a");
-        DMNResult result = runtime.evaluateAll(dmnModel, context); 
+
+        DMNResult dmnResult = runtime.evaluateAll( dmnModel, context );
         
-        System.out.println(result);
+        assertThat( formatMessages( dmnResult.getMessages() ), dmnResult.hasErrors(), is( false ) );
+        DMNContext result = dmnResult.getContext();
+        assertThat( result.get( "MyDecision" ), is( "Decision taken" ) );
     }
 
     private String formatMessages(List<DMNMessage> messages) {
