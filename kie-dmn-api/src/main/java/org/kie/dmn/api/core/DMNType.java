@@ -16,7 +16,10 @@
 
 package org.kie.dmn.api.core;
 
+import java.util.List;
 import java.util.Map;
+
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 
 public interface DMNType
         extends Cloneable {
@@ -36,5 +39,7 @@ public interface DMNType
     DMNType getBaseType();
 
     DMNType clone();
+
+    List<UnaryTest> getAllowedValues();
 
 }

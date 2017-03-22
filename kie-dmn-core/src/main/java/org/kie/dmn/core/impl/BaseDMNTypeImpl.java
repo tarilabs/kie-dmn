@@ -92,6 +92,7 @@ public abstract class BaseDMNTypeImpl
         return false;
     }
 
+    @Override
     public List<UnaryTest> getAllowedValues() {
         return allowedValues;
     }

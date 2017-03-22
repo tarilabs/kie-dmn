@@ -19,11 +19,11 @@ package org.kie.dmn.feel.runtime.decisiontables;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.FEELEventListenersManager;
 import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.FEEL;
-import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.runtime.events.DecisionTableRulesMatchedEvent;
 import org.kie.dmn.feel.runtime.events.FEELEventBase;
 import org.kie.dmn.feel.runtime.events.HitPolicyViolationEvent;
@@ -150,12 +150,9 @@ public class DecisionTableImpl {
                     if ( this.model == null ) {
                         // FIXME report problem.
                     } else {
-                        System.out.println( input.getTypeRef().getPrefix() );
-                        System.out.println( input.getTypeRef().getLocalPart() );
-                        System.out.println( input.getTypeRef().getNamespaceURI() );
                         DMNType typeRef = model.resolveType(input.getTypeRef().getNamespaceURI(), input.getTypeRef().getLocalPart());
-                        boolean satisfiesTypeRefAllowedValues = typeRef.stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
-                        satisfies |= true;
+                        boolean satisfiesTypeRefAllowedValues = typeRef.getAllowedValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
+                        satisfies |= satisfiesTypeRefAllowedValues;
                     }
                 }
                 
