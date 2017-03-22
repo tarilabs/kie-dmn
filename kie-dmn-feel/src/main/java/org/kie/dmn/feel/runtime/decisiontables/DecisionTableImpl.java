@@ -17,6 +17,7 @@
 package org.kie.dmn.feel.runtime.decisiontables;
 
 import org.kie.dmn.api.core.DMNModel;
+import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.FEEL;
@@ -144,7 +145,7 @@ public class DecisionTableImpl {
                 final Object parameter = params[i];
                 boolean satisfies = input.getInputValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
 
-                // if typeRef != null then it is coming from compilation from XML hence model must exists
+                // if typeRef != null then it is coming from compilation from XML hence this.model must exists
                 if ( input.getTypeRef() != null ) {
                     if ( this.model == null ) {
                         // FIXME report problem.
@@ -152,7 +153,8 @@ public class DecisionTableImpl {
                         System.out.println( input.getTypeRef().getPrefix() );
                         System.out.println( input.getTypeRef().getLocalPart() );
                         System.out.println( input.getTypeRef().getNamespaceURI() );
-                        // FIXME: really evaluate:
+                        DMNType typeRef = model.resolveType(input.getTypeRef().getNamespaceURI(), input.getTypeRef().getLocalPart());
+                        boolean satisfiesTypeRefAllowedValues = typeRef.stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
                         satisfies |= true;
                     }
                 }

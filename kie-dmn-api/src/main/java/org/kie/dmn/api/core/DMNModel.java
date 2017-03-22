@@ -66,4 +66,6 @@ public interface DMNModel extends DMNMessageContainer {
 
     Set<ItemDefNode> getItemDefinitions();
 
+    DMNType resolveType(String namespace, String name);
+
 }
