@@ -30,6 +30,7 @@ import org.kie.dmn.feel.runtime.events.HitPolicyViolationEvent;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
 import org.kie.dmn.feel.runtime.functions.FEELFnResult;
 import org.kie.dmn.feel.util.Either;
+import org.kie.dmn.model.v1_1.DMNModelInstrumentedBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,18 +142,20 @@ public class DecisionTableImpl {
         for( int i = 0; i < params.length; i++ ) {
             final DTInputClause input = inputs.get( i );
             // if a list of values is defined, check the the parameter matches the value
-            if ( input.getTypeRef() != null || ( input.getInputValues() != null && ! input.getInputValues().isEmpty() ) ) {
+            if ( typeRefIsCustom( input.getTypeRef() ) || ( input.getInputValues() != null && ! input.getInputValues().isEmpty() ) ) {
                 final Object parameter = params[i];
                 boolean satisfies = input.getInputValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
 
-                // if typeRef != null then it is coming from compilation from XML hence this.model must exists
-                if ( input.getTypeRef() != null ) {
+                if ( typeRefIsCustom( input.getTypeRef() ) ) {
                     if ( this.model == null ) {
+                        // if typeRef != null then it is coming from compilation from XML hence this.model must exists
                         // FIXME report problem.
                     } else {
                         DMNType typeRef = model.resolveType(input.getTypeRef().getNamespaceURI(), input.getTypeRef().getLocalPart());
-                        boolean satisfiesTypeRefAllowedValues = typeRef.getAllowedValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
-                        satisfies |= satisfiesTypeRefAllowedValues;
+                        if ( typeRef.getAllowedValues() != null ) {
+                            boolean satisfiesTypeRefAllowedValues = typeRef.getAllowedValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
+                            satisfies |= satisfiesTypeRefAllowedValues;
+                        }
                     }
                 }
                 
@@ -168,6 +171,13 @@ public class DecisionTableImpl {
             }
         }
         return Either.ofRight(true);
+    }
+
+    /**
+     * null safe check if typeRef represented by QName is NOT a FEEL type but a custom one.
+     */
+    private boolean typeRefIsCustom(final QName typeRef) {
+        return typeRef != null && !typeRef.getNamespaceURI().equals( DMNModelInstrumentedBase.URI_FEEL );
     }
 
     /**
