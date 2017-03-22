@@ -16,7 +16,6 @@
 
 package org.kie.dmn.feel.runtime.decisiontables;
 
-import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent.Severity;
 import org.kie.dmn.feel.FEEL;
@@ -40,8 +39,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.xml.namespace.QName;
-
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -56,9 +53,6 @@ public class DecisionTableImpl {
     private HitPolicy            hitPolicy;
     private boolean              hasDefaultValues;
 
-    // if this table is compiled, get reference to model
-    private DMNModel model;
-
     public DecisionTableImpl(String name,
                              List<String> parameterNames,
                              List<DTInputClause> inputs,
@@ -72,11 +66,6 @@ public class DecisionTableImpl {
         this.decisionRules = decisionRules;
         this.hitPolicy = hitPolicy;
         this.hasDefaultValues = outputs.stream().allMatch( o -> o.getDefaultValue() != null );
-    }
-
-    public DecisionTableImpl(String name, List<String> parameterNames, List<DTInputClause> inputs, List<DTOutputClause> outputs, List<DTDecisionRule> decisionRules, HitPolicy hitPolicy, DMNModel model) {
-        this(name, parameterNames, inputs, outputs, decisionRules, hitPolicy);
-        this.model = model;
     }
 
     /**
@@ -140,23 +129,10 @@ public class DecisionTableImpl {
         for( int i = 0; i < params.length; i++ ) {
             final DTInputClause input = inputs.get( i );
             // if a list of values is defined, check the the parameter matches the value
-            if ( input.getTypeRef() != null || ( input.getInputValues() != null && ! input.getInputValues().isEmpty() ) ) {
+            if ( input.getInputValues() != null && ! input.getInputValues().isEmpty() ) {
                 final Object parameter = params[i];
                 boolean satisfies = input.getInputValues().stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
 
-                // if typeRef != null then it is coming from compilation from XML hence model must exists
-                if ( input.getTypeRef() != null ) {
-                    if ( this.model == null ) {
-                        // FIXME report problem.
-                    } else {
-                        System.out.println( input.getTypeRef().getPrefix() );
-                        System.out.println( input.getTypeRef().getLocalPart() );
-                        System.out.println( input.getTypeRef().getNamespaceURI() );
-                        // FIXME: really evaluate:
-                        satisfies |= true;
-                    }
-                }
-                
                 if ( !satisfies ) {
                     String values = input.getInputValuesText();
                     return Either.ofLeft(new InvalidInputEvent( FEELEvent.Severity.ERROR,

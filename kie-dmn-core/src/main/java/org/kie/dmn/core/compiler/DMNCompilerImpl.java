@@ -86,7 +86,7 @@ public class DMNCompilerImpl
     public DMNModel compile(Definitions dmndefs) {
         DMNModelImpl model = null;
         if ( dmndefs != null ) {
-            model = new DMNModelImpl( dmndefs );
+            model = new DMNModelImpl( dmndefs, types );
             DMNCompilerContext ctx = new DMNCompilerContext();
 
             processItemDefinitions( ctx, feel, model, dmndefs );

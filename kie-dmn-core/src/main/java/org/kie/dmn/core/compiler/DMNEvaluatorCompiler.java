@@ -7,6 +7,7 @@ import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.core.api.DMNExpressionEvaluator;
 import org.kie.dmn.core.ast.*;
+import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.core.impl.DMNModelImpl;
 import org.kie.dmn.core.util.Msg;
 import org.kie.dmn.core.util.MsgUtil;
@@ -225,23 +226,28 @@ public class DMNEvaluatorCompiler {
         java.util.List<DTInputClause> inputs = new ArrayList<>();
         int index = 0;
         for ( InputClause ic : dt.getInput() ) {
-            QName  inputExpressionTypeRef = ic.getInputExpression().getTypeRef();
-            if ( inputExpressionTypeRef.getNamespaceURI() == null || inputExpressionTypeRef.getNamespaceURI().isEmpty() ) {
-                // TODO this could have actually been populated during unmarshalling, but requires throughout customization of the Stax reader.
-                String namespaceURI = ic.getNamespaceURI(inputExpressionTypeRef.getPrefix());
-                inputExpressionTypeRef = new QName(namespaceURI, inputExpressionTypeRef.getLocalPart(), inputExpressionTypeRef.getPrefix());
-            }
             String inputExpressionText = ic.getInputExpression().getText();
-            String inputValuesText =  Optional.ofNullable( ic.getInputValues() ).map( UnaryTests::getText).orElse( null);
-            inputs.add( new DTInputClause(inputExpressionTypeRef, inputExpressionText, inputValuesText,
-                                          textToUnaryTestList( ctx,
-                                                               inputValuesText,
-                                                               model,
-                                                               ic,
-                                                               Msg.ERR_COMPILING_FEEL_EXPR_ON_DT_INPUT_CLAUSE_IDX,
-                                                               inputValuesText,
-                                                               node.getIdentifierString(),
-                                                               ++index ) ) );
+            if ( ic.getInputValues() != null ) {
+                String inputValuesText =  Optional.ofNullable( ic.getInputValues() ).map( UnaryTests::getText).orElse( null);
+                inputs.add( new DTInputClause(inputExpressionText, inputValuesText,
+                                              textToUnaryTestList( ctx,
+                                                                   inputValuesText,
+                                                                   model,
+                                                                   ic,
+                                                                   Msg.ERR_COMPILING_FEEL_EXPR_ON_DT_INPUT_CLAUSE_IDX,
+                                                                   inputValuesText,
+                                                                   node.getIdentifierString(),
+                                                                   ++index ) ) );
+            } else {
+                QName inputExpressionTypeRef = ic.getInputExpression().getTypeRef();
+                if ( inputExpressionTypeRef.getNamespaceURI() == null || inputExpressionTypeRef.getNamespaceURI().isEmpty() ) {
+                    // TODO this could have actually been populated during unmarshalling, but requires throughout customization of the Stax reader.
+                    String namespaceURI = ic.getNamespaceURI(inputExpressionTypeRef.getPrefix());
+                    inputExpressionTypeRef = new QName(namespaceURI, inputExpressionTypeRef.getLocalPart(), inputExpressionTypeRef.getPrefix());
+                }
+                BaseDMNTypeImpl typeRef = (BaseDMNTypeImpl) model.resolveType(inputExpressionTypeRef.getNamespaceURI(), inputExpressionTypeRef.getLocalPart());
+                inputs.add( new DTInputClause(inputExpressionText, null, typeRef.getAllowedValues()) );
+            }
         }
         java.util.List<DTOutputClause> outputs = new ArrayList<>();
         index = 0;
@@ -299,7 +305,7 @@ public class DMNEvaluatorCompiler {
             parameterNames.addAll( node.getDependencies().keySet() );
         }
 
-        DecisionTableImpl dti = new DecisionTableImpl( dtName, parameterNames, inputs, outputs, rules, hp, model );
+        DecisionTableImpl dti = new DecisionTableImpl( dtName, parameterNames, inputs, outputs, rules, hp );
         DTInvokerFunction dtf = new DTInvokerFunction( dti );
         DMNDTExpressionEvaluator dtee = new DMNDTExpressionEvaluator( node, dtf );
         return dtee;
