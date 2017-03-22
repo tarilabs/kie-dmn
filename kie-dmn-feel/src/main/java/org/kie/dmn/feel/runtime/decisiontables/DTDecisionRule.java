@@ -16,7 +16,7 @@
 
 package org.kie.dmn.feel.runtime.decisiontables;
 
-import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.model.v1_1.LiteralExpression;
 
 import java.util.ArrayList;

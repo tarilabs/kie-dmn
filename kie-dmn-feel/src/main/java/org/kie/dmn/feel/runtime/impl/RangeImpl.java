@@ -16,7 +16,7 @@
 
 package org.kie.dmn.feel.runtime.impl;
 
-import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.runtime.Range;
 
 public class RangeImpl

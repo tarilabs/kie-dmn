@@ -16,11 +16,11 @@
 
 package org.kie.dmn.feel.runtime.functions;
 
+import org.kie.dmn.api.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.FEELEventListenersManager;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent.Severity;
-import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Symbol;
-import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 import org.kie.dmn.feel.lang.impl.NamedParameter;
 import org.kie.dmn.feel.lang.types.FunctionSymbol;
 import org.kie.dmn.feel.runtime.FEELFunction;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.kie.dmn.feel.runtime;
+package org.kie.dmn.api.feel.runtime;
 
-import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.EvaluationContext;
 
 import java.util.function.BiFunction;
 

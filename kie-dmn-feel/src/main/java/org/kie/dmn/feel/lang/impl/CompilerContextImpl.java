@@ -16,6 +16,7 @@
 
 package org.kie.dmn.feel.lang.impl;
 
+import org.kie.dmn.api.feel.lang.FEELEventListenersManager;
 import org.kie.dmn.feel.lang.CompilerContext;
 import org.kie.dmn.feel.lang.Type;
 

@@ -18,6 +18,8 @@ package org.kie.dmn.feel.lang.impl;
 
 import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.kie.dmn.api.feel.lang.FEELEventListenersManager;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.CompiledExpression;
@@ -27,7 +29,6 @@ import org.kie.dmn.feel.lang.ast.*;
 import org.kie.dmn.feel.parser.feel11.ASTBuilderVisitor;
 import org.kie.dmn.feel.parser.feel11.FEELParser;
 import org.kie.dmn.feel.parser.feel11.FEEL_1_1Parser;
-import org.kie.dmn.feel.runtime.UnaryTest;
 
 import java.util.*;
 
@@ -39,7 +40,7 @@ public class FEELImpl
 
     private static final Map<String,Object> EMPTY_INPUT = Collections.emptyMap();
 
-    private FEELEventListenersManager eventsManager = new FEELEventListenersManager();
+    private FEELEventListenersManager eventsManager = new FEELEventListenersManagerImpl();
 
     public CompilerContext newCompilerContext() {
         return new CompilerContextImpl( eventsManager );

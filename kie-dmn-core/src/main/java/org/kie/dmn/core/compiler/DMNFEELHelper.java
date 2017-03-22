@@ -2,6 +2,7 @@ package org.kie.dmn.core.compiler;
 
 import org.kie.dmn.api.core.DMNMessage;
 import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
@@ -13,7 +14,6 @@ import org.kie.dmn.feel.lang.CompiledExpression;
 import org.kie.dmn.feel.lang.CompilerContext;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.types.BuiltInType;
-import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.runtime.events.SyntaxErrorEvent;
 import org.kie.dmn.model.v1_1.DMNElement;
 import org.slf4j.Logger;

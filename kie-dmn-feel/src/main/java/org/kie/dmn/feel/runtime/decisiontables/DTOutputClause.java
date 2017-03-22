@@ -1,10 +1,10 @@
 package org.kie.dmn.feel.runtime.decisiontables;
 
-import org.kie.dmn.feel.runtime.UnaryTest;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 
 public class DTOutputClause {
     private final String          name;

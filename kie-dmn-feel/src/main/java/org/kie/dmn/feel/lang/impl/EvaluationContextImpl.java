@@ -16,7 +16,8 @@
 
 package org.kie.dmn.feel.lang.impl;
 
-import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.FEELEventListenersManager;
 import org.kie.dmn.feel.util.EvalHelper;
 
 import java.util.HashMap;

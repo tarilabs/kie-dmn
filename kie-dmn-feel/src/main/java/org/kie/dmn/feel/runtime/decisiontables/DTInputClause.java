@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 
 public class DTInputClause {
     private final QName typeRef;

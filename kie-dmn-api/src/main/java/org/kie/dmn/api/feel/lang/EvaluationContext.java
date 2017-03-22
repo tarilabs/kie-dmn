@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.kie.dmn.feel.lang;
+package org.kie.dmn.api.feel.lang;
 
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
-import org.kie.dmn.feel.lang.impl.FEELEventListenersManager;
 
 import java.util.Map;
 import java.util.function.Supplier;

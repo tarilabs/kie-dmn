@@ -19,6 +19,7 @@ package org.kie.dmn.feel.runtime;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.runners.Parameterized;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 
 public class FEELOperatorsTest extends BaseFEELTest {
 

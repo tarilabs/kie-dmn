@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.runners.Parameterized;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 
 public class FEELValuesConstantsTest extends BaseFEELTest {
 

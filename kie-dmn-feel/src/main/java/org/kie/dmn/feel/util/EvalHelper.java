@@ -16,7 +16,7 @@
 
 package org.kie.dmn.feel.util;
 
-import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.FEELProperty;
 import org.kie.dmn.feel.lang.ast.InfixOpNode;
 import org.kie.dmn.feel.runtime.Range;

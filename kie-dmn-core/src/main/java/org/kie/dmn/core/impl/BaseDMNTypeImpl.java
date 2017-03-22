@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.impl.MapBackedType;
 import org.kie.dmn.feel.lang.types.BuiltInType;
-import org.kie.dmn.feel.runtime.UnaryTest;
 
 public abstract class BaseDMNTypeImpl
         implements DMNType {

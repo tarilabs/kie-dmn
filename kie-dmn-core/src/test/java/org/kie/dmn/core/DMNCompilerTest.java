@@ -27,10 +27,10 @@ import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.ItemDefNode;
+import org.kie.dmn.api.feel.lang.EvaluationContext;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
 import org.kie.dmn.core.util.DMNRuntimeUtil;
-import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.impl.EvaluationContextImpl;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 

@@ -17,8 +17,8 @@
 package org.kie.dmn.feel.lang.ast;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.kie.dmn.feel.lang.EvaluationContext;
-import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.api.feel.lang.EvaluationContext;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 
 public class DashNode
         extends BaseNode {

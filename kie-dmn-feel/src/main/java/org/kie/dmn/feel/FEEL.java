@@ -16,12 +16,12 @@
 
 package org.kie.dmn.feel;
 
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.feel.lang.CompiledExpression;
 import org.kie.dmn.feel.lang.CompilerContext;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.impl.FEELImpl;
-import org.kie.dmn.feel.runtime.UnaryTest;
 
 import java.util.List;
 import java.util.Map;

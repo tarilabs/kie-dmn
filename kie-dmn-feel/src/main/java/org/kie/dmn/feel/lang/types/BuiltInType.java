@@ -16,6 +16,7 @@
 
 package org.kie.dmn.feel.lang.types;
 
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.lang.SimpleType;
@@ -23,7 +24,6 @@ import org.kie.dmn.feel.lang.Symbol;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.runtime.FEELFunction;
 import org.kie.dmn.feel.runtime.Range;
-import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.runtime.functions.*;
 
 import java.time.*;

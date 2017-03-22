@@ -16,6 +16,7 @@
 
 package org.kie.dmn.feel.lang.impl;
 
+import org.kie.dmn.api.feel.lang.FEELEventListenersManager;
 import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.api.feel.runtime.events.FEELEventListener;
 import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
@@ -25,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class FEELEventListenersManager {
+public class FEELEventListenersManagerImpl implements FEELEventListenersManager {
 
     private Set<FEELEventListener> listeners = new HashSet<>(  );
 
@@ -72,9 +73,4 @@ public class FEELEventListenersManager {
         } );
     }
     
-    public static void notifyListeners(FEELEventListenersManager eventsManager, Supplier<FEELEvent> event) {
-        if( eventsManager != null && eventsManager.hasListeners() ) {
-            eventsManager.notifyListeners(event.get());
-        }
-    }
 }

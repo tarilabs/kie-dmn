@@ -17,8 +17,8 @@
 package org.kie.dmn.core.impl;
 
 import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.runtime.UnaryTest;
 
 import java.util.List;
 

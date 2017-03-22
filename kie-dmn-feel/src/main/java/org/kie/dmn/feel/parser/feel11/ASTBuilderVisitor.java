@@ -18,8 +18,8 @@ package org.kie.dmn.feel.parser.feel11;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.kie.dmn.api.feel.runtime.UnaryTest;
 import org.kie.dmn.feel.lang.ast.*;
-import org.kie.dmn.feel.runtime.UnaryTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
