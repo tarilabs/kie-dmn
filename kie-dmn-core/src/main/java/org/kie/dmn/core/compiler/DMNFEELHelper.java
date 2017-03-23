@@ -66,7 +66,7 @@ public class DMNFEELHelper
                     }
                 } catch ( Throwable e ) {
                     // if an unaryTest fail for any treason, is simply considered FALSE.
-                    logger.error("An error happended while evaluating a unary test", e);
+                    logger.warn("A non-critical error happened while evaluating a unary test. Execution will continue.", e);
                 }
             }
         } finally {
